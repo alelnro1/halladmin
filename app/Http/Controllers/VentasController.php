@@ -23,11 +23,6 @@ class VentasController extends MercaderiaController
     public function __construct()
     {
         parent::__construct(false);
-
-        // Si no tiene locales, redirijo al local para que cree uno
-        if (!Auth::user()->tieneAlgunLocal()) {
-            return Redirect::to('locales')->with('user_no_tiene_locales', true)->send();
-        }
     }
 
     public function index()

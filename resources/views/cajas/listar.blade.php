@@ -2,7 +2,7 @@
 
 @section('site-name', 'Listando registros de caja')
 
-@section('page-header', $LOCAL_NOMBRE)
+@section('page-header', session('LOCAL_NOMBRE'))
 @section('page-description', 'Registros de Caja')
 
 @section('styles')

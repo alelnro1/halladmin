@@ -2,7 +2,7 @@
 
 @section('site-name', 'Listando ventas')
 
-@section('page-header', $LOCAL_NOMBRE)
+@section('page-header', session('LOCAL_NOMBRE'))
 @section('page-description', 'Ventas Canceladas')
 
 @section('styles')

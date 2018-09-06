@@ -2,7 +2,6 @@
 
 @section('site-name', 'Usuario')
 
-@section('page-header', $LOCAL_NOMBRE)
 @section('page-description', 'Usuario ' . $usuario->nombre)
 
 @section('styles')

@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-@section('page-header', $LOCAL_NOMBRE)
 @section('page-description', 'Previsualización de Venta')
 
 @section('page-header', 'Ventas')

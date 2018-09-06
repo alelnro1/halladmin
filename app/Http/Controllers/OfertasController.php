@@ -16,11 +16,6 @@ class OfertasController extends Controller
     public function __construct()
     {
         parent::__construct();
-
-        // Si no tiene locales, redirijo al local para que cree uno
-        if (!Auth::user()->tieneAlgunLocal()) {
-            return Redirect::to('locales')->with('user_no_tiene_locales', true)->send();
-        }
     }
 
     /**

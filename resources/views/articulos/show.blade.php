@@ -2,7 +2,6 @@
 
 @section('site-name', 'Viendo a articulo')
 
-@section('page-header', $LOCAL_NOMBRE)
 @section('page-description', 'Artículo')
 
 @section('niveles')

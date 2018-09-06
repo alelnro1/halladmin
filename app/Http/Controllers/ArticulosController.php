@@ -29,11 +29,6 @@ class ArticulosController extends Controller
      */
     public function index()
     {
-        // Si no tiene locales, redirijo al local para que cree uno
-        if (!Auth::user()->tieneAlgunLocal()) {
-            return redirect('locales')->with('user_no_tiene_locales', true);
-        }
-
         $articulos = Articulo::getArticulos();
 
         return view('articulos.listar')->with('articulos', $articulos);

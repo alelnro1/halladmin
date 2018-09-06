@@ -121,7 +121,8 @@ desired effect
 
                                 <p>
                                     {{ ucfirst(Auth::user()->nombre) }} {{ ucfirst(Auth::user()->apellido) }}
-                                    <small>Miembro desde el {{ date('d-m-Y', strtotime(Auth::user()->created_at)) }} </small>
+                                    <small>Miembro desde
+                                        el {{ date('d-m-Y', strtotime(Auth::user()->created_at)) }} </small>
                                 </p>
                             </li>
                             </li>
@@ -133,9 +134,15 @@ desired effect
                                     </a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="{{ url('logout') }}" class="btn btn-default btn-flat">
+                                    <a class="btn btn-default btn-flat" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
                                         <i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Salir
                                     </a>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
                                 </div>
                             </li>
                         </ul>
@@ -172,12 +179,12 @@ desired effect
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" style="min-height: 800px">
-        @yield('alerta-caja-sin-abrir')
+    @yield('alerta-caja-sin-abrir')
 
-        <!-- Content Header (Page header) -->
+    <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                @yield('page-header')
+                {{ session('LOCAL_NOMBRE') }}
                 <small>@yield('page-description')</small>
             </h1>
             <ol class="breadcrumb">
@@ -221,7 +228,7 @@ desired effect
                 <li class="active">
                     <a href="#control-sidebar-home-tab" data-toggle="tab">
                         <i class="fa fa-home"></i>&nbsp;Ud está administrando<br>
-                        <strong>{{ $LOCAL_NOMBRE }}</strong>
+                        <strong>{{ session('LOCAL_NOMBRE') }}</strong>
                     </a>
                 </li>
             </ul>
@@ -231,10 +238,11 @@ desired effect
                 <div class="tab-pane active" id="control-sidebar-home-tab">
                     <h3 class="control-sidebar-heading">Cambiar de Local</h3>
                     <ul class="control-sidebar-menu">
-                        @foreach($locales as $local)
+                        @foreach(session('locales') as $local)
                             <li>
                                 <a href="javascript:;" class="cambiar-de-local" data-local-id="{{ $local->id }}">
-                                    <img style="height: 35px;" class="menu-icon img-circle" src="/{{ $local->archivo }}">
+                                    <img style="height: 35px;" class="menu-icon img-circle"
+                                         src="/{{ $local->archivo }}">
 
                                     <div class="menu-info">
                                         <h4 class="control-sidebar-subheading">{{ $local->nombre }}</h4>
@@ -287,7 +295,9 @@ desired effect
         integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
         crossorigin="anonymous"></script>
 <!-- Bootstrap 3.3.6 -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('js/app.min.js') }}"></script>
 
@@ -295,18 +305,18 @@ desired effect
 @yield('javascript')
 
 <script type="text/javascript">
-    $(window).load(function() {
+    $(window).load(function () {
         $('#prev-load').hide().removeClass('hidden').fadeIn(500);
 
         $(".spinner-container").fadeOut(200);
 
-        $('.cambiar-de-local').on('click', function() {
+        $('.cambiar-de-local').on('click', function () {
             var local_id = $(this).data('local-id');
 
             $.ajax({
                 url: '/cambiar-de-local/' + local_id,
                 dataType: 'json',
-                success: function(data){
+                success: function (data) {
                     if (data.valid == true)
                         window.location.href = '/';
                 }
@@ -314,7 +324,7 @@ desired effect
         });
 
         // Click en la imagen de perfil redirije al perfil
-        $('.img-circle').on('click', function() {
+        $('.img-circle').on('click', function () {
             window.location.href = 'perfil';
         });
     });

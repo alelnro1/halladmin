@@ -2,7 +2,7 @@
 
 @section('site-name', 'Nueva Venta')
 
-@section('page-header', $LOCAL_NOMBRE)
+@section('page-header', session('LOCAL_NOMBRE'))
 @section('page-description', 'Nueva Venta')
 
 {{-- Esta sección deberá mostrar una alerta si no se abrió la caja --}}

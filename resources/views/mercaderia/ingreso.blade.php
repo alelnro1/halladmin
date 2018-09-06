@@ -7,7 +7,6 @@
     @include('commons.alerta-caja-sin-abrir')
 @endsection
 
-@section('page-header', $LOCAL_NOMBRE)
 @section('page-description', 'Ingreso de Mercadería')
 
 @section('styles')

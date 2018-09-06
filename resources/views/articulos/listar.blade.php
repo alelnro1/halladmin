@@ -2,7 +2,6 @@
 
 @section('site-name', 'Listando articulos')
 
-@section('page-header', $LOCAL_NOMBRE)
 @section('page-description', 'Mercadería')
 
 {{-- Esta sección deberá mostrar una alerta si no se abrió la caja --}}

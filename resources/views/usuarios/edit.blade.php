@@ -2,7 +2,6 @@
 
 @section('site-name', 'Usuarios')
 
-@section('page-header', $LOCAL_NOMBRE)
 @section('page-description', 'Editando a Usuario ' . $usuario->nombre)
 
 @section('niveles')

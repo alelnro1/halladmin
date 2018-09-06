@@ -2,7 +2,6 @@
 
 @section('site-name', 'Listando ventas')
 
-@section('page-header', $LOCAL_NOMBRE)
 @section('page-description', 'Ventas')
 
 @section('styles')

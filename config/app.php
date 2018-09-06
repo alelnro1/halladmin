@@ -158,8 +158,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        DoublePoint\DPAbmer\DPAbmerServiceProvider::class,
-
         Barryvdh\Debugbar\ServiceProvider::class,
 
 		PragmaRX\Tracker\Vendor\Laravel\ServiceProvider::class,

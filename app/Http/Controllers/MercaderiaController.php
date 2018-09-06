@@ -34,11 +34,6 @@ class MercaderiaController extends ArchivosTemporalesController
      */
     public function ingresoForm()
     {
-        // Si no tiene locales, redirijo al local para que cree uno
-        if (!Auth::user()->tieneAlgunLocal()) {
-            return redirect('locales')->with('user_no_tiene_locales', true);
-        }
-
         $ingreso_form = $this->getDatosParaIngresoForm();
 
         return view(

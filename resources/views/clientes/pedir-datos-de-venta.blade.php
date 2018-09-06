@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-@section('page-header', $LOCAL_NOMBRE)
 @section('page-description', 'Ventas')
 
 {{-- Esta sección deberá mostrar una alerta si no se abrió la caja --}}

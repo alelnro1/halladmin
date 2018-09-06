@@ -2,7 +2,6 @@
 
 @section('site-name', 'Listando usuarios')
 
-@section('page-header', $LOCAL_NOMBRE)
 @section('page-description', 'Usuarios')
 
 @section('styles')
