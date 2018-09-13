@@ -1,8 +1,9 @@
 <?php
 
-namespace App;
+namespace App\Models\Mercaderia;
 
 use App\Http\Controllers\Controller;
+use App\Models\Categoria;
 use Illuminate\Database\Eloquent\Model;
 
 class DatosArticulo extends Model

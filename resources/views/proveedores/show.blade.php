@@ -22,7 +22,7 @@
 
                 @if(isset($proveedor->archivo) && $proveedor->archivo != "")
                     <div class="text-center margin-bottom">
-                        <img src="/{{ $proveedor->archivo }}" height="250" />
+                        <img src="{{ url('storage/' . $proveedor->archivo) }}" height="250" />
                     </div>
                 @endif
 

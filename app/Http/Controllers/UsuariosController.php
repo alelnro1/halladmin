@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Menu;
+use App\Models\Menu;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use App\User;
 
-class UsuariosController extends Controller
+class UsuariosController extends BaseController
 {
     use SoftDeletes;
 
@@ -20,10 +20,6 @@ class UsuariosController extends Controller
     {
         $this->middleware('section:usuarios');
 
-        // Si no tiene locales, redirijo al local para que cree uno
-        /*if (!Auth::user()->tieneAlgunLocal()) {
-            return Redirect::to('locales')->with('user_no_tiene_locales', true)->send();
-        }*/
     }
 
     /**
@@ -72,7 +68,7 @@ class UsuariosController extends Controller
     public function store(Request $request)
     {
         // Valido el input
-        $validator = Validator::make(
+        /*$validator = Validator::make(
             $request->all(), [
             'nombre'      => 'required|max:100',
             'apellido'    => 'required|max:500',
@@ -85,7 +81,7 @@ class UsuariosController extends Controller
 
         if ($validator->fails()) {
             return redirect('usuarios/create')->withErrors($validator)->withInput();
-        }
+        }*/
 
         // Si hay una contraseña, la actualizo
         if ($request->password != "") {
@@ -105,14 +101,8 @@ class UsuariosController extends Controller
         // Asignar el local actual al usuario
         $usuario->Locales()->attach($this->getLocalId());
 
-        // Si se trató de guardar una foto para el local, validarla y subirla
-        $validator = $this->subirYGuardarArchivoSiHay($request, $validator, $usuario);
 
-        if ($validator) {
-            if ($validator->fails()) {
-                return redirect('usuarios/create')->withErrors($validator)->withInput();
-            }
-        }
+        $this->subirYGuardarArchivoSiHay($request, $usuario);
 
         return redirect('/usuarios/')->with('usuario_creado', 'Usuario con nombre ' . $request->nombre . ' creado');
     }
@@ -150,47 +140,20 @@ class UsuariosController extends Controller
     }
 
     /**
-     * Si hay algun archivo para subir, subirlo y guardar la referencia en la base
-     *
-     * @param  $request
-     * @param  $validator
-     * @param  $usuario
-     * @return mixed
-     */
-    private function subirYGuardarArchivoSiHay($request, $validator, $usuario)
-    {
-        if (isset($request->archivo) && count($request->archivo) > 0) {
-            $archivo = $this->subirArchivo($request);
-
-            if ($archivo['url']) {
-                $usuario->archivo = $archivo['url'];
-                $usuario->save();
-            } else {
-                $validator->errors()->add('archivo', $archivo['err']);
-
-                return $validator;
-            }
-        }
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $usuario)
     {
-        $usuario = User::findOrFail($id);
-        $usuario->load(
-            [
+        $usuario->load([
             'Menus' => function ($query) {
                 $query->with('MenuPadre', 'MenusHijos');
             },
             'Ventas' => function ($query) {
                 $query->with('Usuario');
-            }
-            ]
+            }]
         );
 
         return view('usuarios.show')->with('usuario', $usuario);
@@ -202,11 +165,8 @@ class UsuariosController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $usuario)
     {
-        // Busco al usuario
-        $usuario = User::findOrFail($id);
-
         // Le cargo los menus habilitados
         $usuario->load('Menus');
 
@@ -266,7 +226,7 @@ class UsuariosController extends Controller
         }
 
         // Si se trató de guardar una foto para el local, validarla y subirla
-        $validator = $this->subirYGuardarArchivoSiHay($request, $validator, $usuario);
+        $validator = $this->subirYGuardarArchivoSiHay($request, $usuario);
 
         if ($validator) {
             if ($validator->fails()) {
@@ -290,35 +250,6 @@ class UsuariosController extends Controller
         $usuario->delete();
 
         return redirect('/usuarios/')->with('usuario_eliminado', 'Usuario con nombre ' . $usuario->nombre . ' eliminado');
-    }
-
-    /**
-     * Subir un archivo
-     *
-     * @param  Request $request
-     * @return JSON
-     */
-    public function subirArchivo(Request $request)
-    {
-        $directorio_destino = 'uploads/archivos/';
-        $nombre_original    = $request->archivo->getClientOriginalName();
-        $extension          = $request->archivo->getClientOriginalExtension();
-        $nombre_archivo     = rand(111111, 999999) .'_'. time() . "_.". $extension;
-
-        if ($request->archivo->isValid()) {
-            if ($request->archivo->move($directorio_destino, $nombre_archivo)) {
-                $url = $directorio_destino . $nombre_archivo;
-                $error = false;
-            } else {
-                $url = false;
-                $error = "No se pudo mover el archivo";
-            }
-        } else {
-            $url = false;
-            $error = $request->archivo->getErrorMessage();
-        }
-
-        return array('url' => $url, 'err' => $error);
     }
 
     /**

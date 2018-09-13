@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Menu;
-use App\Negocio;
+use App\Http\Requests\AdministradoresRequest;
+use App\Models\Menu;
+use App\Models\Negocio;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Validator;
-use App\Administrador;
 
 class AdministradoresController extends Controller
 {
@@ -43,29 +43,13 @@ class AdministradoresController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AdministradoresRequest $request)
     {
-        // Valido el input
-        $validator = Validator::make(
-            $request->all(), [
-            'nombre'      => 'required|max:100',
-            'apellido'    => 'required|max:100',
-            'password'    => 'required|confirmed|min:6',
-            'domicilio'   => 'required',
-            'email'       => 'required|email|max:100|unique:users',
-            'telefono'    => 'required',
-            'negocio'     => 'required|max:100'
-            ]
-        );
-        
-        if ($validator->fails()) {
-            return redirect('administradores/create')->withErrors($validator)->withInput();
-        }
-
         // Le indico que va a ser admin
-        $request->request->add(['es_admin' => '1']);
-
-        $request->request->set('password', bcrypt($request->password));
+        $request->merge([
+            'es_admin' => '1',
+            'password' => bcrypt($request->password)
+        ]);
 
         // Creo el negocio para poder vincularlo con el usuario
         $negocio = Negocio::create([
@@ -81,13 +65,13 @@ class AdministradoresController extends Controller
         $this->vincularMenus($administrador);
         
         // Si se trató de guardar una foto para el local, validarla y subirla
-        $validator = $this->subirYGuardarArchivoSiHay($request, $validator, $administrador);
+        /*$validator = $this->subirYGuardarArchivoSiHay($request, $validator, $administrador);
 
         if ($validator) {
             if ($validator->fails()) {
                 return redirect('administradores/create')->withErrors($validator)->withInput();
             }
-        }
+        }*/
 
         return redirect('/administradores/')->with('administrador_creado', 'Administrador con nombre ' . $request->nombre . ' creado');
     }

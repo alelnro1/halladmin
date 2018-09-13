@@ -7,14 +7,14 @@
     </li>
 
     <li @if(Request::is('locales*') ) class="active" @endif>
-        <a href="{{ url('/locales') }}">
+        <a href="{{ route('locales') }}">
             <i class="fa fa-building" aria-hidden="true"></i>
             <span>Locales</span>
         </a>
     </li>
 
     <li @if(Request::is('proveedores*') ) class="active" @endif>
-        <a href="{{ url('/proveedores') }}">
+        <a href="{{ route('proveedores') }}">
             <i class="fa fa-truck" aria-hidden="true"></i>
             <span>Proveedores</span>
         </a>

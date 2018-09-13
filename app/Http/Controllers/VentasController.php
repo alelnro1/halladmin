@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Articulo;
-use App\Cambio;
-use App\Cliente;
-use App\DatosArticulo;
-use App\Venta;
-use App\VentaCancelada;
-use App\VentaTemporal;
+use App\Models\Mercaderia\Articulo;
+use App\Models\Cambio;
+use App\Models\Cliente;
+use App\Models\Mercaderia\DatosArticulo;
+use App\Models\Ventas\Venta;
+use App\Models\Ventas\VentaCancelada;
+use App\Models\Ventas\VentaTemporal;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;

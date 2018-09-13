@@ -20,7 +20,9 @@
         </div>
 
         <div class="box-body">
-        <form action="/proveedores" method="POST" class="form-horizontal" enctype="multipart/form-data">
+        <form action="{{ route('proveedores.store') }}" method="POST" class="form-horizontal"
+              autocomplete="off"
+              enctype="multipart/form-data">
             {!! csrf_field() !!}
 
             <!-- Nombre -->
@@ -103,7 +105,8 @@
                 <label class="col-md-4 control-label">Domicilio</label>
 
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="domicilio" value="{{ old('domicilio') }}" id="domicilio" autocomplete="off">
+                    <input type="text" class="form-control" name="domicilio" value="{{ old('domicilio') }}"
+                           id="domicilio" autocomplete="off">
 
                     @if ($errors->has('domicilio'))
                         <span class="help-block">

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Cambio;
-use App\Venta;
-use App\VentaCancelada;
+use App\Models\Cambio;
+use App\Models\Ventas\Venta;
+use App\Models\Ventas\VentaCancelada;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;

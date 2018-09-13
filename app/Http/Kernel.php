@@ -58,6 +58,10 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'section' => \App\Http\Middleware\CheckSection::class,
         'acceso' => \App\Http\Middleware\AccesoRequerido::class,
-        'tiene-algun-local' => \App\Http\Middleware\TieneAlgunLocal::class
+        'tiene-algun-local' => \App\Http\Middleware\TieneAlgunLocal::class,
+
+        'ownership-proveedores' => \App\Http\Middleware\ProtectOwnership\Proveedores::class,
+        'ownership-locales' => \App\Http\Middleware\ProtectOwnership\Locales::class,
+        'ownership-usuarios' => \App\Http\Middleware\ProtectOwnership\Usuarios::class
     ];
 }

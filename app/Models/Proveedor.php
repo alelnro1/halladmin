@@ -1,7 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use App\Models\Mercaderia\Articulo;
 use Illuminate\Database\Eloquent\Model;
 
 class Proveedor extends Model

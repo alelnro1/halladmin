@@ -1,8 +1,12 @@
 <?php
 
-namespace App;
+namespace App\Models\Mercaderia;
 
 use App\Http\Controllers\Controller;
+use App\Models\Categoria;
+use App\Models\Local;
+use App\Models\Proveedor;
+use App\Models\Ventas\Venta;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

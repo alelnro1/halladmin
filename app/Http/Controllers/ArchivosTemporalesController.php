@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Articulo;
-use App\MercaderiaTemporal;
-use App\VentaTemporal;
+use App\Models\Mercaderia\MercaderiaTemporal;
+use App\Models\VentaTemporal;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;

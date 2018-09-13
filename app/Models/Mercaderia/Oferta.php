@@ -1,7 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Models\Mercaderia;
 
+use App\Models\Local;
 use Illuminate\Database\Eloquent\Model;
 
 class Oferta extends Model

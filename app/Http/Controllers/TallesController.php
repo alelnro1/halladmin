@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Categoria;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Talle;
+use App\Models\Mercaderia\Talle;
 use Illuminate\Support\Facades\Validator;
 
 class TallesController extends Controller

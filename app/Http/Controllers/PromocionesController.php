@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Promocion;
+use App\Models\Mercaderia\Promocion;
 
 class PromocionesController extends Controller
 {

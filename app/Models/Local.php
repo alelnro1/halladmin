@@ -1,7 +1,13 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use App\Models\Mercaderia\Articulo;
+use App\Models\Mercaderia\MercaderiaTemporal;
+use App\Models\Ventas\Venta;
+use App\Models\Ventas\VentaCancelada;
+use App\Models\Ventas\VentaTemporal;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;

@@ -1,4 +1,4 @@
-<table class="table table-bordered table-hover" id="ventas" style="width:100%">
+<table class="table table-bordered table-hover table-striped" id="ventas" style="width:100%">
     <!-- Table Headings -->
     <thead>
     <tr>
@@ -23,7 +23,7 @@
             <tr>
                 <td>{{ $venta->created_at }}</td>
                 <td class="text-right">
-                    <a href="{{ url('ventas/ver/' . $venta->nro_orden) }}">
+                    <a href="{{ route('ventas.ver', ['venta' => $venta->nro_orden]) }}">
                         #{{ $venta->nro_orden }}
                     </a>
                 </td>
@@ -43,7 +43,7 @@
                 </td>
                 <td>{{ date("d/m/Y H:i:s", strtotime($venta->created_at)) }}</td>
                 <td>
-                    <a href="{{ url('ventas/ver/' . $venta->nro_orden) }}" class="btn btn-xs btn-default">
+                    <a href="{{ route('ventas.ver', ['venta' => $venta->nro_orden]) }}" class="btn btn-xs btn-default">
                         <i class="fa fa-eye" aria-hidden="true"></i>&nbsp;
                         Ver
                     </a>

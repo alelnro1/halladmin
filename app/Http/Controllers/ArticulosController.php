@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Categoria;
-use App\DatosArticulo;
-use App\Genero;
-use App\Talle;
+use App\Models\Categoria;
+use App\Models\Mercaderia\DatosArticulo;
+use App\Models\Mercaderia\Genero;
+use App\Models\Mercaderia\Talle;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Articulo;
+use App\Models\Mercaderia\Articulo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 

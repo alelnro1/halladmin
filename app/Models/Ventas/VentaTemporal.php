@@ -1,13 +1,13 @@
 <?php
 
-namespace App;
+namespace App\Models\Ventas;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
-class MercaderiaTemporal extends Model
+class VentaTemporal extends Model
 {
-    protected $table = "mercaderias_temporales";
+    protected $table = "ventas_temporales";
 
     protected $fillable = [
         'local_id', 'user_id', 'link'

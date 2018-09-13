@@ -23,13 +23,61 @@ $perfil = function () {
 Route::get('/', 'HomeController@index');
 
 // Rutas del front-end
-Route::get('/tpl', 'FrontendController@index');
+    Route::get('/tpl', 'FrontendController@index');
 
 Route::auth();
 Route::group(['middleware' => ['auth']], function () use ($perfil) {
     Route::get('/home', 'HomeController@index');
-    Route::resource('locales', 'LocalesController');
-    Route::resource('proveedores', 'ProveedoresController');
+
+    /***** LOCALES *****/
+    Route::group(['prefix' => 'locales'], function () {
+        Route::get('/', 'LocalesController@index')->name('locales');
+
+        Route::get('nuevo', 'LocalesController@create')->name('locales.create');
+        Route::post('nuevo', 'LocalesController@store')->name('locales.store');
+
+        Route::group(['middleware' => ['ownership-locales']], function () {
+            Route::get('{local}', 'LocalesController@show')->name('locales.view');
+
+            Route::get('{local}/edit', 'LocalesController@edit')->name('locales.edit');
+            Route::post('{local}/edit', 'LocalesController@update')->name('locales.update');
+        });
+    });
+
+    /***** PROVEEDORES *****/
+    Route::group(['prefix' => 'proveedores'], function () {
+        Route::get('/', 'ProveedoresController@index')->name('proveedores');
+
+        Route::get('nuevo', 'ProveedoresController@create')->name('proveedores.create');
+        Route::post('nuevo', 'ProveedoresController@store')->name('proveedores.store');
+
+        Route::group(['middleware' => ['ownership-proveedores']], function () {
+            Route::get('/{proveedor}', 'ProveedoresController@show')->name('proveedores.view');
+
+            Route::get('{proveedor}/edit', 'ProveedoresController@edit')->name('proveedores.edit');
+            Route::post('{proveedor}/edit', 'ProveedoresController@update')->name('proveedores.update');
+        });
+    });
+
+    /***** USUARIOS *****/
+    Route::group(['prefix' => 'usuarios'], function () {
+        Route::get('/', 'UsuariosController@index')->name('usuarios');
+
+        Route::get('nuevo', 'UsuariosController@create')->name('usuarios.create');
+        Route::post('nuevo', 'UsuariosController@store')->name('usuarios.store');
+
+        Route::group(['middleware' => ['ownership-usuarios']], function () {
+            Route::get('{usuario}', 'UsuariosController@show')->name('usuarios.view');
+
+            Route::get('{usuario}/edit', 'UsuariosController@edit')->name('usuarios.edit');
+            Route::post('{usuario}/edit', 'UsuariosController@update')->name('usuarios.update');
+        });
+    });
+
+    //Route::resource('usuarios', 'UsuariosController');
+
+
+
     Route::resource('promociones', 'PromocionesController');
 
     Route::resource('ofertas', 'OfertasController');
@@ -48,15 +96,14 @@ Route::group(['middleware' => ['auth']], function () use ($perfil) {
     // Listado de ventas canceladas
     Route::get('ventas-canceladas', 'VentasController@ventasCanceladas');
 
-    Route::group(
-        ['prefix' => 'mercaderia', 'middleware' => 'section:mercaderia'], function () {
-        Route::get('/', 'ArticulosController@index');
+    Route::group(['prefix' => 'mercaderia', 'middleware' => 'section:mercaderia'], function () {
+        Route::get('/', 'ArticulosController@index')->name('mercaderia');
 
         Route::get('/actual', 'ArticulosController@index');
 
-        Route::get('ingreso', 'MercaderiaController@ingresoForm')->middleware('section:ingreso');
+        Route::get('ingreso', 'MercaderiaController@ingresoForm')->middleware('section:ingreso')->name('mercaderia.ingresar');
 
-        Route::post('ingresar', 'MercaderiaController@procesarIngresoDeMercaderia')->middleware('section:ingreso');
+        Route::post('ingresar', 'MercaderiaController@procesarIngresoDeMercaderia')->middleware('section:ingreso')->name('mercaderia.procesar-ingreso');
 
         // Cuando termina de tipear un codigo, busca si existe un articulo con ese codigo y devuelve la descripcion
         Route::post('buscar-articulo-con-codigo', 'MercaderiaController@cargarArticuloConCodigo');
@@ -72,11 +119,9 @@ Route::group(['middleware' => ['auth']], function () use ($perfil) {
 
         // Cargo dinamicamente los talles de la categoria seleccionada
         Route::post('cargar-talles-de-genero', 'TallesController@cargarTallesDeGenero');
-    }
-    );
+    });
 
-    Route::group(
-        ['prefix' => 'cambios'], function () {
+    Route::group(['prefix' => 'cambios'], function () {
         Route::get('/', 'CambiosController@index');
 
         // Paso 1: Se elije el articulo a cambiar
@@ -90,14 +135,12 @@ Route::group(['middleware' => ['auth']], function () use ($perfil) {
 
         // Cancelar el articulo
         Route::get('nuevo', 'CambiosController@cambiarArticuloADevolver');
-    }
-    );
+    });
 
-    Route::group(
-        ['prefix' => 'ventas', 'middleware' => 'section:ventas'], function () {
+    Route::group(['prefix' => 'ventas', 'middleware' => 'section:ventas'], function () {
         Route::get('/', 'VentasController@index');
 
-        Route::get('/ver/{orden}', 'VentasController@show');
+        Route::get('/orden/{orden}', 'VentasController@show')->name('ventas.ver');
 
         // Paso 1: Seleccionar articulo para vender
         Route::get('nueva-venta', 'VentasController@nuevaVentaForm');
@@ -128,20 +171,14 @@ Route::group(['middleware' => ['auth']], function () use ($perfil) {
 
         // Se actualizan los precios de los archivos temporales por descuentos
         Route::post('aplicar-descuento', 'VentasController@aplicarDescuento');
-    }
-    );
+    });
 
     Route::get('cambiar-de-local/{local}', 'Controller@setLocalDesdeVista');
 
-    Route::resource('usuarios', 'UsuariosController');
-
     // Rutas solo del super admin
-    Route::group(
-        ['middleware' => 'acceso:super admin'], function () {
+    Route::group(['middleware' => 'acceso:super admin'], function () {
         Route::resource('administradores', 'AdministradoresController');
-    }
-    );
+    });
 
     $perfil();
-}
-);
+});

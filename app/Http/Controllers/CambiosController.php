@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Articulo;
+use App\Models\Mercaderia\Articulo;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
-use App\Cambio;
+use App\Models\Cambio;
 
 class CambiosController extends VentasController
 {

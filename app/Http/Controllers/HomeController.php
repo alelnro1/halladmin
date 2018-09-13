@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Cambio;
 use App\Http\Requests;
-use App\Local;
-use App\Venta;
+use App\Models\Local;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,7 +33,9 @@ class HomeController extends Controller
             $ventas = [];
             $grafico_lineal = $grafico_pie = false;
         } else {
-            $local = Local::where('id', $this->getLocalId())
+            $local_id = session('LOCAL_ACTUAL')->id;
+
+            $local = Local::where('id', $local_id)
                 ->with(
                     [
                         'Ventas' => function ($query) {

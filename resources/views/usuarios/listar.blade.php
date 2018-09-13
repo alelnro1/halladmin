@@ -20,7 +20,7 @@
         <div class="box-header">
             <h3 class="box-title">Listado</h3>
             <div class="box-tools">
-                <a href="{{ url('usuarios/create') }}" class="btn btn-block btn-success btn-sm">
+                <a href="{{ route('usuarios.create') }}" class="btn btn-block btn-success btn-sm">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                     Nuevo Usuario
                 </a>
@@ -47,7 +47,7 @@
             @endif
 
             @if (count($usuarios) > 0)
-                <table class="table table-bordered table-hover responsive" id="usuarios" width="100%">
+                <table class="table table-bordered table-hover responsive table-striped" id="usuarios" width="100%">
                     <!-- Table Headings -->
                     <thead>
                     <tr>

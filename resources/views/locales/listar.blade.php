@@ -18,7 +18,7 @@
         <div class="box-header">
             <h3 class="box-title"></h3>
             <div class="box-tools">
-                <a href="{{ url('locales/create') }}" class="btn btn-block btn-success btn-sm">
+                <a href="{{ route('locales.create') }}" class="btn btn-block btn-success btn-sm">
                     <i class="fa fa-fw fa-plus" aria-hidden="true"></i>
                     Nuevo Local
                 </a>
@@ -57,7 +57,7 @@
             @endif
 
             @if (count($locales) > 0)
-                <table class="table table-bordered table-hover responsive" id="locales" width="100%">
+                <table class="table table-bordered table-hover table-striped responsive" id="locales" width="100%">
                     <!-- Table Headings -->
                     <thead>
                     <tr>
@@ -76,12 +76,12 @@
                             <td>{{ $local->telefono }}</td>
 
                             <td>
-                                <a href="{{ url('locales/' . $local['id'])   }}" class="btn btn-default btn-xs">
+                                <a href="{{ route('locales.view', ['id' => $local['id']])   }}" class="btn btn-default btn-xs">
                                     <i class="fa fa-eye" aria-hidden="true"></i>
                                     Ver
                                 </a>
 
-                                <a href="{{ url('locales/' . $local['id'] . '/edit') }}" class="btn btn-default btn-xs">
+                                <a href="{{ route('locales.edit', ['id' => $local['id']]) }}" class="btn btn-default btn-xs">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                     Editar
                                 </a>

@@ -1,8 +1,13 @@
 <?php
 
-namespace App;
+namespace App\Models\Ventas;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cambio;
+use App\Models\Cliente;
+use App\Models\Local;
+use App\Models\Mercaderia\Articulo;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 

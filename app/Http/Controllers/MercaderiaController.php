@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Articulo;
-use App\Categoria;
-use App\DatosArticulo;
-use App\Genero;
-use App\MercaderiaTemporal;
-use App\Proveedor;
-use App\Talle;
+use App\Models\Mercaderia\Articulo;
+use App\Models\Categoria;
+use App\Models\Mercaderia\DatosArticulo;
+use App\Models\Mercaderia\Genero;
+use App\Models\Mercaderia\MercaderiaTemporal;
+use App\Models\Proveedor;
+use App\Models\Mercaderia\Talle;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
@@ -44,8 +44,7 @@ class MercaderiaController extends ArchivosTemporalesController
             'proveedores' => $ingreso_form['proveedores'],
             'categorias' => $ingreso_form['categorias'],
             'generos' => $ingreso_form['generos']
-            ]
-        );
+        ]);
     }
 
     /**
@@ -77,21 +76,18 @@ class MercaderiaController extends ArchivosTemporalesController
         // Busco todas las mercaderias (ya ingresadas) del local
         $datos['mercaderia_existente'] =
             Articulo::select(['id', 'talle_id', 'color', 'datos_articulo_id'])
-                ->with(
-                    [
+                ->with([
                     'DatosArticulo' => function ($query) {
                         $query->where('local_id', $this->getLocalId());
 
                         $query->with('Categoria');
                     },
                     'Talle',
-                    ]
-                )
+                ])
                 ->whereHas(
                     'DatosArticulo', function ($query) {
-                        $query->where('local_id', $this->getLocalId());
-                    }
-                )
+                    $query->where('local_id', $this->getLocalId());
+                })
                 ->get();
 
         return $datos;
@@ -182,13 +178,13 @@ class MercaderiaController extends ArchivosTemporalesController
         // Valido el input
         $validator = Validator::make(
             $request->all(), [
-            'codigo.*'       => 'required',
-            'descripcion.*'  => 'required|max:500',
-            'genero_id.*'    => 'required',
-            'categoria_id.*' => 'required',
-            'talle_id.*'     => 'required|not_in:0',
-            'color.*'        => 'required',
-            'cantidad.*'     => 'required|integer'
+                'codigo.*' => 'required',
+                'descripcion.*' => 'required|max:500',
+                'genero_id.*' => 'required',
+                'categoria_id.*' => 'required',
+                'talle_id.*' => 'required|not_in:0',
+                'color.*' => 'required',
+                'cantidad.*' => 'required|integer'
             ]
         );
 
@@ -214,7 +210,8 @@ class MercaderiaController extends ArchivosTemporalesController
         foreach ($mercaderia as $fila_de_archivo_temporal) {
             // Cuando se elimina una fila que no tiene codigo, a veces queda el registro en el
             // artchivo temporal => salteo esa fila
-            if ($fila_de_archivo_temporal['codigo'] == "") { continue;
+            if ($fila_de_archivo_temporal['codigo'] == "") {
+                continue;
             }
 
             // Busco el articulo con codigo del local con talle, con descripcion
@@ -248,12 +245,12 @@ class MercaderiaController extends ArchivosTemporalesController
                 $datos_articulo =
                     DatosArticulo::create(
                         [
-                        'codigo' => trim($fila_de_archivo_temporal['codigo']),
-                        'precio' => $fila_de_archivo_temporal['precio'],
-                        'descripcion' => $fila_de_archivo_temporal['descripcion'],
-                        'categoria_id' => $fila_de_archivo_temporal['categoria_id'],
-                        'genero_id' => $fila_de_archivo_temporal['genero'],
-                        'local_id' => $this->getLocalId()
+                            'codigo' => trim($fila_de_archivo_temporal['codigo']),
+                            'precio' => $fila_de_archivo_temporal['precio'],
+                            'descripcion' => $fila_de_archivo_temporal['descripcion'],
+                            'categoria_id' => $fila_de_archivo_temporal['categoria_id'],
+                            'genero_id' => $fila_de_archivo_temporal['genero'],
+                            'local_id' => $this->getLocalId()
                         ]
                     );
 
@@ -285,12 +282,12 @@ class MercaderiaController extends ArchivosTemporalesController
         return
             Articulo::create(
                 [
-                'cantidad' => $fila_temporal['cantidad'],
-                'color' => $fila_temporal['color'],
-                'genero' => $fila_temporal['genero'],
-                'local_id'  => $this->getLocalId(),
-                'talle_id'  => $fila_temporal['talle_id'],
-                'datos_articulo_id' => $datos_articulo->id
+                    'cantidad' => $fila_temporal['cantidad'],
+                    'color' => $fila_temporal['color'],
+                    'genero' => $fila_temporal['genero'],
+                    'local_id' => $this->getLocalId(),
+                    'talle_id' => $fila_temporal['talle_id'],
+                    'datos_articulo_id' => $datos_articulo->id
                 ]
             );
     }
@@ -345,10 +342,10 @@ class MercaderiaController extends ArchivosTemporalesController
                 ->select(['id', 'precio', 'descripcion', 'categoria_id', 'genero_id'])
                 ->with(
                     [
-                    'Categoria' => function ($query) {
-                        $query->select(['id', 'nombre']);
-                    },
-                    'Genero'
+                        'Categoria' => function ($query) {
+                            $query->select(['id', 'nombre']);
+                        },
+                        'Genero'
                     ]
                 )
                 ->first();
@@ -374,9 +371,9 @@ class MercaderiaController extends ArchivosTemporalesController
         // Creo la relacion entre el proveedor y el articulo
         $articulo->Proveedores()->attach(
             $proveedor, [
-            'costo' => $fila_de_archivo_temporal['costo'],
-            'cantidad' => $fila_de_archivo_temporal['cantidad'],
-            'local_id' => $this->getLocalId()
+                'costo' => $fila_de_archivo_temporal['costo'],
+                'cantidad' => $fila_de_archivo_temporal['cantidad'],
+                'local_id' => $this->getLocalId()
             ]
         );
     }

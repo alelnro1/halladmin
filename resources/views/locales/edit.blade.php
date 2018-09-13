@@ -18,8 +18,7 @@
         </div>
 
         <div class="box-body">
-        <form class="form-horizontal" method="POST" action="{{ url('locales/' . $local->id) }}" enctype="multipart/form-data">
-            {{ method_field('PATCH') }}
+        <form class="form-horizontal" method="POST" action="{{ route('locales.update', ['id' => $local->id]) }}" enctype="multipart/form-data">
             {!! csrf_field() !!}
 
             <fieldset>

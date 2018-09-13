@@ -15,8 +15,8 @@
         <div class="panel-heading">Proveedor</div>
 
         <div class="panel-body">
-        <form class="form-horizontal" method="POST" action="{{ url('proveedores/' . $proveedor->id) }}" enctype="multipart/form-data">
-            {{ method_field('PATCH') }}
+        <form class="form-horizontal" method="POST" action="{{ route('proveedores.update', ['proveedor' => $proveedor->id]) }}"
+              enctype="multipart/form-data">
             {!! csrf_field() !!}
 
             <!-- Nombre -->

@@ -1,7 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use App\Models\Mercaderia\Articulo;
+use App\Models\Mercaderia\Genero;
+use App\Models\Mercaderia\Talle;
 use Illuminate\Database\Eloquent\Model;
 
 class Categoria extends Model

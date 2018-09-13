@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Auditoria;
+use App\Models\Auditoria;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;

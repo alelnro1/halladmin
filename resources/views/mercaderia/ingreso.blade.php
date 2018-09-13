@@ -46,7 +46,7 @@
             </div>
         @endif
 
-        <form action="{{ url('mercaderia/ingresar') }}" method="POST" id="mercaderia-form">
+        <form action="{{ route('mercaderia.procesar-ingreso') }}" method="POST" id="mercaderia-form">
             {{ csrf_field() }}
             <div class="box-body" style="padding: 10px 0">
                 <table class="table table-bordered table-hover" id="nueva-mercaderia">

@@ -14,7 +14,7 @@
     </li>
 
     <li @if(Request::is('proveedores*') ) class="active" @endif>
-        <a href="{{ url('/proveedores') }}">
+        <a href="{{ route('proveedores') }}">
             <i class="fa fa-truck" aria-hidden="true"></i>
             <span>Proveedores</span>
         </a>
@@ -70,14 +70,14 @@
         </a>
         <ul class="treeview-menu">
             <li>
-                <a href="{{ url('/mercaderia') }}">
+                <a href="{{ route('mercaderia') }}">
                     <i class="fa fa-list" aria-hidden="true"></i>
                     Actual
                 </a>
             </li>
 
             <li class="">
-                <a href="{{ url('/mercaderia/ingreso') }}">
+                <a href="{{ route('mercaderia.ingresar') }}">
                     <i class="fa fa-upload" aria-hidden="true"></i>
                     <span>Ingreso</span>
                 </a>

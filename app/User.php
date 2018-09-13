@@ -3,6 +3,16 @@
 namespace App;
 
 use App\Http\Controllers\Controller;
+use App\Models\Caja;
+use App\Models\Cambio;
+use App\Models\Local;
+use App\Models\Menu;
+use App\Models\Mercaderia\MercaderiaTemporal;
+use App\Models\Negocio;
+use App\Models\UserLogin;
+use App\Models\Ventas\Venta;
+use App\Models\Ventas\VentaCancelada;
+use App\Models\Ventas\VentaTemporal;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
@@ -55,8 +65,10 @@ class User extends Authenticatable
 
     public static function getAdministradores()
     {
-        $administradores = User::where('es_admin', true)->get();
-        $administradores->load('Logins');
+        $administradores =
+            User::where('es_admin', true)
+                ->with('Logins')
+                ->get();
 
         return $administradores;
     }

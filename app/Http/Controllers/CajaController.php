@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Caja;
+use App\Models\Caja;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Http\Request;
 

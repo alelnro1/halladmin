@@ -16,7 +16,7 @@
 @section('content')
     <div class="box box-primary">
         <div class="box-body">
-            <form action="{{ url('locales') }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
+            <form action="{{ route('locales.store') }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
                 <div class="box-body">
                     {!! csrf_field() !!}
 

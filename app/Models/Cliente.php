@@ -1,7 +1,9 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use App\Models\Ventas\Venta;
+use App\Models\Ventas\VentaCancelada;
 use Illuminate\Database\Eloquent\Model;
 
 class Cliente extends Model

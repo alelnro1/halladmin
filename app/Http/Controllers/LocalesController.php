@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Categoria;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
-use App\Local;
+use App\Models\Local;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -113,10 +113,8 @@ class LocalesController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Local $local)
     {
-        $local = Local::findOrFail($id);
-
         return view('locales.show')->with('local', $local);
     }
 
@@ -126,10 +124,8 @@ class LocalesController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Local $local)
     {
-        $local = Local::findOrFail($id);
-
         $local->load('Categorias');
 
         // Busco todas las categorias disponibles

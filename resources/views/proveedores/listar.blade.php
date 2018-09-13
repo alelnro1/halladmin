@@ -20,7 +20,7 @@
         <div class="box-header">
             <h3 class="box-title">Listado</h3>
             <div class="box-tools">
-                <a href="{{ url('proveedores/create') }}" class="btn btn-block btn-success btn-sm">
+                <a href="{{ route('proveedores.create') }}" class="btn btn-block btn-success btn-sm">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                     Nuevo Proveedor
                 </a>
@@ -68,12 +68,12 @@
                         <td>{{ $proveedor->telefono }}</td>
 
                         <td>
-                            <a href="{{ url('proveedores/' . $proveedor['id']) }}" class="btn btn-default btn-xs">
+                            <a href="{{ route('proveedores.view', ['proveedor' => $proveedor['id']]) }}" class="btn btn-default btn-xs">
                                 <i class="fa fa-eye" aria-hidden="true"></i>
                                 Ver
                             </a>
 
-                            <a href="{{ url('proveedores/' . $proveedor['id'] . '/edit') }}" class="btn btn-default btn-xs">
+                            <a href="{{ route('proveedores.edit', ['proveedor' => $proveedor['id']]) }}" class="btn btn-default btn-xs">
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
                                 Editar
                             </a>

@@ -1,46 +1,41 @@
 <?php
 
-namespace App;
+namespace App\Models\Ventas;
 
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Cambio extends Model
+class VentaCancelada extends Model
 {
-    protected $table = 'cambios';
+    protected $table = "ventas_canceladas";
 
     protected $fillable = [
-        'articulo_id', 'local_id', 'user_id', 'venta_id', 'saldo'
-
+        'cliente_id', 'user_id', 'local_id', 'motivo'
     ];
 
-    public function Local()
+    public function setClienteIdAttribute($value)
     {
-        return $this->belongsTo(Local::class);
-    }
-
-    public function Venta()
-    {
-        return $this->belongsTo(Venta::class);
+        $this->attributes['cliente_id'] = $value ?: null;
     }
 
     public function Usuario()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function Articulo()
+    public function Cliente()
     {
-        return $this->belongsTo(Articulo::class);
+        return $this->belongsTo(Cliente::class, 'cliente_id');
     }
 
-    public function dameCambiosParaGraficoDeHome($fecha_desde, $fecha_hasta)
+    public function dameVentasCanceladasParaGraficoDeHome($fecha_desde, $fecha_hasta)
     {
         // Inicializo el controller para poder acceder a las funciones
         $controller = new Controller();
 
-        // Devolvemos la cantidad de cambios agrupadas por dia, desde el primer dia del mes hasta hoy
+        // Devolvemos la cantidad de ventas canceladas agrupadas por dia, desde el primer dia del mes hasta hoy
         // [date => 2016-11-11, cantidad => 7]
         return
             $this->whereDate('created_at', '>=', $fecha_desde)
