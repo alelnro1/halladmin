@@ -66,33 +66,6 @@
                         <th>Descuento</th>
                     </tr>
 
-                        {{--<tr id="buscador">
-                            <th rowspan="1" colspan="1">
-                                <input type="text" class="form-control" placeholder="Buscar">
-                            </th>
-                            <th rowspan="1" colspan="1">
-                                <input type="text" class="form-control" placeholder="Buscar">
-                            </th>
-                            <th rowspan="1" colspan="1">
-                                <input type="text" class="form-control" placeholder="Buscar">
-                            </th>
-                            <th rowspan="1" colspan="1">
-                                <input type="text" class="form-control" placeholder="Buscar">
-                            </th>
-                            <th rowspan="1" colspan="1">
-                                <input type="text" class="form-control" placeholder="Buscar">
-                            </th>
-                            <th rowspan="1" colspan="1">
-                                <input type="text" class="form-control" placeholder="Buscar">
-                            </th>
-                            <th rowspan="1" colspan="1">
-                                <input type="text" class="form-control" placeholder="Buscar">
-                            </th>
-                            <th rowspan="1" colspan="1">
-                                <input type="text" class="form-control" placeholder="Buscar">
-                            </th>
-                            <th rowspan="1" colspan="1"></th>
-                        </tr>--}}
                     </thead>
 
                     <tfoot>

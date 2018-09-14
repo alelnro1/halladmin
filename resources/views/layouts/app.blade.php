@@ -28,6 +28,8 @@
 
     <link rel="stylesheet" href="{{ asset('css/loading-cover.css') }}">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
+
 
 @yield('styles')
 
@@ -91,7 +93,7 @@ desired effect
                     </li>
                     <li class="dropdown">
                         @if (Auth::user()->tieneModuloHabilitado('nueva-venta') || Auth::user()->esSuperAdmin() || Auth::user()->tieneModuloHabilitado('nuevo-cambio'))
-                            <a href="{{ url('ventas/nueva-venta') }}">
+                            <a href="{{ route('ventas.nueva') }}">
                                 <i class="fa fa-cart-plus" aria-hidden="true"></i>
                                 Vender
                             </a>
@@ -129,7 +131,7 @@ desired effect
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="{{ url('/perfil') }}" class="btn btn-default btn-flat">
+                                    <a href="{{ route('perfil') }}" class="btn btn-default btn-flat">
                                         <i class="fa fa-user" aria-hidden="true"></i>&nbsp;Mi Perfil
                                     </a>
                                 </div>
@@ -300,6 +302,9 @@ desired effect
         crossorigin="anonymous"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('js/app.min.js') }}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
+
 
 
 @yield('javascript')

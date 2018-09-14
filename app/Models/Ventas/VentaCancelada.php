@@ -3,6 +3,7 @@
 namespace App\Models\Ventas;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cliente;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;

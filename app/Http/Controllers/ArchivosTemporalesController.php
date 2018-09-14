@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mercaderia\MercaderiaTemporal;
-use App\Models\VentaTemporal;
+use App\Models\Ventas\VentaTemporal;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -16,6 +16,101 @@ class ArchivosTemporalesController extends Controller
     public function __construct()
     {
         parent::__construct();
+    }
+
+    /**
+     * Devuelve un link con el archivo temporal. Si no existe la sesión, lo crea
+     *
+     * @param  $local_id
+     * @return mixed
+     */
+    public function getArchivoTemporalDeLocal($modelo)
+    {
+        $user_id = Auth::user()->id;
+        $local_id = $this->getLocalId();
+        $sesion = $this->getSesionConArchivoTemporal($modelo, $user_id, $local_id);
+        $archivo = Storage::disk('local')->has($sesion);
+
+        // Si no se creó una sesión con la mercadería temporal o es null, crearla
+        if ($sesion == null) {
+            $archivo_temporal =
+                $modelo::where('local_id', $local_id)
+                    ->where('user_id', $user_id)
+                    ->select(['link'])
+                    ->first();
+
+            // Verifico si hay algun registro temporal creado del usuario actual
+            if (!$archivo_temporal || $archivo_temporal->count() <= 0) {
+                // Genero un archivo con el id del usuario, el id del local y un random
+                $link = $user_id . "_" . $local_id . "_" . str_random(20);
+
+                // Creo el archivo
+                Storage::disk('local')->put($link, '');
+
+                // Guardo el registro del archivo en la base
+                $archivo_temporal =
+                    $modelo::create(
+                        [
+                            'local_id' => $local_id,
+                            'user_id' => $user_id,
+                            'link' => $link
+                        ]
+                    );
+            }
+
+            $link = $archivo_temporal->link;
+
+            // Creo la sesion segun el modelo
+            if ($modelo == MercaderiaTemporal::class) {
+                session(['link_mercaderia_temporal_local_de_user_' . $local_id . '_' . $user_id => $link]);
+            } else if ($modelo == VentaTemporal::class) {
+                session(['link_venta_temporal_local_de_user_' . $local_id . '_' . $user_id => $link]);
+            }
+        } else if ($sesion && $archivo) {
+            // Existe la sesion y el archivo pero no el registro => se eliminó, y hay que crearlo
+            $archivo_temporal =
+                $modelo::where('local_id', $local_id)
+                    ->where('user_id', $user_id)
+                    ->select(['link'])
+                    ->first();
+
+            if (!$archivo_temporal) {
+                // Guardo el registro del archivo en la base
+                $archivo_temporal =
+                    $modelo::create(
+                        [
+                            'local_id' => $local_id,
+                            'user_id' => $user_id,
+                            'link' => $sesion
+                        ]
+                    );
+            }
+        }
+
+        return $this->getSesionConArchivoTemporal($modelo, $user_id, $local_id);
+    }
+
+    /**
+     * Obtiene la sesion con el archivo temporal segun el modelo
+     *
+     * @param  $modelo
+     * @param  $user_id
+     * @param  $local_id
+     * @return mixed|null
+     */
+    private function getSesionConArchivoTemporal($modelo, $user_id, $local_id)
+    {
+        // Inicializo la sesion
+        $sesion = null;
+
+        // Obtengo el nombre de la sesion segun el modelo
+        if ($modelo == MercaderiaTemporal::class) {
+            $sesion = session('link_mercaderia_temporal_local_de_user_' . $local_id . '_' . $user_id);
+        } else if ($modelo == VentaTemporal::class) {
+            $sesion = session('link_venta_temporal_local_de_user_' . $local_id . '_' . $user_id);
+        }
+
+        return $sesion;
     }
 
     /**
@@ -41,12 +136,12 @@ class ArchivosTemporalesController extends Controller
         // Si hay algo temporal, lo tengo que cargar
         if ($archivo_temporal != null && $archivo_temporal->count() >= 1) {
             // Si el archivo no existe es porque se borro en el server => lo creo con ese nombre
-            if (!Storage::exists($archivo_temporal->link)) {
+            if (!Storage::disk('local')->exists($archivo_temporal->link)) {
                 Storage::disk('local')->put($archivo_temporal->link, '');
             }
 
             // Obtengo el contenido del archivo
-            $articulos_de_archivo = Storage::get($archivo_temporal->link);
+            $articulos_de_archivo = Storage::disk('local')->get($archivo_temporal->link);
 
             $articulos_de_archivo = explode("\n", $articulos_de_archivo);
 
@@ -107,100 +202,5 @@ class ArchivosTemporalesController extends Controller
             // Elimino el registro
             //$archivo_temporal->delete();
         }
-    }
-
-    /**
-     * Devuelve un link con el archivo temporal. Si no existe la sesión, lo crea
-     *
-     * @param  $local_id
-     * @return mixed
-     */
-    public function getArchivoTemporalDeLocal($modelo)
-    {
-        $user_id = Auth::user()->id;
-        $local_id = $this->getLocalId();
-        $sesion = $this->getSesionConArchivoTemporal($modelo, $user_id, $local_id);
-        $archivo = Storage::disk('local')->has($sesion);
-
-        // Si no se creó una sesión con la mercadería temporal o es null, crearla
-        if ($sesion == null) {
-            $archivo_temporal =
-                $modelo::where('local_id', $local_id)
-                    ->where('user_id', $user_id)
-                    ->select(['link'])
-                    ->first();
-
-            // Verifico si hay algun registro temporal creado del usuario actual
-            if (!$archivo_temporal || $archivo_temporal->count() <= 0) {
-                // Genero un archivo con el id del usuario, el id del local y un random
-                $link = $user_id . "_" . $local_id . "_" . str_random(20);
-
-                // Creo el archivo
-                Storage::disk('local')->put($link, '');
-
-                // Guardo el registro del archivo en la base
-                $archivo_temporal =
-                    $modelo::create(
-                        [
-                        'local_id' => $local_id,
-                        'user_id' => $user_id,
-                        'link' => $link
-                        ]
-                    );
-            }
-
-            $link = $archivo_temporal->link;
-
-            // Creo la sesion segun el modelo
-            if ($modelo == MercaderiaTemporal::class) {
-                session(['link_mercaderia_temporal_local_de_user_' . $local_id . '_' . $user_id => $link]);
-            } else if ($modelo == VentaTemporal::class) {
-                session(['link_venta_temporal_local_de_user_' . $local_id . '_' . $user_id => $link]);
-            }
-        } else if ($sesion && $archivo) {
-            // Existe la sesion y el archivo pero no el registro => se eliminó, y hay que crearlo
-            $archivo_temporal =
-                $modelo::where('local_id', $local_id)
-                    ->where('user_id', $user_id)
-                    ->select(['link'])
-                    ->first();
-
-            if (!$archivo_temporal) {
-                // Guardo el registro del archivo en la base
-                $archivo_temporal =
-                    $modelo::create(
-                        [
-                            'local_id' => $local_id,
-                            'user_id' => $user_id,
-                            'link' => $sesion
-                        ]
-                    );
-            }
-        }
-
-        return $this->getSesionConArchivoTemporal($modelo, $user_id, $local_id);
-    }
-
-    /**
-     * Obtiene la sesion con el archivo temporal segun el modelo
-     *
-     * @param  $modelo
-     * @param  $user_id
-     * @param  $local_id
-     * @return mixed|null
-     */
-    private function getSesionConArchivoTemporal($modelo, $user_id, $local_id)
-    {
-        // Inicializo la sesion
-        $sesion = null;
-
-        // Obtengo el nombre de la sesion segun el modelo
-        if ($modelo == MercaderiaTemporal::class) {
-            $sesion = session('link_mercaderia_temporal_local_de_user_' . $local_id . '_' . $user_id);
-        } else if ($modelo == VentaTemporal::class) {
-            $sesion = session('link_venta_temporal_local_de_user_' . $local_id . '_' . $user_id);
-        }
-
-        return $sesion;
     }
 }

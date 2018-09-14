@@ -35,8 +35,27 @@ $(document).ready(function() {
     }, "Please specify the correct domain for your documents");*/
 
     $('#ingresar-mercaderia').on('click', function (e) {
-        if (!confirm('Confirmar ingreso de mercadería?'))
-            e.preventDefault();
+        e.preventDefault();
+
+        $.confirm({
+            title: 'Confirmar',
+            content: '¿Confirmar el ingreso de la mercadería?',
+            buttons: {
+                cancelar: {
+                    text: 'Cancelar',
+                    btnClass: 'btn-red'
+                },
+                confirmar: {
+                    text: 'Confirmar',
+                    btnClass: 'btn-green',
+                    action: function(){
+                        $('#mercaderia-form').submit();
+                    }
+                }
+            }
+        });
+        /*if (!confirm('Confirmar ingreso de mercadería?'))
+            e.preventDefault();*/
     });
 
     // Cargo por primera vez una fila si no hay ningun articulo temporal

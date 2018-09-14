@@ -55,15 +55,15 @@
             </fieldset>
 
             <fieldset>
-                <legend>Artículos Proveídos</legend>
+                <legend>Artículos Provistos</legend>
 
                 @if (count($articulos) > 0)
-                    <table class="table table-bordered table-hover">
+                    <table class="table table-bordered table-hover table-striped">
                         <thead>
                         <tr>
                             <th>Local</th>
                             <th>Artículo</th>
-                            <th>Cantidad Proveída</th>
+                            <th>Cantidad Provista</th>
                             <th>Costo de Compra</th>
                             <th>Precio de Venta</th>
                             <th>Fecha de Compra</th>
@@ -111,7 +111,7 @@
             </div>
 
             <div class="col-xs-6">
-                <a href="{{ url('/proveedores/' . $proveedor->id . '/edit') }}" class="btn btn-default btn-primary" style="float:right; color: white;">
+                <a href="{{ route('proveedores.edit', ['proveedor' => $proveedor->id]) }}" class="btn btn-default btn-primary" style="float:right; color: white;">
                     <i class="fa fa-wrench" aria-hidden="true"></i>&nbsp;Editar
                 </a>
             </div>

@@ -5,7 +5,7 @@ $(document).ready(function() {
             { orderable: false, targets: -1 }
         ],
         "language": {
-            "info": "Mostrando _START_ a _END_ de _TOTAL_ categorias filtrados",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ categorías filtradas",
             "paginate": {
                 "first":      "Primera",
                 "last":       "Ultima",

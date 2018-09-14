@@ -1,32 +1,12 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
-
-$perfil = function () {
-    Route::get('/cambiar-clave-personal', 'PerfilController@cambiarClaveForm');
-    Route::post('/cambiar-clave-personal', 'PerfilController@actualizarClave');
-
-    Route::get('/perfil', 'PerfilController@verPerfil');
-    Route::get('/perfil/edit', 'PerfilController@editarPerfil');
-    Route::patch('/perfil/update', 'PerfilController@actualizarPerfil');
-};
-
 Route::get('/', 'HomeController@index');
 
 // Rutas del front-end
     Route::get('/tpl', 'FrontendController@index');
 
 Route::auth();
-Route::group(['middleware' => ['auth']], function () use ($perfil) {
+Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index');
 
     /***** LOCALES *****/
@@ -74,14 +54,25 @@ Route::group(['middleware' => ['auth']], function () use ($perfil) {
         });
     });
 
-    //Route::resource('usuarios', 'UsuariosController');
+    /***** USUARIOS *****/
+    Route::group(['prefix' => 'articulos'], function () {
+        Route::get('/', 'ArticulosController@index')->name('articulos');
 
+        Route::get('nuevo', 'ArticulosController@create')->name('articulos.create');
+        Route::post('nuevo', 'ArticulosController@store')->name('articulos.store');
+
+        Route::group(['middleware' => ['ownership-articulos']], function () {
+            Route::get('{articulo}', 'ArticulosController@show')->name('articulos.view');
+
+            Route::get('{articulo}/edit', 'ArticulosController@edit')->name('articulos.edit');
+            Route::post('{articulo}/edit', 'ArticulosController@update')->name('articulos.update');
+        });
+    });
 
 
     Route::resource('promociones', 'PromocionesController');
-
     Route::resource('ofertas', 'OfertasController');
-    Route::resource('articulos', 'ArticulosController');
+    //Route::resource('articulos', 'ArticulosController');
     Route::resource('talles', 'TallesController');
     Route::resource('categorias', 'CategoriasController');
     Route::resource('clientes', 'ClientesController');
@@ -94,7 +85,7 @@ Route::group(['middleware' => ['auth']], function () use ($perfil) {
     Route::post('caja/cerrar', 'CajaController@procesarCierre');
 
     // Listado de ventas canceladas
-    Route::get('ventas-canceladas', 'VentasController@ventasCanceladas');
+    Route::get('ventas-canceladas', 'VentasController@ventasCanceladas')->name('ventas.canceladas');
 
     Route::group(['prefix' => 'mercaderia', 'middleware' => 'section:mercaderia'], function () {
         Route::get('/', 'ArticulosController@index')->name('mercaderia');
@@ -122,7 +113,7 @@ Route::group(['middleware' => ['auth']], function () use ($perfil) {
     });
 
     Route::group(['prefix' => 'cambios'], function () {
-        Route::get('/', 'CambiosController@index');
+        Route::get('/', 'CambiosController@index')->name('cambios');
 
         // Paso 1: Se elije el articulo a cambiar
         Route::get('/nuevo-cambio', 'CambiosController@ingresarArticuloACambiarForm');
@@ -138,18 +129,18 @@ Route::group(['middleware' => ['auth']], function () use ($perfil) {
     });
 
     Route::group(['prefix' => 'ventas', 'middleware' => 'section:ventas'], function () {
-        Route::get('/', 'VentasController@index');
+        Route::get('/', 'VentasController@index')->name('ventas');
 
         Route::get('/orden/{orden}', 'VentasController@show')->name('ventas.ver');
 
         // Paso 1: Seleccionar articulo para vender
-        Route::get('nueva-venta', 'VentasController@nuevaVentaForm');
+        Route::get('nueva-venta', 'VentasController@nuevaVentaForm')->name('ventas.nueva');
 
         // Guardar articulos temporales de la venta
         Route::post('guardar-articulos-venta', 'VentasController@guardarFilasTemporalmente');
 
         // Paso 2: Datos del cliente
-        Route::get('datos-de-cliente', 'VentasController@pedirDatosDeCliente');
+        Route::get('datos-de-cliente', 'VentasController@pedirDatosDeCliente')->name('ventas.datos-de-cliente');
 
         // Paso 2.5: Si el cliente ya existe, se selecciona y hay que crear la variable de de sesion
         Route::post('seleccionar-cliente', 'ClientesController@seleccionarClienteParaVender');
@@ -164,21 +155,29 @@ Route::group(['middleware' => ['auth']], function () use ($perfil) {
         Route::get('concretar-venta', 'VentasController@concretarVenta');
 
         // Cancelación de una venta
-        Route::post('cancelar', 'VentasController@cancelarVenta');
+        Route::post('cancelar', 'VentasController@cancelarVenta')->name('ventas.cancelar');
 
         // Se manda a imprimir los datos de la venta
-        Route::get('imprimir', 'VentasController@imprimir');
+        Route::get('imprimir', 'VentasController@imprimir')->name('ventas.imprimir');
 
         // Se actualizan los precios de los archivos temporales por descuentos
         Route::post('aplicar-descuento', 'VentasController@aplicarDescuento');
     });
 
-    Route::get('cambiar-de-local/{local}', 'Controller@setLocalDesdeVista');
+    Route::get('cambiar-de-local/{local}', 'BaseController@setLocalDesdeVista');
 
     // Rutas solo del super admin
     Route::group(['middleware' => 'acceso:super admin'], function () {
         Route::resource('administradores', 'AdministradoresController');
     });
 
-    $perfil();
+    Route::group(['prefix' => 'perfil'], function () {
+        Route::get('/', 'PerfilController@verPerfil')->name('perfil');
+
+        Route::get('/cambiar-clave-personal', 'PerfilController@cambiarClaveForm');
+        Route::post('/cambiar-clave-personal', 'PerfilController@actualizarClave');
+
+        Route::get('/perfil/edit', 'PerfilController@editarPerfil');
+        Route::patch('/perfil/update', 'PerfilController@actualizarPerfil');
+    });
 });

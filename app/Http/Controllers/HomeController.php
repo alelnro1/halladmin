@@ -33,19 +33,25 @@ class HomeController extends Controller
             $ventas = [];
             $grafico_lineal = $grafico_pie = false;
         } else {
-            $local_id = session('LOCAL_ACTUAL')->id;
+            $local = session('LOCAL_ACTUAL');
 
-            $local = Local::where('id', $local_id)
-                ->with(
-                    [
-                        'Ventas' => function ($query) {
-                            $query->with('Usuario')
-                                ->orderBy('created_at', 'desc')
-                                ->limit(20);
-                        }
-                    ]
-                )
-                ->first();
+            $local = $local->load([
+                'Ventas' => function ($query) {
+                    $query->with('Usuario')
+                        ->orderBy('created_at', 'desc')
+                        ->limit(20);
+                }
+            ]);
+
+            /*$local = Local::where('id', $local_id)
+                ->with([
+                    'Ventas' => function ($query) {
+                        $query->with('Usuario')
+                            ->orderBy('created_at', 'desc')
+                            ->limit(20);
+                    }
+                ])
+                ->first();*/
 
             // Ventas
             $ventas = $local->Ventas;

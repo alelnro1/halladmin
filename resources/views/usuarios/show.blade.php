@@ -74,7 +74,7 @@
 
                     <div class="help-block">
                         El usuario tiene acceso a los siguientes módulos. Si quiere cambiarlos, haga
-                        <a href="{{ url('usuarios/' . $usuario->id . '/edit') }}">click acá</a>
+                        <a href="{{ route('usuarios.edit', ['usuario' => $usuario->id]) }}">click acá</a>
                     </div>
 
                     <div class="description-block">
@@ -104,7 +104,7 @@
                 </div>
 
                 <div class="col-xs-6">
-                    <a href="/usuarios/{{ $usuario->id }}/edit" class="btn btn-default btn-primary" style="float:right; color: white;">
+                    <a href="{{ route('usuarios.edit', ['usuario' => $usuario->id]) }}" class="btn btn-default btn-primary" style="float:right; color: white;">
                         <i class="fa fa-wrench" aria-hidden="true"></i>&nbsp;Editar Usuario
                     </a>
                 </div>

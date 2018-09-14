@@ -78,7 +78,7 @@
         </div>
 
         <div class="col-xs-6">
-            <a href="/locales/{{ $local->id }}/edit" class="btn btn-default btn-primary" style="float:right; color: white;">
+            <a href="{{ route('locales.edit', ['local' => $local->id]) }}" class="btn btn-default btn-primary" style="float:right; color: white;">
                 <i class="fa fa-wrench" aria-hidden="true"></i>&nbsp;Editar
             </a>
         </div>

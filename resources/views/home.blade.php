@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('page-header', Session::get('LOCAL_ACTUAL')->nombre)
-@section('page-description', 'Resumen')
+@section('page-description', 'Resumen mensual')
 
 @if (Auth::user()->tieneAlgunLocal())
     {{-- Esta sección deberá mostrar una alerta si no se abrió la caja si hay al menos 1 local --}}
@@ -68,7 +68,7 @@
         <div class="box box-info">
             <div class="box-body">
                 Para operar, comience creando su primer local haciendo
-                <a href="{{ url('locales/create') }}"> click aquí</a>
+                <a href="{{ route('locales.create') }}"> click aquí</a>
             </div>
         </div>
     @endif

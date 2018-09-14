@@ -19,4 +19,9 @@ class Talle extends Model
     public function Articulos() {
         return $this->hasMany(Articulo::class);
     }
+
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
 }

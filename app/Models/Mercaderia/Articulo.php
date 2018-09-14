@@ -165,4 +165,44 @@ class Articulo extends Model
         return $this->belongsToMany(Venta::class, 'articulo_venta', 'articulo_id', 'venta_id')
             ->withPivot(['cantidad', 'precio', 'subtotal', 'descuento']);
     }
+
+    /**
+     * Obtenemos el id del local de donde es el artículo
+     *
+     * @return mixed
+     */
+    public function getLocal()
+    {
+        return $this->local_id;
+    }
+
+    public function getCodigo()
+    {
+        return $this->DatosArticulo->codigo;
+    }
+
+    public function getDescripcion()
+    {
+        return $this->DatosArticulo->descripcion;
+    }
+
+    public function getPrecio()
+    {
+        return $this->DatosArticulo->getPrecio();
+    }
+
+    public function getNombreGenero()
+    {
+        return $this->DatosArticulo->getNombreGenero();
+    }
+
+    public function getNombreCategoria()
+    {
+        return $this->DatosArticulo->getNombreCategoria();
+    }
+
+    public function getNombreTalle()
+    {
+        return $this->Talle->getNombre();
+    }
 }

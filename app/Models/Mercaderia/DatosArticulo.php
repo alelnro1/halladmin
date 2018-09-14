@@ -39,4 +39,19 @@ class DatosArticulo extends Model
     {
         return $this->belongsTo(Genero::class);
     }
+
+    public function getPrecio()
+    {
+        return $this->precio;
+    }
+
+    public function getNombreGenero()
+    {
+        return $this->Genero->getNombre();
+    }
+
+    public function getNombreCategoria()
+    {
+        return $this->Categoria->getNombre();
+    }
 }

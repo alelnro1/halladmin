@@ -168,30 +168,72 @@ $(window).load(function() {
     });
 
     $('#confirmar-articulos-venta').on('click', function(e) {
-        if (confirm('Confirmar artículos para vender?')) {
-            // Obtengo todos los artículos para vender
-            var articulos = armarArticulosParaGuardar();
+        $.confirm({
+            title: 'Confirmar',
+            content: '¿Confirmar artículos para vender?',
+            buttons: {
+                cancelar: {
+                    text: 'Cancelar',
+                    btnClass: 'btn-red'
+                },
+                confirmar: {
+                    text: 'Confirmar',
+                    btnClass: 'btn-green',
+                    action: function(){
+                        // Obtengo todos los artículos para vender
+                        var articulos = armarArticulosParaGuardar();
 
-            // Si no se seleccionó ningún artículo para vender no guardo
-            if (articulos.length > 0) {
-                guardarArticulosParaVenta(true);
-            } else {
-                alert('Seleccione al menos 1 artículo');
+                        // Si no se seleccionó ningún artículo para vender no guardo
+                        if (articulos.length > 0) {
+                            guardarArticulosParaVenta(true);
+                        } else {
+                            $.confirm({
+                                title: 'Error!',
+                                content: 'Seleccione al menos 1 artículo',
+                                type: 'red',
+                                typeAnimated: true,
+                                buttons: {
+                                    cerrar: function () {
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
             }
-
-        }
+        });
     });
 
     $('#cancelar-venta').on('click', function() {
-        if (confirm('Cancelar?')) {
-            // Destildo los articulos seleccionados
-            $('table#articulos tbody tr').each(function() {
-                $(this).removeClass('selected')
-                    .find('td.col-subtotal').empty().html('-');
-            });
+        var cancelar_venta_url = $(this).attr('href');
 
-            guardarArticulosParaVenta();
-        }
+        $.confirm({
+            title: 'Confirmar',
+            content: '¿Está seguro que desea cancelar la venta?',
+            buttons: {
+                cerrar: {
+                    text: 'Cerrar',
+                    btnClass: 'btn-red'
+                },
+                confirmar: {
+                    text: 'Confirmar',
+                    btnClass: 'btn-green',
+                    action: function() {
+                        // Destildo los articulos seleccionados
+                        oTable.rows().deselect();
+
+                        $('table#articulos tbody tr').each(function () {
+                            $(this).removeClass('selected')
+                                .find('td.col-subtotal').empty().html('-');
+                        });
+
+                        setTimeout(function () {
+                            guardarArticulosParaVenta();
+                        }, 10000);
+                    }
+                }
+            }
+        });
     });
 
     $('#modificar-articulo').on('click', function(e) {

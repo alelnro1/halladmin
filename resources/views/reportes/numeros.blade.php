@@ -16,7 +16,7 @@
             <div class="icon">
                 <i class="fa fa-shopping-bag" aria-hidden="true"></i>
             </div>
-            <a href="{{ url('ventas') }}" class="small-box-footer">Ver más <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="{{ route('ventas') }}" class="small-box-footer">Ver más <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
     <!-- ./col -->
@@ -37,7 +37,7 @@
             <div class="icon">
                 <i class="fa fa-exchange" aria-hidden="true"></i>
             </div>
-            <a href="{{ url('cambios') }}" class="small-box-footer">Ver más <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="{{ route('cambios') }}" class="small-box-footer">Ver más <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
     <!-- ./col -->
@@ -58,7 +58,7 @@
             <div class="icon">
                 <i class="fa fa-users" aria-hidden="true"></i>
             </div>
-            <a href="{{ url('usuarios') }}" class="small-box-footer">Ver más <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="{{ route('usuarios') }}" class="small-box-footer">Ver más <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
     <!-- ./col -->
@@ -79,7 +79,7 @@
             <div class="icon">
                 <i class="fa fa-ban" aria-hidden="true"></i>
             </div>
-            <a href="{{ url('ventas-canceladas') }}" class="small-box-footer">Ver más <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="{{ route('ventas.canceladas') }}" class="small-box-footer">Ver más <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
     <!-- ./col -->

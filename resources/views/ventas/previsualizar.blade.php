@@ -120,19 +120,19 @@
 
         <div class="row no-print">
             <div class="col-xs-12">
-                <button href="{{ url('ventas/cancelar') }}"
+                <button href="{{ route('ventas.cancelar') }}"
                         id="cancelar-venta"
                         class="btn btn-danger">
                     Cancelar
                 </button>
 
-                <a href="{{ url('ventas/nueva-venta') }}"
+                <a href="{{ route('ventas.nueva') }}"
                    class="btn btn-default">
                     Modificar Artículos
                 </a>
 
                 @if (!$cliente)
-                    <a href="{{ url('ventas/datos-de-cliente') }}"
+                    <a href="{{ route('ventas.datos-de-cliente') }}"
                        class="btn btn-default">
                         Agregar Cliente
                     </a>
@@ -145,7 +145,7 @@
                     <i class="fa fa-credit-card"></i> Finalizar
                 </a>
 
-                <a href="{{ url('ventas/imprimir') }}"
+                <a href="{{ route('ventas.imprimir') }}"
                    target="_blank"
                    type="button"
                    class="btn btn-primary pull-right"
@@ -156,7 +156,7 @@
         </div>
     </section>
 
-    <div id="dialog-cancelar-venta" title="Cancelar Venta" style="display:none;">
+    <div id="dialog-cancelar-venta" title="Cancelar Venta" style="display:none;" >
         {{ csrf_field() }}
         <p>Está seguro que desea cancelar la venta? <strong>Perderá todas las acciones realizadas</strong>.</p>
         <p>Si es así, escriba el motivo de la cancelación y haga click en Cancelar</p>
@@ -193,14 +193,22 @@
                                 $.ajax({
                                     url: 'cancelar',
                                     type: 'POST',
-                                    data:
-                                    {
+                                    data: {
                                         'motivo' : motivo,
                                         '_token' : $('input[name="_token"]').val()
                                     },
                                     dataType: 'json',
                                     success: function (data) {
-                                        alert('La venta se canceló');
+                                        $.confirm({
+                                            title: 'Cancelada!',
+                                            content: 'La venta se canceló',
+                                            type: 'green',
+                                            typeAnimated: true,
+                                            buttons: {
+                                                cerrar: function () {
+                                                }
+                                            }
+                                        });
 
                                         window.location.href = 'nueva-venta';
                                     }
@@ -213,21 +221,35 @@
             });
 
             $('#concretar-venta').on('click', function(e) {
-                if (confirm('Confirmar venta?')) {
-                    // Primero envío el medio de pago y después proceso la venta
-                    $.ajax({
-                        url: 'medio-y-factura',
-                        type: 'POST',
-                        data: {
-                            'medio': $('#medio-de-pago').prop('checked'),
-                            '_token': $('input[name="_token"]').val()
+                $.confirm({
+                    title: 'Confirmar',
+                    content: '¿Confirma la venta?',
+                    buttons: {
+                        cancelar: {
+                            text: 'Cancelar',
+                            btnClass: 'btn-red'
                         },
-                        dataType: 'json',
-                        success: function (data) {
-                            window.location.href = 'concretar-venta';
+                        confirmar: {
+                            text: 'Confirmar',
+                            btnClass: 'btn-green',
+                            action: function(){
+                                // Primero envío el medio de pago y después proceso la venta
+                                $.ajax({
+                                    url: 'medio-y-factura',
+                                    type: 'POST',
+                                    data: {
+                                        'medio': $('#medio-de-pago').prop('checked'),
+                                        '_token': $('input[name="_token"]').val()
+                                    },
+                                    dataType: 'json',
+                                    success: function (data) {
+                                        window.location.href = 'concretar-venta';
+                                    }
+                                });
+                            }
                         }
-                    });
-                }
+                    }
+                });
             });
 
             $('#modificar-articulo').on('click', function(e) {

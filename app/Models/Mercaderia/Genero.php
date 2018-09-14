@@ -21,4 +21,9 @@ class Genero extends Model
     {
         return $this->hasMany(DatosArticulo::class);
     }
+
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
 }

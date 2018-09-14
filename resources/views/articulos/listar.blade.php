@@ -32,7 +32,7 @@
 
             <div style="float:right;">
                 @if (Auth::user()->tieneModuloHabilitado('ingreso'))
-                    <a href="{{ url('mercaderia/ingreso') }}" class="btn btn-block btn-success btn-sm">
+                    <a href="{{ route('mercaderia.ingresar') }}" class="btn btn-block btn-success btn-sm">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         Nuevo Artículo
                     </a>
@@ -69,7 +69,7 @@
             @endif
 
             @if (count($articulos) > 0)
-                <table class="table table-bordered table-hover responsive" id="articulos" width="100%">
+                <table class="table table-bordered table-hover responsive table-striped" id="articulos" width="100%">
                     <!-- Table Headings -->
                     <thead>
                     <tr>
@@ -87,25 +87,25 @@
                         <tr>
                             <td>
                                 <strong>
-                                    <i>{{ $articulo->DatosArticulo->codigo }}</i> |
-                                    {{ $articulo->DatosArticulo->descripcion }} |
-                                    <span class="hidden-xs">{{ $articulo->DatosArticulo->Categoria->nombre }} |
-                                    {{ $articulo->DatosArticulo->Genero->nombre }}</span>
+                                    <i>{{ $articulo->getCodigo() }}</i> |
+                                    {{ $articulo->getDescripcion() }} |
+                                    <span class="hidden-xs">{{ $articulo->getNombreCategoria() }} |
+                                    {{ $articulo->getNombreGenero() }}</span>
                                 </strong>
                             </td>
-                            <td>{{ $articulo->Talle->nombre }}</td>
+                            <td>{{ $articulo->getNombreTalle() }}</td>
                             <td class="hidden-xs col-xs-1">{{ $articulo->color }}</td>
-                            <td class="text-right col-xs-1">${{ number_format($articulo->DatosArticulo->precio, 2) }}</td>
+                            <td class="text-right col-xs-1">${{ number_format($articulo->getPrecio(), 2) }}</td>
                             <td class="hidden-xs col-xs-1">{{ $articulo->cantidad }}</td>
 
                             <td class="col-xs-3">
-                                <a href="{{ url('articulos/' . $articulo['id']) }}"
+                                <a href="{{ route('articulos.view', ['articulo' => $articulo['id']]) }}"
                                    class="btn btn-default btn-sm btn-xs">
                                     <i class="fa fa-eye" aria-hidden="true"></i>
                                     Ver
                                 </a>
 
-                                <a href="{{ url('articulos/' . $articulo['id'] . '/edit') }}"
+                                <a href="{{ route('articulos.edit', ['articulo' => $articulo['id']]) }}"
                                    class="btn btn-default btn-sm btn-xs">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                     Editar
@@ -122,39 +122,13 @@
                                             </span>
                                 </a>
 
-                                {{--<div class="btn-group dropdown" style="width: 30%">
-                                    <button type="button" class="btn btn-default btn-sm btn-xs dropdown-toggle" data-toggle="dropdown">
-                                        Más <span class="caret"></span>
-                                    </button>
-
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                        <li>
-                                            <a href="{{ url('articulos/' . $articulo['id'] . '/edit') }}">
-                                                <i class="fa fa-pencil" aria-hidden="true"></i>
-                                                Editar
-                                            </a>
-                                        </li>
-
-                                        <li>
-                                            <a href="{{ url('articulos/' . $articulo['id']) }}"
-                                               data-method="delete"
-                                               data-token="{{ csrf_token() }}"
-                                               data-confirm="Esta seguro que desea eliminar a articulo con nombre {{ $articulo->nombre }}?">
-                                                <i class="fa fa-trash text-danger" aria-hidden="true"></i>
-                                                <span class="text-danger">
-                                                Eliminar
-                                            </span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>--}}
                             </td>
                         </tr>
                     @endforeach
                     </tbody>
                 </table>
             @else
-                No hay articulos
+                No hay artículos
             @endif
         </div>
     </div>

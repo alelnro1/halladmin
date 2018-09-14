@@ -7,8 +7,8 @@
         <div class="panel-heading">Articulo</div>
 
         <div class="panel-body">
-            <form class="form-horizontal" method="POST" action="{{ url('articulos/' . $articulo->id) }}" enctype="multipart/form-data">
-                {{ method_field('PATCH') }}
+            <form class="form-horizontal" method="POST" action="{{ route('articulos.edit', ['articulo' => $articulo->id]) }}"
+                  enctype="multipart/form-data">
                 {!! csrf_field() !!}
 
                 <fieldset>
@@ -27,7 +27,7 @@
                             <input type="text"
                                    class="form-control"
                                    name="codigo"
-                                   value="{{ $articulo->DatosArticulo->codigo }}">
+                                   value="{{ $articulo->getCodigo() }}">
 
                             @if ($errors->has('codigo'))
                                 <span class="help-block">
@@ -80,7 +80,7 @@
                                        id="{{ 'precio_' . str_random(8) }}"
                                        data-id="precio"
                                        name="precio"
-                                       value="{{ $articulo->DatosArticulo->precio }}"
+                                       value="{{ $articulo->getPrecio() }}"
                                        class="form-control precio"
                                        autocomplete="off">
                             </div>

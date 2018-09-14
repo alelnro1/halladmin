@@ -141,4 +141,15 @@ class Local extends Model
                 ->select(['id', 'nombre', 'email', 'telefono'])
                 ->get();
     }
+
+    /**
+     * Dado un articulo, verificamos si este pertenece al local actual
+     *
+     * @param $articulo
+     * @return bool
+     */
+    public function articuloPerteneceALocal($articulo)
+    {
+        return $this->id == $articulo->getLocal();
+    }
 }

@@ -37,7 +37,7 @@
                     @endif
                 </td>
                 <td>
-                    <a href="{{ url('usuarios/' . $venta->Usuario->id) }}">
+                    <a href="{{ route('usuarios.view', ['usuario' => $venta->Usuario->id]) }}">
                         {{ $venta->Usuario->nombre }} {{ $venta->Usuario->apellido }}
                     </a>
                 </td>

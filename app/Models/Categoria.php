@@ -55,4 +55,9 @@ class Categoria extends Model
     {
         return $this->belongsTo(Genero::class);
     }
+
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
 }

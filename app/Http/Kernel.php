@@ -62,6 +62,7 @@ class Kernel extends HttpKernel
 
         'ownership-proveedores' => \App\Http\Middleware\ProtectOwnership\Proveedores::class,
         'ownership-locales' => \App\Http\Middleware\ProtectOwnership\Locales::class,
-        'ownership-usuarios' => \App\Http\Middleware\ProtectOwnership\Usuarios::class
+        'ownership-usuarios' => \App\Http\Middleware\ProtectOwnership\Usuarios::class,
+        'ownership-articulos' => \App\Http\Middleware\ProtectOwnership\Articulos::class
     ];
 }

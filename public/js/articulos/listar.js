@@ -21,7 +21,7 @@ $(window).load(function() {
             } );
         },
         "language": {
-            "info": "Mostrando _START_ a _END_ de _TOTAL_ articulos filtrados",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ artículos filtrados",
             "paginate": {
                 "first":      "Primera",
                 "last":       "Ultima",
