@@ -28,15 +28,24 @@ class CajaController extends Controller
 
     public function abrirCaja()
     {
+        // Obtengo el local actual
+        $local_actual_id = session('LOCAL_ACTUAL')->id;
+
+        $caja = Caja::getCajaLocalUserActual($local_actual_id, Auth::user()->id);
+
+        if ($caja) {
+            return redirect('caja/cerrar')->with(['caja_abierta' => true]);
+        }
+
         // Busco si hay una caja abierta (porque se cerró la sesión, por ejemplo)
-        $caja = Caja::find(Auth::user()->caja_id);
+        /*$caja = Caja::find(Auth::user()->caja_id);
 
         // Si hay significa que ya se abrio y se perdió la sesión => hay que cerrar la caja
         if ($caja) {
             if ($caja->apertura != null && $caja->date_apertura != null) {
                 return redirect('caja/cerrar')->with(['caja_abierta' => true]);
             }
-        }
+        }*/
 
         return view('cajas.abrir');
     }

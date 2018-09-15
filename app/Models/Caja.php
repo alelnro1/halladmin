@@ -46,6 +46,17 @@ class Caja extends Model
         return false;
     }
 
+    public static function getCajaLocalUserActual($local_actual_id, $user_id)
+    {
+        $caja =
+            self::where('local_id', $local_actual_id)
+                ->where('user_id', $user_id)
+                ->where('cierre', null)
+                ->first();
+
+        return $caja;
+    }
+
     /**
      * Devuelve el ID si el ultimo registro no está completo (apertura y cierre completados). Sino devuelve false
      * @param $local_id

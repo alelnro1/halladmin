@@ -196,7 +196,19 @@ class User extends Authenticatable
 
     public function abrioCaja()
     {
-        return ($this->caja_id != null);
+        // Local actual
+        $local_actual_id = session('LOCAL_ACTUAL')->id;
+
+        // Buscamos la caja que abrio el usuario actual
+        $caja = Caja::getCajaLocalUserActual($local_actual_id, $this->id);
+
+        if ($caja) {
+            return true;
+        }
+
+        return false;
+
+        //return ($this->caja_id != null && session('LOCAL_ACTUAL')->);
     }
 
     public function cerroCaja()

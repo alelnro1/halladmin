@@ -22,7 +22,7 @@
                 </div>
             @endif
 
-            <form action="{{ url('caja/abrir') }}" method="POST" id="abrir-caja" class="form-horizontal" enctype="multipart/form-data">
+            <form action="{{ url('caja/abrir') }}" method="POST" id="abrir-caja-form" class="form-horizontal">
                 <div class="box-body">
                     {!! csrf_field() !!}
 
@@ -71,8 +71,61 @@
 
 @section('javascript')
     <script>
-        $(function(){
-            $('#abrir-caja').on('submit', function (e) {
+        $(document).ready(function () {
+            var askConfirmation = true;
+
+            $('body').on('submit', '#abrir-caja-form', function (e) {
+                if (askConfirmation) {
+                    e.preventDefault();
+
+                    monto = $('#monto').val();
+
+                    if (monto == "") {
+                        $.confirm({
+                            title: 'Error!',
+                            content: 'Ingrese un monto',
+                            type: 'red',
+                            typeAnimated: true,
+                            buttons: {
+                                cerrar: function () {
+                                }
+                            }
+                        });
+                    } else {
+                        $.confirm({
+                            title: 'Error!',
+                            content: 'El monto que ha ingresado es $' + monto + ' ¿Es correcto?',
+                            typeAnimated: true,
+                            buttons: {
+                                cancelar: {
+                                    text: 'Cancelar',
+                                    btnClass: 'btn-red',
+                                    action: function () {
+                                    }
+                                },
+                                confirmar: {
+                                    text: 'Confirmar',
+                                    btnClass: 'btn-green',
+                                    action: function () {
+                                        askConfirmation = false; // done asking confirmation, now submit the form
+                                        $('#abrir-caja-form').submit();
+                                    }
+                                }
+                            }
+                        });
+
+                        /*$.confirm({
+                            title: 'Confirmar',
+                            content: 'El monto que ha ingresado es $' + monto + ' ¿Es correcto?',
+                            buttons: {
+
+                            }
+                        });*/
+                    }
+                }
+            });
+
+            /*$('#abrir-caja').on('submit', function (e) {
                 monto = $('#monto').val();
 
                 if (monto == "") {
@@ -81,7 +134,7 @@
                 } else if (!confirm('El monto que ha ingresado es $' + monto + '. Es correcto?')) {
                     e.preventDefault();
                 }
-            })
+            })*/
         });
     </script>
 @stop
