@@ -1,5 +1,5 @@
 <ul class="sidebar-menu">
-    @foreach ($MODULOS_HABILITADOS as $menu)
+    @foreach (session('MODULOS_HABILITADOS') as $menu)
         @if (count($menu->MenusHijos) > 0 && $menu->nombre == "mercaderia")
             <li class="treeview @if(Request::is('mercaderia*') ) active @endif">
                 <a href="#">

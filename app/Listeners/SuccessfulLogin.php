@@ -9,7 +9,7 @@ use Illuminate\Support\ServiceProvider;
 class SuccessfulLogin {
 
     public function start() {
-        $this->cargarLocalesYAsignarElPrimero();
+        Auth::user()->cargarLocalesYAsignarElPrimero();
 
         if (Auth::user() && !Auth::user()->esSuperAdmin()) {
             // Seteo los módulos habilitados del menú para el usuario actual
@@ -21,65 +21,49 @@ class SuccessfulLogin {
     }
 
     /**
-     * Se setea el nombre del local y si no hay ningun local asignado, se selecciona el primero
-     * de la lista de locales del usuario.
-     * Esto se usa al loguearse
+     * Getter de los módulos (menus) habilitados para el usuario actual
+     * @return mixed
      */
-    protected function cargarLocalesYAsignarElPrimero()
+    private function getModulosHabilitados()
     {
-        // Busco al usuario logueado
-        $user = Auth::user();
+        // No se preguntó nunca a la base los módulos habilitados
+        if (session('MODULOS_HABILITADOS') == null) {
+            $this->setModulosHabilitados();
+        }
 
-        // Si hay alguien logueado cargo los locales
-        if ($user) {
-            // Si no hay ningun local en la sesion
-            if (session('LOCAL_ACTUAL') == null) {
-                // Busco los locales
-                $user->load('Locales');
+        return session('MODULOS_HABILITADOS');
+    }
 
-                // Si existe al menos un local, seteo la sesion en true
-                if (count($user->Locales) > 0) {
-                    Auth::user()->setearSesionTieneLocal();
-                }
+    /**
+     * Seteamos los módulos que el usuario puede ver acorde a lo que está en la base de datos.
+     * Generamos una sesión con esos datos para no tener que hacer queries todo el tiempo
+     */
+    public function setModulosHabilitados()
+    {
+        // Busco en la base de datos
+        $modulos = Auth::user()->Menus()->whereNull('padre_id')->get();
 
-                // Tomo el primer local
-                $primer_local = $user->Locales->first();
-
-                // Seteo el primer local como el seleccionado
-                $this->setLocal($primer_local);
+        // Cargo sólo los hijos que se hayan seleccionado
+        $modulos->load([
+            'MenusHijos' => function ($query) {
+                $query->whereHas('Usuarios', function ($query) {
+                    $query->where('user_id', Auth::user()->id);
+                });
             }
+        ]);
 
-            // Comparto con las vistas el local actual
-            session(['LOCAL_NOMBRE' => $this->getLocalNombre()]);
+        // Si está habilitado el módulo cambios, debe estar habilitado el módulo ventas
+        /*foreach ($modulos as $modulo) {
+            if ($modulo->nombre == "ventas") {
+                // Busco el id de nueva_venta
+                $nuevo_cambio_menu = Menu::where('nombre', 'nuevo-cambio')->first();
+                $cambios_menu = Menu::where('id', $nuevo_cambio_menu->padre_id)->first();
 
-            // Comparto con las vistas todos los locales del usuario actual
-            session(['locales' => $user->locales]);
+                // Vinculo al menu las ventas
+                $modulos->push($cambios_menu);
+            }
+        }*/
 
-            View::share('LOCAL_NOMBRE', session('LOCAL_NOMBRE'));
-            View::share('locales', session('locales'));
-        }
-    }
-
-    /**
-     * Creo una sesion con el objeto local
-     * @param $local
-     */
-    public function setLocal($local)
-    {
-        // Creo la sesion con el local actual
-        session(['LOCAL_ACTUAL' => $local]);
-    }
-
-    /**
-     * Getter del nombre del local
-     * @return null
-     */
-    public function getLocalNombre()
-    {
-        if (session('LOCAL_ACTUAL')) {
-            return session('LOCAL_ACTUAL')->nombre;
-        }
-
-        return null;
+        session(['MODULOS_HABILITADOS' => $modulos]);
     }
 }

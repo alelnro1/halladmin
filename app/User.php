@@ -16,6 +16,7 @@ use App\Models\Ventas\VentaTemporal;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 
 class User extends Authenticatable
 {
@@ -176,6 +177,7 @@ class User extends Authenticatable
                 $this->setearSesionTieneLocal();
 
                 session(['LOCAL_ACTUAL' => $local]);
+                session(['LOCAL_NOMBRE' => $local->getNombre()]);
             }
         } else {
             // Si hay una sesion con un local pero no hay ningun local asignado, traigo el primero
@@ -188,6 +190,7 @@ class User extends Authenticatable
                     )->first();
 
                 session(['LOCAL_ACTUAL' => $local]);
+                session(['LOCAL_NOMBRE' => $local->getNombre()]);
             }
         }
 
@@ -196,17 +199,19 @@ class User extends Authenticatable
 
     public function abrioCaja()
     {
-        // Local actual
-        $local_actual_id = session('LOCAL_ACTUAL')->id;
+        if (session('LOCAL_ACTUAL') != null) {
+            // Local actual
+            $local_actual_id = session('LOCAL_ACTUAL')->id;
 
-        // Buscamos la caja que abrio el usuario actual
-        $caja = Caja::getCajaLocalUserActual($local_actual_id, $this->id);
+            // Buscamos la caja que abrio el usuario actual
+            $caja = Caja::getCajaLocalUserActual($local_actual_id, $this->id);
 
-        if ($caja) {
-            return true;
+            if ($caja) {
+                return true;
+            }
+
+            return false;
         }
-
-        return false;
 
         //return ($this->caja_id != null && session('LOCAL_ACTUAL')->);
     }
@@ -293,5 +298,68 @@ class User extends Authenticatable
     public function Logins()
     {
         return $this->hasMany(UserLogin::class);
+    }
+
+    /**
+     * Se setea el nombre del local y si no hay ningun local asignado, se selecciona el primero
+     * de la lista de locales del usuario.
+     * Esto se usa al loguearse y al crear un local nuevo
+     */
+    public function cargarLocalesYAsignarElPrimero()
+    {
+        // Busco al usuario logueado
+        $user = Auth::user();
+
+        // Si hay alguien logueado cargo los locales
+        if ($user) {
+            // Si no hay ningun local en la sesion
+            if (session('LOCAL_ACTUAL') == null) {
+                // Busco los locales
+                $user->load('Locales');
+
+                // Si existe al menos un local, seteo la sesion en true
+                if (count($user->Locales) > 0) {
+                    Auth::user()->setearSesionTieneLocal();
+
+                    // Tomo el primer local
+                    $primer_local = $user->Locales->first();
+
+                    // Seteo el primer local como el seleccionado
+                    $this->setLocal($primer_local);
+                }
+            }
+
+            // Comparto con las vistas el local actual
+            session(['LOCAL_NOMBRE' => $this->getLocalNombre()]);
+
+            // Comparto con las vistas todos los locales del usuario actual
+            session(['locales' => $user->locales]);
+
+            View::share('LOCAL_NOMBRE', session('LOCAL_NOMBRE'));
+            View::share('locales', session('locales'));
+        }
+    }
+
+    /**
+     * Creo una sesion con el objeto local
+     * @param $local
+     */
+    public function setLocal($local)
+    {
+        // Creo la sesion con el local actual
+        session(['LOCAL_ACTUAL' => $local]);
+    }
+
+    /**
+     * Getter del nombre del local
+     * @return null
+     */
+    public function getLocalNombre()
+    {
+        if (session('LOCAL_ACTUAL')) {
+            return session('LOCAL_ACTUAL')->nombre;
+        }
+
+        return null;
     }
 }

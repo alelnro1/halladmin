@@ -29,6 +29,11 @@ class Local extends Model
      */
     protected $dates = ['deleted_at'];
 
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
     public function setNombreAttribute($value)
     {
         $this->attributes['nombre'] = ucfirst($value) ?: null;

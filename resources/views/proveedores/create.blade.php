@@ -16,12 +16,11 @@
 @section('content')
     <div class="box box-primary">
         <div class="box-header with-border">
-            <h3 class="box-title">Nuevo</h3>
+            <h3 class="box-title">Nuevo proveedor</h3>
         </div>
 
         <div class="box-body">
         <form action="{{ route('proveedores.store') }}" method="POST" class="form-horizontal"
-              autocomplete="off"
               enctype="multipart/form-data">
             {!! csrf_field() !!}
 
@@ -30,7 +29,9 @@
                 <label class="col-md-4 control-label">Nombre</label>
 
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="nombre" value="{{ old('nombre') }}" placeholder="Escriba el nombre del proveedor">
+                    <input type="text" class="form-control" name="nombre" value="{{ old('nombre') }}"
+                           autocomplete="off"
+                           placeholder="Escriba el nombre del proveedor">
 
                     @if ($errors->has('nombre'))
                         <span class="help-block">

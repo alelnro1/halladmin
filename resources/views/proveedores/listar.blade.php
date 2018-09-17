@@ -18,7 +18,7 @@
 @section('content')
     <div class="box box-primary">
         <div class="box-header">
-            <h3 class="box-title">Listado</h3>
+            <h3 class="box-title">Proveedores</h3>
             <div class="box-tools">
                 <a href="{{ route('proveedores.create') }}" class="btn btn-block btn-success btn-sm">
                     <i class="fa fa-plus" aria-hidden="true"></i>
@@ -78,10 +78,10 @@
                                 Editar
                             </a>
 
-                            <a href="{{ url('/proveedores/' . $proveedor['id']) }}" class="btn btn-danger btn-xs"
-                               data-method="delete"
-                               data-token="{{ csrf_token() }}"
-                               data-confirm="Esta seguro que desea eliminar a proveedor con nombre {{ $proveedor->nombre }}?">
+                            <a data-href="{{ route('proveedores.delete', ['proveedor' => $proveedor['id']]) }}"
+                               id="eliminar-proveedor"
+                               data-proveedor-nombre="{{ $proveedor->nombre }}"
+                               class="btn btn-danger btn-xs">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                 Eliminar
                             </a>
@@ -102,4 +102,31 @@
     <script type="text/javascript" src="{{ asset('/js/proveedores/listar.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/js/delete-link.js') }}"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('body').on('click', '#eliminar-proveedor', function () {
+                var elem = $(this),
+                    proveedor_nombre  = elem.data('proveedor-nombre'),
+                    url_delete = elem.data('href');
+
+                $.confirm({
+                    title: 'Confirmar',
+                    content: '¿Está seguro que quiere eliminar al proveedor <strong>' + proveedor_nombre + '</strong>?',
+                    buttons: {
+                        cancelar: {
+                            text: 'Cancelar',
+                            btnClass: 'btn-red'
+                        },
+                        confirmar: {
+                            text: 'Confirmar',
+                            btnClass: 'btn-green',
+                            action: function(){
+                                window.location = url_delete;
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 @stop

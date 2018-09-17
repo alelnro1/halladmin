@@ -20,7 +20,7 @@
 
             @if(isset($usuario->archivo) && $usuario->archivo != "")
                 <div class="text-center margin-bottom">
-                    <img src="/{{ $usuario->archivo }}" style="max-height: 150px;" />
+                    <img src="{{ url('storage/' . $usuario->archivo) }}" width="250">
                 </div>
             @endif
 

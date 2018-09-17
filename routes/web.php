@@ -25,7 +25,7 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     /***** PROVEEDORES *****/
-    Route::group(['prefix' => 'proveedores'], function () {
+    Route::group(['prefix' => 'proveedores', 'middleware' => 'tiene-algun-local'], function () {
         Route::get('/', 'ProveedoresController@index')->name('proveedores');
 
         Route::get('nuevo', 'ProveedoresController@create')->name('proveedores.create');
@@ -36,6 +36,8 @@ Route::group(['middleware' => ['auth']], function () {
 
             Route::get('{proveedor}/edit', 'ProveedoresController@edit')->name('proveedores.edit');
             Route::post('{proveedor}/edit', 'ProveedoresController@update')->name('proveedores.update');
+
+            Route::get('{proveedor}/eliminar', 'ProveedoresController@destroy')->name('proveedores.delete');
         });
     });
 
@@ -55,7 +57,7 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     /***** USUARIOS *****/
-    Route::group(['prefix' => 'articulos'], function () {
+    Route::group(['prefix' => 'articulos', 'middleware' => 'tiene-algun-local'], function () {
         Route::get('/', 'ArticulosController@index')->name('articulos');
 
         Route::get('nuevo', 'ArticulosController@create')->name('articulos.create');
@@ -112,7 +114,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('cargar-talles-de-genero', 'TallesController@cargarTallesDeGenero');
     });
 
-    Route::group(['prefix' => 'cambios'], function () {
+    Route::group(['prefix' => 'cambios', 'middleware' => 'tiene-algun-local'], function () {
         Route::get('/', 'CambiosController@index')->name('cambios');
 
         // Paso 1: Se elije el articulo a cambiar
@@ -128,7 +130,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('nuevo', 'CambiosController@cambiarArticuloADevolver');
     });
 
-    Route::group(['prefix' => 'ventas', 'middleware' => 'section:ventas'], function () {
+    Route::group(['prefix' => 'ventas', 'middleware' => ['section:ventas', 'tiene-algun-local']], function () {
         Route::get('/', 'VentasController@index')->name('ventas');
 
         Route::get('/orden/{orden}', 'VentasController@show')->name('ventas.ver');

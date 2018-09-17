@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UsuarioRequest;
 use App\Models\Menu;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -32,9 +33,9 @@ class UsuariosController extends BaseController
         // Obtengo todos los usuarios del local actual
         $usuarios = User::whereHas(
             'Locales', function ($query) {
-                $query->where('local_id', $this->getLocalId())
-                    ->where('user_id', '!=', Auth::user()->id);
-            }
+            $query->where('local_id', $this->getLocalId())
+                ->where('user_id', '!=', Auth::user()->id);
+        }
         )->get();
 
         return view('usuarios.listar')->with('usuarios', $usuarios);
@@ -65,24 +66,8 @@ class UsuariosController extends BaseController
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UsuarioRequest $request)
     {
-        // Valido el input
-        /*$validator = Validator::make(
-            $request->all(), [
-            'nombre'      => 'required|max:100',
-            'apellido'    => 'required|max:500',
-            'archivo'     => 'max:2000|mimes:jpg,jpeg,png,gif',
-            'password'    => 'required|confirmed|min:6',
-            'email'       => 'required|email|max:100|unique:users',
-            'menus'       => 'required'
-            ]
-        );
-
-        if ($validator->fails()) {
-            return redirect('usuarios/create')->withErrors($validator)->withInput();
-        }*/
-
         // Si hay una contraseña, la actualizo
         if ($request->password != "") {
             $request->request->add(['password' => Hash::make($request->password)]);
@@ -101,10 +86,9 @@ class UsuariosController extends BaseController
         // Asignar el local actual al usuario
         $usuario->Locales()->attach($this->getLocalId());
 
-
         $this->subirYGuardarArchivoSiHay($request, $usuario);
 
-        return redirect('/usuarios/')->with('usuario_creado', 'Usuario con nombre ' . $request->nombre . ' creado');
+        return redirect(route('usuarios'))->with('usuario_creado', 'Usuario con nombre ' . $request->nombre . ' creado');
     }
 
     /**
@@ -116,7 +100,7 @@ class UsuariosController extends BaseController
     private function asignarMenusAlUsuario($usuario, $menus_ids)
     {
         // Recorro los menus
-        foreach ($menus_ids as $menu_id){
+        foreach ($menus_ids as $menu_id) {
             $menu = Menu::where('id', $menu_id)->first();
             // Verifico que exista el menu
             if (count($menu) > 0) {
@@ -148,12 +132,12 @@ class UsuariosController extends BaseController
     public function show(User $usuario)
     {
         $usuario->load([
-            'Menus' => function ($query) {
-                $query->with('MenuPadre', 'MenusHijos');
-            },
-            'Ventas' => function ($query) {
-                $query->with('Usuario');
-            }]
+                'Menus' => function ($query) {
+                    $query->with('MenuPadre', 'MenusHijos');
+                },
+                'Ventas' => function ($query) {
+                    $query->with('Usuario');
+                }]
         );
 
         return view('usuarios.show')->with('usuario', $usuario);
@@ -186,25 +170,24 @@ class UsuariosController extends BaseController
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  int                      $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UsuarioRequest $request, User $id)
     {
         // Valido el input
         $validator = Validator::make(
             $request->all(), [
-            'nombre'      => 'required|max:100',
-            'apellido'    => 'required|max:500',
-            'archivo'     => 'max:2000|mimes:jpg,jpeg,png,gif',
-            'password'    => 'confirmed|min:6',
-            'email'       => 'required|email|max:100|unique:users,email,' . $id,
-            'menus'       => 'required'
-            ]
-        );
+            'nombre' => 'required|max:100',
+            'apellido' => 'required|max:500',
+            'archivo' => 'max:2000|mimes:jpg,jpeg,png,gif',
+            'password' => 'confirmed|min:6',
+            'email' => 'required|email|max:100|unique:users,email,' . $id,
+            'menus' => 'required'
+        ]);
 
         if ($validator->fails()) {
-            return redirect('usuarios/' . $id .'/edit')->withErrors($validator)->withInput();
+            return redirect(route('usuarios.edit', ['usuario' => $id]))->withErrors($validator)->withInput();
         }
 
         // Busco el usuario
@@ -307,7 +290,7 @@ class UsuariosController extends BaseController
         }
 
         // Verifico si hay algun menu distinta en menus_deseados con existentes
-        if ($menus_existentes === array_intersect($menus_existentes, $menus_deseados) 
+        if ($menus_existentes === array_intersect($menus_existentes, $menus_deseados)
             && $menus_deseados === array_intersect($menus_deseados, $menus_existentes)
         ) {
             return false;

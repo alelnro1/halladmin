@@ -20,7 +20,7 @@
 
             @if($usuario->archivo != "")
                 <div class="form-group text-center">
-                    <img src="../{{ $usuario->archivo }}" width="250">
+                    <img src="{{ url('storage/' . $usuario->archivo) }}" width="250">
                 </div>
             @endif
 

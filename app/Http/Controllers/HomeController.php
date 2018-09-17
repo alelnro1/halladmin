@@ -43,16 +43,6 @@ class HomeController extends Controller
                 }
             ]);
 
-            /*$local = Local::where('id', $local_id)
-                ->with([
-                    'Ventas' => function ($query) {
-                        $query->with('Usuario')
-                            ->orderBy('created_at', 'desc')
-                            ->limit(20);
-                    }
-                ])
-                ->first();*/
-
             // Ventas
             $ventas = $local->Ventas;
 
@@ -74,7 +64,12 @@ class HomeController extends Controller
 
             $grafico_lineal = $graficos['lineal'];
             $grafico_pie = $graficos['pie'];
+        }
 
+        $local_nombre = "";
+
+        if (session('LOCAL_ACTUAL') != null) {
+            $local_nombre = session('LOCAL_ACTUAL')->nombre;
         }
 
         return view(
@@ -85,6 +80,8 @@ class HomeController extends Controller
                 'cantidad_cambios' => $cantidad_cambios,
                 'cantidad_ventas_canceladas' => $cantidad_ventas_canceladas,
                 'cantidad_usuarios' => $cantidad_usuarios,
+
+                'local_nombre' => $local_nombre,
 
                 'ventas' => $ventas
             ]

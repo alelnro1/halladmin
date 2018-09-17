@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
-@section('page-header', Session::get('LOCAL_ACTUAL')->nombre)
+
+@section('page-header', $local_nombre)
 @section('page-description', 'Resumen mensual')
 
 @if (Auth::user()->tieneAlgunLocal())

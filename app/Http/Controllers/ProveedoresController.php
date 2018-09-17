@@ -53,7 +53,7 @@ class ProveedoresController extends BaseController
         // Creo el proveedor
         $proveedor = Proveedor::create($request->all());
 
-        // Si se trató de guardar una foto para el local, validarla y subirla
+        // Si se trató de guardar una foto, validarla y subirla
         $this->subirYGuardarArchivoSiHay($request, $proveedor);
 
         return redirect('/proveedores/')->with('proveedor_creado', 'Proveedor con nombre ' . $request->nombre . ' creado');
@@ -103,40 +103,11 @@ class ProveedoresController extends BaseController
      */
     public function update(ProveedoresRequest $request, Proveedor $proveedor)
     {
-        // Valido el input
-        /*$validator = Validator::make(
-            $request->all(), [
-                'nombre' => 'required|max:100',
-                'descripcion' => 'required|max:200',
-                'archivo' => 'mimes:jpg,image/jpeg,png,gif',
-                'email' => 'email|max:100',
-                'telefono' => 'required'
-            ]
-        );*/
-
-        // Busco el local
-        //$local = Proveedor::findOrFail($id);
-
         // Actualizo el local
         $proveedor->update($request->except(['_method', '_token']));
 
-        // Si se trató de guardar una foto para el local, validarla y subirla
-        /*$validator = $this->subirYGuardarArchivoSiHay($request, $validator, $local);
-
-
-        if ($validator) {
-            if ($validator->fails()) {
-                return redirect('proveedores/' . $id . '/edit')->withErrors($validator)->withInput();
-            }
-        }*/
-
-        $extension = $request->archivo->getClientOriginalExtension();
-        $nombre_archivo = rand(111111, 999999) . '_' . time() . "_." . $extension;
-
-        $path = $request->archivo->storeAs('uploads', $nombre_archivo);
-
-        $proveedor->archivo = $path;
-        $proveedor->save();
+        // Si se trató de guardar una foto, validarla y subirla
+        $this->subirYGuardarArchivoSiHay($request, $proveedor);
 
         return redirect(route('proveedores'))->with('proveedor_actualizado', 'Proveedor actualizado');
     }
@@ -152,38 +123,7 @@ class ProveedoresController extends BaseController
     {
         $proveedor->delete();
 
-        return redirect('/proveedores/')->with('proveedor_eliminado', 'Proveedor con nombre ' . $proveedor->nombre . ' eliminado');
+        return redirect(route('proveedores'))
+            ->with('proveedor_eliminado', 'Proveedor ' . $proveedor->nombre . ' eliminado');
     }
-
-    /**
-     * Subir un archivo
-     *
-     * @param  Request $request
-     * @return JSON
-     */
-    public function subirArchivo(Request $request)
-    {
-
-        $directorio_destino = 'uploads/archivos/';
-        $nombre_original = $request->archivo->getClientOriginalName();
-        $extension = $request->archivo->getClientOriginalExtension();
-        $nombre_archivo = rand(111111, 999999) . '_' . time() . "_." . $extension;
-
-        if ($request->archivo->isValid()) {
-            if ($request->archivo->move($directorio_destino, $nombre_archivo)) {
-                $url = $directorio_destino . $nombre_archivo;
-                $error = false;
-            } else {
-                $url = false;
-                $error = "No se pudo mover el archivo";
-            }
-        } else {
-            $url = false;
-            $error = $request->archivo->getErrorMessage();
-        }
-
-
-        return array('url' => $url, 'err' => $error);
-    }
-
 }

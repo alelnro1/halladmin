@@ -16,15 +16,17 @@ class BaseController extends Controller
      * @param  $local
      * @return mixed
      */
-    protected function subirYGuardarArchivoSiHay($request, $modelo)
+    protected function subirYGuardarArchivoSiHay($request, $modelo = null)
     {
-        $extension = $request->archivo->getClientOriginalExtension();
-        $nombre_archivo = rand(111111, 999999) . '_' . time() . "_." . $extension;
+        if ($request->archivo != null) {
+            $extension = $request->archivo->getClientOriginalExtension();
+            $nombre_archivo = rand(111111, 999999) . '_' . time() . "_." . $extension;
 
-        $path = $request->archivo->storeAs('uploads/archivos', $nombre_archivo);
+            $path = $request->archivo->storeAs('uploads/archivos', $nombre_archivo);
 
-        $modelo->archivo = $path;
-        $modelo->save();
+            $modelo->archivo = $path;
+            $modelo->save();
+        }
     }
 
     /**

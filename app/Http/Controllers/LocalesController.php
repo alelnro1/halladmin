@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LocalRequest;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
 use App\Models\Local;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class LocalesController extends Controller
+class LocalesController extends BaseController
 {
     public function __construct()
     {
@@ -47,22 +48,8 @@ class LocalesController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(LocalRequest $request)
     {
-        // Valido el input
-        $validator = Validator::make(
-            $request->all(), [
-            'nombre'      => 'required|max:100',
-            'archivo'     => 'mimes:jpg,jpeg,png,gif',
-            'email'       => 'email|max:100',
-            'telefono'    => 'required'
-            ]
-        );
-
-        if ($validator->fails()) {
-            return redirect('locales/create')->withErrors($validator)->withInput();
-        }
-
         // Le agrego el negocio al local
         $request->request->add(['negocio_id' => Auth::user()->negocio_id]);
 
@@ -73,38 +60,12 @@ class LocalesController extends Controller
         $local->Usuarios()->attach(Auth::user()->id, ['es_admin' => '1']);
 
         // Si se trató de guardar una foto para el local, validarla y subirla
-        $validator = $this->subirYGuardarArchivoSiHay($request, $validator, $local);
+        $this->subirYGuardarArchivoSiHay($request, $local);
 
-        if ($validator) {
-            if ($validator->fails()) {
-                return redirect('locales/create')->withErrors($validator)->withInput();
-            }
-        }
+        // Recreamos la sesion con los locales
+        Auth::user()->cargarLocalesYAsignarElPrimero();
 
-        return redirect('/locales/')->with('local_creado', 'Local creado');
-    }
-
-    /**
-     * Si hay algun archivo para subir, subirlo y guardar la referencia en la base
-     * @param $request
-     * @param $validator
-     * @param $local
-     * @return mixed
-     */
-    private function subirYGuardarArchivoSiHay($request, $validator, $local)
-    {
-        if (isset($request->archivo) && count($request->archivo) > 0) {
-            $archivo = $this->subirArchivo($request);
-
-            if ($archivo['url']) {
-                $local->archivo = $archivo['url'];
-                $local->save();
-            } else {
-                $validator->errors()->add('archivo', $archivo['err']);
-
-                return $validator;
-            }
-        }
+        return redirect(route('locales'))->with('local_creado', 'Local creado');
     }
 
     /**
@@ -179,15 +140,12 @@ class LocalesController extends Controller
         }*/
 
         // Si se trató de guardar una foto para el local, validarla y subirla
-        $validator = $this->subirYGuardarArchivoSiHay($request, $validator, $local);
+        $this->subirYGuardarArchivoSiHay($request, $local);
 
-        if ($validator) {
-            if ($validator->fails()) {
-                return redirect('locales/create')->withErrors($validator)->withInput();
-            }
-        }
+        // Recreamos la sesion con los locales
+        Auth::user()->cargarLocalesYAsignarElPrimero();
 
-        return redirect('/locales/')->with('local_actualizado', 'Local actualizado');
+        return redirect(route('locales.create'))->with('local_actualizado', 'Local actualizado');
     }
 
     /**
@@ -218,7 +176,7 @@ class LocalesController extends Controller
             session(['HAY_ALGUN_LOCAL' => null]);
         }
 
-        return redirect('/locales/')->with('local_eliminado', 'Local eliminado');
+        return redirect(route('locales'))->with('local_eliminado', 'Local eliminado');
     }
 
         /**

@@ -93,10 +93,12 @@ desired effect
                     </li>
                     <li class="dropdown">
                         @if (Auth::user()->tieneModuloHabilitado('nueva-venta') || Auth::user()->esSuperAdmin() || Auth::user()->tieneModuloHabilitado('nuevo-cambio'))
-                            <a href="{{ route('ventas.nueva') }}">
-                                <i class="fa fa-cart-plus" aria-hidden="true"></i>
-                                Vender
-                            </a>
+                            @if (Session::get('LOCAL_ACTUAL') != null)
+                                <a href="{{ route('ventas.nueva') }}">
+                                    <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                                    Vender
+                                </a>
+                            @endif
                         @endif
                     </li>
                     <!-- User Account Menu -->
@@ -107,9 +109,9 @@ desired effect
                             @if(Auth::user()->archivo == "")
                                 <img src="{{ asset('img/avatar.png') }}" class="user-image">
                             @else
-                                <img src="{{ asset( Auth::user()->archivo) }}" class="user-image">
+                                <img src="{{ asset( 'storage/' . Auth::user()->archivo) }}" class="user-image">
                         @endif
-                        <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                        <!-- hidden-xs hides the username on smahome.ll devices so only the image appears. -->
                             <span class="hidden-xs">{{ Auth::user()->nombre }} {{ Auth::user()->apellido }}</span>
                         </a>
                         <ul class="dropdown-menu">
@@ -118,7 +120,7 @@ desired effect
                                 @if(Auth::user()->archivo == "")
                                     <img src="{{ asset('img/avatar.png') }}" class="img-circle">
                                 @else
-                                    <img src="{{ asset( Auth::user()->archivo) }}" class="img-circle">
+                                    <img src="{{ asset( 'storage/' . Auth::user()->archivo) }}" class="img-circle">
                                 @endif
 
                                 <p>
@@ -142,7 +144,8 @@ desired effect
                                         <i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Salir
                                     </a>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                          style="display: none;">
                                         @csrf
                                     </form>
                                 </div>
@@ -304,7 +307,6 @@ desired effect
 <script src="{{ asset('js/app.min.js') }}"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
-
 
 
 @yield('javascript')
