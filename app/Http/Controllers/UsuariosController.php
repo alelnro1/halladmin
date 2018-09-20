@@ -176,7 +176,7 @@ class UsuariosController extends BaseController
     public function update(UsuarioRequest $request, User $id)
     {
         // Valido el input
-        $validator = Validator::make(
+        /*$validator = Validator::make(
             $request->all(), [
             'nombre' => 'required|max:100',
             'apellido' => 'required|max:500',
@@ -188,7 +188,7 @@ class UsuariosController extends BaseController
 
         if ($validator->fails()) {
             return redirect(route('usuarios.edit', ['usuario' => $id]))->withErrors($validator)->withInput();
-        }
+        }*/
 
         // Busco el usuario
         $usuario = User::findOrFail($id);
@@ -208,16 +208,16 @@ class UsuariosController extends BaseController
             $this->borrarYVincularMenus($request->menus, $usuario);
         }
 
-        // Si se trató de guardar una foto para el local, validarla y subirla
+        /*// Si se trató de guardar una foto para el local, validarla y subirla
         $validator = $this->subirYGuardarArchivoSiHay($request, $usuario);
 
         if ($validator) {
             if ($validator->fails()) {
                 return redirect('usuarios/create')->withErrors($validator)->withInput();
             }
-        }
+        }*/
 
-        return redirect('/usuarios')->with('usuario_actualizado', 'Usuario actualizado');
+        return redirect(route('usuarios'))->with('usuario_actualizado', 'Usuario actualizado');
     }
 
     /**
@@ -226,13 +226,11 @@ class UsuariosController extends BaseController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $usuario)
     {
-        $usuario = User::findOrFail($id);
-
         $usuario->delete();
 
-        return redirect('/usuarios/')->with('usuario_eliminado', 'Usuario con nombre ' . $usuario->nombre . ' eliminado');
+        return redirect(route('usuarios'))->with('usuario_eliminado', 'Usuario eliminado');
     }
 
     /**

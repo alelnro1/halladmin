@@ -334,6 +334,30 @@ desired effect
         $('.img-circle').on('click', function () {
             window.location.href = 'perfil';
         });
+
+        $('body').on('click', '.eliminar-elem', function () {
+            var elem = $(this),
+                mensaje = elem.data('confirm'),
+                url_delete = elem.data('href');
+
+            $.confirm({
+                title: 'Confirmar',
+                content: mensaje,
+                buttons: {
+                    cancelar: {
+                        text: 'Cancelar',
+                        btnClass: 'btn-red'
+                    },
+                    confirmar: {
+                        text: 'Confirmar',
+                        btnClass: 'btn-green',
+                        action: function () {
+                            window.location = url_delete;
+                        }
+                    }
+                }
+            });
+        });
     });
 </script>
 <!-- Optionally, you can add Slimscroll and FastClick plugins.

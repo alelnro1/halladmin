@@ -36,7 +36,13 @@ class ProveedoresController extends BaseController
      */
     public function create()
     {
-        return view('proveedores.create');
+        // Obtengo el negocio actual
+        $negocio_id = session('LOCAL_ACTUAL')->negocio_id;
+
+        // Obtenemos los proveedores del negocio actual
+        $proveedores = Proveedor::getProveedoresDeNegocio($negocio_id);
+
+        return view('proveedores.create', ['proveedores' => $proveedores]);
     }
 
     /**
@@ -56,7 +62,13 @@ class ProveedoresController extends BaseController
         // Si se trató de guardar una foto, validarla y subirla
         $this->subirYGuardarArchivoSiHay($request, $proveedor);
 
-        return redirect('/proveedores/')->with('proveedor_creado', 'Proveedor con nombre ' . $request->nombre . ' creado');
+        // Local actual
+        $local_actual_id = session('LOCAL_ACTUAL')->id;
+
+        // Vinculamos al proveedor con el local actual
+        $proveedor->locales()->attach($local_actual_id);
+
+        return redirect(route('proveedores'))->with('proveedor_creado', 'Proveedor con nombre ' . $request->nombre . ' creado');
     }
 
     /**

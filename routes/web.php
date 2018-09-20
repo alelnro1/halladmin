@@ -3,7 +3,7 @@
 Route::get('/', 'HomeController@index');
 
 // Rutas del front-end
-    Route::get('/tpl', 'FrontendController@index');
+Route::get('/tpl', 'FrontendController@index');
 
 Route::auth();
 Route::group(['middleware' => ['auth']], function () {
@@ -21,6 +21,9 @@ Route::group(['middleware' => ['auth']], function () {
 
             Route::get('{local}/edit', 'LocalesController@edit')->name('locales.edit');
             Route::post('{local}/edit', 'LocalesController@update')->name('locales.update');
+
+            Route::get('{local}/eliminar', 'LocalesController@destroy')->name('locales.delete');
+
         });
     });
 
@@ -53,10 +56,12 @@ Route::group(['middleware' => ['auth']], function () {
 
             Route::get('{usuario}/edit', 'UsuariosController@edit')->name('usuarios.edit');
             Route::post('{usuario}/edit', 'UsuariosController@update')->name('usuarios.update');
+
+            Route::get('{usuario}/eliminar', 'UsuariosController@destroy')->name('usuarios.delete');
         });
     });
 
-    /***** USUARIOS *****/
+    /***** ARTICULOS *****/
     Route::group(['prefix' => 'articulos', 'middleware' => 'tiene-algun-local'], function () {
         Route::get('/', 'ArticulosController@index')->name('articulos');
 
@@ -169,8 +174,19 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('cambiar-de-local/{local}', 'BaseController@setLocalDesdeVista');
 
     // Rutas solo del super admin
-    Route::group(['middleware' => 'acceso:super admin'], function () {
-        Route::resource('administradores', 'AdministradoresController');
+    /***** ADMINISTRADORES *****/
+    Route::group(['prefix' => 'administradores', 'middleware' => 'acceso:super admin'], function () {
+        Route::get('/', 'AdministradoresController@index')->name('administradores');
+
+        Route::get('nuevo', 'AdministradoresController@create')->name('administradores.create');
+        Route::post('nuevo', 'AdministradoresController@store')->name('administradores.store');
+
+        Route::get('{administrador}', 'AdministradoresController@show')->name('administradores.view');
+
+        Route::get('{administrador}/edit', 'AdministradoresController@edit')->name('administradores.edit');
+        Route::post('{administrador}/edit', 'AdministradoresController@update')->name('administradores.update');
+
+        Route::post('{administrador}/edit-pass', 'AdministradoresController@updatePassword')->name('administradores.update-password');
     });
 
     Route::group(['prefix' => 'perfil'], function () {

@@ -26,11 +26,12 @@ class AdministradoresRequest extends FormRequest
         return [
             'nombre'      => 'required|max:100',
             'apellido'    => 'required|max:100',
-            'password'    => 'required|confirmed|min:6',
+            'password'    => 'sometimes|nullable|confirmed|min:6',
             'domicilio'   => 'required',
-            'email'       => 'required|email|max:100|unique:users',
+            'email'       => 'required|email|max:100|unique:users,email,' . $this->administrador->id,
             'telefono'    => 'required',
-            'negocio'     => 'required|max:100'
+            'negocio'     => 'required|max:100',
+            'archivo'     => 'sometimes|nullable|max:1000|mimes:jpg,jpeg,png,gif',
         ];
     }
 }

@@ -66,20 +66,19 @@
                             <td>{{ $usuario->telefono }}</td>
 
                             <td>
-                                <a href="{{ url('usuarios/' . $usuario['id']) }}" class="btn btn-default btn-sm">
+                                <a href="{{ route('usuarios', ['usuario' => $usuario['id']]) }}" class="btn btn-default btn-sm">
                                     <i class="fa fa-eye" aria-hidden="true"></i>
                                     Ver
                                 </a>
 
-                                <a href="{{ url('usuarios/' . $usuario['id'] . '/edit') }}" class="btn btn-default btn-sm">
+                                <a href="{{ route('usuarios.view', ['usuario' => $usuario['id']]) }}" class="btn btn-default btn-sm">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                     Editar
                                 </a>
 
-                                <a href="{{ url('usuarios/' . $usuario['id']) }}" class="btn btn-danger btn-sm"
-                                   data-method="delete"
-                                   data-token="{{ csrf_token() }}"
-                                   data-confirm="Está seguro que desea eliminar a usuario con nombre {{ $usuario->nombre }}?">
+                                <a href="{{ route('usuarios.delete', ['usuario' => $usuario['id']]) }}"
+                                   class="btn btn-danger btn-sm eliminar-elem"
+                                   data-confirm="Está seguro que desea eliminar al usuario <strong>{{ $usuario->nombre }}?</strong>">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     Eliminar
                                 </a>
@@ -98,6 +97,5 @@
 @section('javascript')
     <script src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="{{ asset('/js/usuarios/listar.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('/js/delete-link.js') }}"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
 @stop

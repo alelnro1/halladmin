@@ -79,9 +79,9 @@
                             </a>
 
                             <a data-href="{{ route('proveedores.delete', ['proveedor' => $proveedor['id']]) }}"
-                               id="eliminar-proveedor"
+                               class="btn btn-danger btn-xs eliminar-elem"
                                data-proveedor-nombre="{{ $proveedor->nombre }}"
-                               class="btn btn-danger btn-xs">
+                               data-confirm="¿Está seguro que quiere eliminar al proveedor <strong>{{ $proveedor->nombre }}?</strong>">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                 Eliminar
                             </a>
@@ -100,33 +100,5 @@
 @section('javascript')
     <script src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="{{ asset('/js/proveedores/listar.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('/js/delete-link.js') }}"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('body').on('click', '#eliminar-proveedor', function () {
-                var elem = $(this),
-                    proveedor_nombre  = elem.data('proveedor-nombre'),
-                    url_delete = elem.data('href');
-
-                $.confirm({
-                    title: 'Confirmar',
-                    content: '¿Está seguro que quiere eliminar al proveedor <strong>' + proveedor_nombre + '</strong>?',
-                    buttons: {
-                        cancelar: {
-                            text: 'Cancelar',
-                            btnClass: 'btn-red'
-                        },
-                        confirmar: {
-                            text: 'Confirmar',
-                            btnClass: 'btn-green',
-                            action: function(){
-                                window.location = url_delete;
-                            }
-                        }
-                    }
-                });
-            });
-        });
-    </script>
 @stop

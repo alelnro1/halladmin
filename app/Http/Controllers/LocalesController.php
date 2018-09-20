@@ -99,7 +99,7 @@ class LocalesController extends BaseController
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  int                      $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -107,11 +107,11 @@ class LocalesController extends BaseController
         // Valido el input
         $validator = Validator::make(
             $request->all(), [
-            'nombre'      => 'required|max:100',
-            'archivo'     => 'mimes:jpg,jpeg,png,gif',
-            'email'       => 'email|max:100',
-            'telefono'    => 'required',
-            //'categorias'  => 'required'
+                'nombre' => 'required|max:100',
+                'archivo' => 'mimes:jpg,jpeg,png,gif',
+                'email' => 'email|max:100',
+                'telefono' => 'required',
+                //'categorias'  => 'required'
             ]
         );
 
@@ -154,21 +154,16 @@ class LocalesController extends BaseController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Local $local)
     {
-        // Busco el local y si no existe lanzo una excepcion
-        $local = Local::findOrFail($id);
-
         // Elimino el local
         $local->delete();
 
         // Busco a ver si el usuario tiene algun local y si tiene lo seteo
         $hay_local =
-            Local::whereHas(
-                'Usuarios', function ($query) {
-                    $query->where('user_id', Auth::user()->id);
-                }
-            )->first();
+            Local::whereHas('Usuarios', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            })->first();
 
         // Si hay locales del usuario => pongo la sesión en true
         if (!$hay_local) {
@@ -179,18 +174,18 @@ class LocalesController extends BaseController
         return redirect(route('locales'))->with('local_eliminado', 'Local eliminado');
     }
 
-        /**
+    /**
      * Subir un archivo
-         *
+     *
      * @param  Request $request
      * @return JSON
      */
     public function subirArchivo(Request $request)
     {
         $directorio_destino = 'uploads/archivos/';
-        $nombre_original    = $request->archivo->getClientOriginalName();
-        $extension          = $request->archivo->getClientOriginalExtension();
-        $nombre_archivo     = rand(111111, 999999) .'_'. time() . "_.". $extension;
+        $nombre_original = $request->archivo->getClientOriginalName();
+        $extension = $request->archivo->getClientOriginalExtension();
+        $nombre_archivo = rand(111111, 999999) . '_' . time() . "_." . $extension;
 
         if ($request->archivo->isValid()) {
             if ($request->archivo->move($directorio_destino, $nombre_archivo)) {

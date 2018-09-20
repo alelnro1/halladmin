@@ -11,7 +11,7 @@ use App\Http\Requests;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Validator;
 
-class AdministradoresController extends Controller
+class AdministradoresController extends BaseController
 {
     use SoftDeletes;
 
@@ -63,41 +63,10 @@ class AdministradoresController extends Controller
 
         // Vincularle todos los menus admins al usuario recien creado
         $this->vincularMenus($administrador);
-        
-        // Si se trató de guardar una foto para el local, validarla y subirla
-        /*$validator = $this->subirYGuardarArchivoSiHay($request, $validator, $administrador);
 
-        if ($validator) {
-            if ($validator->fails()) {
-                return redirect('administradores/create')->withErrors($validator)->withInput();
-            }
-        }*/
+        $this->subirYGuardarArchivoSiHay($request, $administrador);
 
-        return redirect('/administradores/')->with('administrador_creado', 'Administrador con nombre ' . $request->nombre . ' creado');
-    }
-    
-    /**
-     * Si hay algun archivo para subir, subirlo y guardar la referencia en la base
-     *
-     * @param  $request
-     * @param  $validator
-     * @param  $administrador
-     * @return mixed
-     */
-    private function subirYGuardarArchivoSiHay($request, $validator, $administrador)
-    {
-        if (isset($request->archivo) && count($request->archivo) > 0) {
-            $archivo = $this->subirArchivo($request);
-
-            if ($archivo['url']) {
-                $administrador->archivo = $archivo['url'];
-                $administrador->save();
-            } else {
-                $validator->errors()->add('archivo', $archivo['err']);
-
-                return $validator;
-            }
-        }
+        return redirect(route('administradores'))->with('administrador_creado', 'Administrador con nombre ' . $request->nombre . ' creado');
     }
 
     /**
@@ -106,9 +75,9 @@ class AdministradoresController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $administrador)
     {
-        $administrador = User::getAdministrador($id);
+        $administrador = $administrador->cargarRelaciones();
 
         return view('administradores.show')->with('administrador', $administrador);
     }
@@ -119,9 +88,8 @@ class AdministradoresController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $administrador)
     {
-        $administrador = User::findOrFail($id);
         return view('administradores.edit')->with('administrador', $administrador);
     }
 
@@ -132,58 +100,15 @@ class AdministradoresController extends Controller
      * @param  int                      $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AdministradoresRequest $request, User $administrador)
     {
-        // Valido el input
-        $validator = Validator::make(
-            $request->all(), [
-            'nombre'      => 'required|max:100',
-            'descripcion' => 'required|max:500',
-            'archivo'     => 'max:1000|mimes:jpg,jpeg,png,gif',
-            'fecha'       => 'required|date',
-            'password'    => 'required|confirmed|min:6',
-            'domicilio'   => 'required',
-            'email'       => 'required|email|max:100',
-            'telefono'    => 'required'
-            ]
-        );
-        
-        if ($validator->fails()) { 
-            return redirect('administradores/' . $id .'/edit')->withErrors($validator)->withInput();
-        }
-
-        // Busco el administrador
-        $administrador = User::findOrFail($id);
-        
         // Actualizo el administrador
         $administrador->update($request->except(['_method', '_token']));
 
-        // Si se trató de guardar una foto para el local, validarla y subirla
-        $validator = $this->subirYGuardarArchivoSiHay($request, $validator, $administrador);
+        $this->subirYGuardarArchivoSiHay($request, $administrador);
 
-        if ($validator) {
-            if ($validator->fails()) {
-                return redirect('administradores/create')->withErrors($validator)->withInput();
-            }
-        }
-
-        return redirect('/administradores')->with('administrador_actualizado', 'Administrador actualizado');
+        return redirect(route('administradores'))->with('administrador_actualizado', 'Administrador actualizado');
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    /*public function destroy($id)
-    {
-         $administrador = User::findOrFail($id);
-
-        $administrador->delete();
-
-        return redirect('/administradores/')->with('administrador_eliminado', 'Administrador con nombre ' . $administrador->nombre . ' eliminado');
-    }*/
 
     /**
      * Cuando un administrador se crea, se le asocian los menus que podrán ver por ser admins

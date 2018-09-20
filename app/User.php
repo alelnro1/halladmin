@@ -47,17 +47,16 @@ class User extends Authenticatable
      */
     protected $dates = ['deleted_at'];
 
-    public static function getAdministrador($id)
+    public function cargarRelaciones($administrador)
     {
-        $administrador = User::findOrFail($id);
-
         $administrador->load([
             'Locales' => function ($query) {
-                $query->withCount(
-                    [
-                        'Articulos', 'Usuarios', 'Ventas', 'Cambios'
-                    ]
-                );
+                $query->withCount([
+                    'Articulos',
+                    'Usuarios',
+                    'Ventas',
+                    'Cambios'
+                ]);
             }
         ]);
 
@@ -168,8 +167,8 @@ class User extends Authenticatable
             $local =
                 Local::whereHas(
                     'Usuarios', function ($query) {
-                        $query->where('user_id', Auth::user()->id);
-                    }
+                    $query->where('user_id', Auth::user()->id);
+                }
                 )->first();
 
             // Si hay locales del usuario => pongo la sesión en true
@@ -185,8 +184,8 @@ class User extends Authenticatable
                 $local =
                     Local::whereHas(
                         'Usuarios', function ($query) {
-                            $query->where('user_id', Auth::user()->id);
-                        }
+                        $query->where('user_id', Auth::user()->id);
+                    }
                     )->first();
 
                 session(['LOCAL_ACTUAL' => $local]);
