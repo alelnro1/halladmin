@@ -56,8 +56,8 @@
             </fieldset>
 
             <div class="col-xs-12">
-                <a href="{{ url('perfil/edit') }}" class="btn btn-default btn-primary" style="float:right; color: white;">
-                    <i class="fa fa-wrench" aria-hidden="true"></i>&nbsp;Editar
+                <a href="{{ route('perfil.modificar') }}" class="btn btn-default btn-primary" style="float:right; color: white;">
+                    <i class="fa fa-wrench" aria-hidden="true"></i>&nbsp;Modificar
                 </a>
             </div>
         </div>

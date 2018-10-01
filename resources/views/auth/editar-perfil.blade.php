@@ -11,8 +11,8 @@
 
         <div class="panel-body">
             <fieldset>
-                <form class="form-horizontal" method="POST" action="{{ url('perfil/update') }}" enctype="multipart/form-data">
-                    {{ method_field('PATCH') }}
+                <form class="form-horizontal" method="POST" action="{{ route('perfil.procesar-modificacion') }}"
+                      enctype="multipart/form-data">
                     {!! csrf_field() !!}
 
                     @if($usuario->archivo != "")

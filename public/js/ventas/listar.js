@@ -5,7 +5,7 @@ $(window).load(function() {
 
         // Si no es la última columna, poner el buscador
         if (!$(this).is(':last-child')) {
-            $(this).html('<input type="text" class="form-control" placeholder="Buscar ' + title + '" >');
+            $(this).html('<input type="text" class="form-control" placeholder="' + title + '" >');
         }
     });
 

@@ -1,6 +1,5 @@
 @extends('layouts.app', [
     'LOCAL_NOMBRE' => session('LOCAL_NOMBRE'),
-    'locales' => Auth::user()->Locales
 ])
 
 @section('page-header', 'Página no encontrada')

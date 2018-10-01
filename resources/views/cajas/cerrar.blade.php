@@ -27,14 +27,15 @@
                 </div>
             @endif
 
-            <form action="{{ url('caja/cerrar') }}" method="POST" id="cerrar-caja" class="form-horizontal" enctype="multipart/form-data">
+            <form action="{{ route('caja.procesar-cierre') }}" method="POST" id="cerrar-caja-form"
+                  class="form-horizontal">
                 <div class="box-body">
                     {!! csrf_field() !!}
 
                     <fieldset>
-                            <span class="help-block">
-                                Está a punto de cerrar la caja. Al cerrarla, saldrá del sistema. Ingrese el dinero actual en caja
-                            </span>
+                        <div class="callout callout-info">
+                            Está a punto de cerrar la caja. Al cerrarla, saldrá del sistema. Ingrese el dinero actual en caja
+                        </div>
 
                         <div class="form-group {{ $errors->has('monto') ? ' has-error' : '' }}">
                             <label class="col-md-4 control-label">Monto Actual</label>
@@ -64,29 +65,10 @@
                     </div>
                 </div>
             </form>
-
-            {{--<div class="pull-xs-left col-xs-6">
-                <a href="#" onclick="window.history.go(-1); return false;" class="btn btn-default">
-                    <i class="fa fa-fw fa-arrow-left"></i>&nbsp;Volver
-                </a>
-            </div>--}}
         </div>
     </div>
 @stop
 
 @section('javascript')
-    <script>
-        $(function(){
-            $('#cerrar-caja').on('submit', function (e) {
-                monto = $('#monto').val();
-
-                if (monto == "") {
-                    alert('Ingrese un monto');
-                    e.preventDefault();
-                } else if (!confirm('El monto que ha ingresado es $' + monto + '. Es correcto?')) {
-                    e.preventDefault();
-                }
-            })
-        });
-    </script>
+    <script src="{{ asset('js/caja/cerrar.js') }}"></script>
 @stop

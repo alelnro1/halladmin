@@ -7,7 +7,7 @@ Route::get('/tpl', 'FrontendController@index');
 
 Route::auth();
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('/home', 'HomeController@index');
+    Route::get('/home', 'HomeController@index')->name('home');
 
     /***** LOCALES *****/
     Route::group(['prefix' => 'locales'], function () {
@@ -85,11 +85,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('clientes', 'ClientesController');
     Route::resource('alarmas', 'AlarmasController');
 
-    Route::get('caja', 'CajaController@listar');
-    Route::get('caja/abrir', 'CajaController@abrirCaja');
-    Route::get('caja/cerrar', 'CajaController@cerrarCaja');
-    Route::post('caja/abrir', 'CajaController@procesarApertura');
-    Route::post('caja/cerrar', 'CajaController@procesarCierre');
+    Route::group(['prefix' => 'caja'], function () {
+        Route::get('/', 'CajaController@listar')->name('caja');
+        Route::get('abrir', 'CajaController@abrirCaja')->name('caja.abrir');
+        Route::post('abrir', 'CajaController@procesarApertura')->name('caja.procesar-apertura');
+
+        Route::get('cerrar', 'CajaController@cerrarCaja')->name('caja.cerrar');
+        Route::post('cerrar', 'CajaController@procesarCierre')->name('caja.procesar-cierre');
+    });
 
     // Listado de ventas canceladas
     Route::get('ventas-canceladas', 'VentasController@ventasCanceladas')->name('ventas.canceladas');
@@ -195,7 +198,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/cambiar-clave-personal', 'PerfilController@cambiarClaveForm');
         Route::post('/cambiar-clave-personal', 'PerfilController@actualizarClave');
 
-        Route::get('/perfil/edit', 'PerfilController@editarPerfil');
-        Route::patch('/perfil/update', 'PerfilController@actualizarPerfil');
+        Route::get('modificar', 'PerfilController@editarPerfil')->name('perfil.modificar');
+        Route::post('modificar', 'PerfilController@actualizarPerfil')->name('perfil.procesar-modificacion');
     });
 });

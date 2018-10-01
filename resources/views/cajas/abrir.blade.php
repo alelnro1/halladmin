@@ -22,7 +22,8 @@
                 </div>
             @endif
 
-            <form action="{{ url('caja/abrir') }}" method="POST" id="abrir-caja-form" class="form-horizontal">
+            <form action="{{ route('caja.procesar-apertura') }}" method="POST" id="abrir-caja-form"
+                  class="form-horizontal">
                 <div class="box-body">
                     {!! csrf_field() !!}
 
@@ -59,82 +60,10 @@
                     </div>
                 </div>
             </form>
-
-            {{--<div class="pull-xs-left col-xs-6">
-                <a href="#" onclick="window.history.go(-1); return false;" class="btn btn-default">
-                    <i class="fa fa-fw fa-arrow-left"></i>&nbsp;Volver
-                </a>
-            </div>--}}
         </div>
     </div>
 @stop
 
 @section('javascript')
-    <script>
-        $(document).ready(function () {
-            var askConfirmation = true;
-
-            $('body').on('submit', '#abrir-caja-form', function (e) {
-                if (askConfirmation) {
-                    e.preventDefault();
-
-                    monto = $('#monto').val();
-
-                    if (monto == "") {
-                        $.confirm({
-                            title: 'Error!',
-                            content: 'Ingrese un monto',
-                            type: 'red',
-                            typeAnimated: true,
-                            buttons: {
-                                cerrar: function () {
-                                }
-                            }
-                        });
-                    } else {
-                        $.confirm({
-                            title: 'Error!',
-                            content: 'El monto que ha ingresado es $' + monto + ' ¿Es correcto?',
-                            typeAnimated: true,
-                            buttons: {
-                                cancelar: {
-                                    text: 'Cancelar',
-                                    btnClass: 'btn-red',
-                                    action: function () {
-                                    }
-                                },
-                                confirmar: {
-                                    text: 'Confirmar',
-                                    btnClass: 'btn-green',
-                                    action: function () {
-                                        askConfirmation = false; // done asking confirmation, now submit the form
-                                        $('#abrir-caja-form').submit();
-                                    }
-                                }
-                            }
-                        });
-
-                        /*$.confirm({
-                            title: 'Confirmar',
-                            content: 'El monto que ha ingresado es $' + monto + ' ¿Es correcto?',
-                            buttons: {
-
-                            }
-                        });*/
-                    }
-                }
-            });
-
-            /*$('#abrir-caja').on('submit', function (e) {
-                monto = $('#monto').val();
-
-                if (monto == "") {
-                    alert('Ingrese un monto');
-                    e.preventDefault();
-                } else if (!confirm('El monto que ha ingresado es $' + monto + '. Es correcto?')) {
-                    e.preventDefault();
-                }
-            })*/
-        });
-    </script>
+    <script src="{{ asset('js/caja/abrir.js') }}"></script>
 @stop

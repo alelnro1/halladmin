@@ -93,7 +93,7 @@ class CajaController extends Controller
         );
 
         if ($validator->fails()) {
-            return redirect('caja/cerrar')->withErrors($validator)->withInput();
+            return redirect(route('caja.cerrar'))->withErrors($validator)->withInput();
         }
 
         // Guardo que el usuario abrió la caja
@@ -101,8 +101,9 @@ class CajaController extends Controller
         $caja = $caja->registrarTransaccion($this->getLocalId(), Auth::user()->id, $request->monto, 'cierre');
 
         // Deslogueo al usuario
-        $auth = new AuthController();
-        return $auth->logout();
+        Auth::logout();
+
+        return redirect('/');
     }
 
 }

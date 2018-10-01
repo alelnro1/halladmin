@@ -42,7 +42,7 @@
                         <tr>
                             <td>{{ $caja->created_at }}</td>
                             <td>
-                                <a href="{{ url('usuarios/' . $caja->User->id) }}">
+                                <a href="{{ route('usuarios.view', ['usuario' => $caja->User->id]) }}">
                                     {{ $caja->User->nombre }} {{ $caja->User->apellido }}
                                 </a>
                             </td>
