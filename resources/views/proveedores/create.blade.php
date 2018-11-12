@@ -18,36 +18,9 @@
     <div class="box box-primary">
 
         <div class="box-body">
-            <fieldset>
-                <legend>Asignar proveedor existente al local</legend>
-
-                <form action="{{ route('proveedores.asignar-proveedor') }}">
-                    <div class="help-block">
-                        Seleccione un proveedor ya existente para asignar al local actual.
-                    </div>
-
-                    <div class="form-group{{ $errors->has('nombre') ? ' has-error' : '' }}">
-                        <label class="col-md-4 control-label">Proveedor</label>
-
-                        <div class="col-md-6">
-                            <select name="proveedor" id="">
-                                @foreach ($proveedores as $proveedor)
-
-                                @endforeach
-                            </select>
-                            <input type="text" class="form-control" name="nombre" value="{{ old('nombre') }}"
-                                   autocomplete="off"
-                                   placeholder="Escriba el nombre del proveedor">
-
-                            @if ($errors->has('nombre'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('nombre') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-                </form>
-            </fieldset>
+            @if ($negocio_tiene_proveedores)
+                @include('proveedores.asignar')
+            @endif
 
             <fieldset>
                 <legend>Nuevo proveedor</legend>
