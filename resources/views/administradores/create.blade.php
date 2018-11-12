@@ -19,7 +19,7 @@
         <div class="panel-heading">Nuevo</div>
 
         <div class="panel-body">
-            <form action="{{ url('administradores') }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
+            <form action="{{ route('administradores.store') }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
                 {!! csrf_field() !!}
 
                 <fieldset>

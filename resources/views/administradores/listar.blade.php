@@ -20,7 +20,7 @@
         <div class="box-header">
             <h3 class="box-title"></h3>
             <div class="box-tools">
-                <a href="{{ url('/administradores/create') }}" class="btn btn-block btn-success btn-sm">
+                <a href="{{ route('administradores.create') }}" class="btn btn-block btn-success btn-sm">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                     Nuevo Administrador
                 </a>
