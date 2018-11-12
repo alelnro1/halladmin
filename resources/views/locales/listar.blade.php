@@ -36,7 +36,8 @@
             @if (Session::has('local_creado'))
                 <div class="callout callout-success">
                     <i class="fa fa-check" aria-hidden="true"></i>
-                    {{ Session::get('local_creado') }}
+                    El local ha sido creado. Para comenzar a utilizarlo, deberá cargar la mercadería. Para ello,
+                    haga <a href="{{ route('mercaderia.ingresar') }}">click aquí</a>
                 </div>
             @endif
 
@@ -52,7 +53,7 @@
                     <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
                     Para poder ingresar mercadería, realizar ventas o cambios, administrar usuarios y ofertas, debe tener al menos un local
                     sobre el cual operar.
-                    Por favor cree uno haciendo <a href="{{ url('locales/create') }}">click aquí</a>
+                    Por favor cree uno haciendo <a href="{{ route('locales.create') }}">click aquí</a>
                 </div>
             @endif
 
