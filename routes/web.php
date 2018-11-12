@@ -33,9 +33,11 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('nuevo', 'ProveedoresController@create')->name('proveedores.create');
         Route::post('nuevo', 'ProveedoresController@store')->name('proveedores.store');
+        Route::post('asignar', 'ProveedoresController@asignar')->name('proveedores.asignar-proveedor');
 
         Route::group(['middleware' => ['ownership-proveedores']], function () {
             Route::get('/{proveedor}', 'ProveedoresController@show')->name('proveedores.view');
+
 
             Route::get('{proveedor}/edit', 'ProveedoresController@edit')->name('proveedores.edit');
             Route::post('{proveedor}/edit', 'ProveedoresController@update')->name('proveedores.update');
@@ -92,6 +94,8 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('cerrar', 'CajaController@cerrarCaja')->name('caja.cerrar');
         Route::post('cerrar', 'CajaController@procesarCierre')->name('caja.procesar-cierre');
+
+        Route::get('contabilidad', 'ContabilidadController@index');
     });
 
     // Listado de ventas canceladas
@@ -172,6 +176,19 @@ Route::group(['middleware' => ['auth']], function () {
 
         // Se actualizan los precios de los archivos temporales por descuentos
         Route::post('aplicar-descuento', 'VentasController@aplicarDescuento');
+    });
+
+    Route::group(['prefix' => 'afip', 'middleware' => ['tiene-algun-local']], function () {
+        // Se muestra la informacion para generar una factura
+        Route::get('facturar/datos', 'AfipController@datosParaFacturar')->name('afip.datos-para-facturar');
+
+        Route::get('comprobantes-disponibles', 'AfipController@getComprobantesDisponibles')->name('afip.comprobantes-disponibles');
+
+        Route::get('contribuyente/{nro_contribuyente}', 'AfipController@getInfoContribuyente')->name('afip.info-contribuyente');
+
+        Route::get('voucher/generar', 'AfipController@generarFactura')->name('afip.generar-factura');
+
+        Route::get('voucher/{voucher}', 'AfipController@getVoucher')->name('afip.ver-voucher');
     });
 
     Route::get('cambiar-de-local/{local}', 'BaseController@setLocalDesdeVista');
