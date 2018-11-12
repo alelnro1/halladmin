@@ -24,7 +24,9 @@ class ProveedoresController extends BaseController
      */
     public function index()
     {
-        $proveedores = Proveedor::where('usuario_id', Auth::user()->id)->get();
+        $local_id = session('LOCAL_ACTUAL')->id;
+
+        $proveedores = Proveedor::getProveedoresDeLocal($local_id);
 
         return view('proveedores.listar')->with('proveedores', $proveedores);
     }
@@ -42,7 +44,12 @@ class ProveedoresController extends BaseController
         // Obtenemos los proveedores del negocio actual
         $proveedores = Proveedor::getProveedoresDeNegocio($negocio_id);
 
-        return view('proveedores.create', ['proveedores' => $proveedores]);
+        $negocio_tiene_proveedores = count($proveedores) > 0;
+
+        return view('proveedores.create', [
+            'proveedores' => $proveedores,
+            'negocio_tiene_proveedores' => $negocio_tiene_proveedores
+        ]);
     }
 
     /**
@@ -137,5 +144,29 @@ class ProveedoresController extends BaseController
 
         return redirect(route('proveedores'))
             ->with('proveedor_eliminado', 'Proveedor ' . $proveedor->nombre . ' eliminado');
+    }
+
+    /**
+     * Asignamos un proveedor del negocio a un local
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function asignar(Request $request)
+    {
+        $proveedor = Proveedor::find($request->proveedor);
+
+        $local = session('LOCAL_ACTUAL');
+
+        $negocio_actual_id = session('LOCAL_ACTUAL')->negocio_id;
+
+        // Si el proveedor pertenece a todo el negocio => lo puedo asignar a un local del negocio
+        if ($proveedor->perteneceAlNegocio($negocio_actual_id)) {
+            $local->Proveedores()->attach($proveedor);
+
+            return redirect(route('proveedores'))->with(['proveedor_asignado' => true]);
+        }
+
+        abort(403);
     }
 }
