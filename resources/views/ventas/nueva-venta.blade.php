@@ -87,13 +87,13 @@
                     @foreach ($articulos as $articulo)
                         <tr class="@if($articulo['seleccionado']) selected @endif">
                             <td>{{ $articulo->id }}</td>
-                            <td class="col-codigo">{{ $articulo->DatosArticulo->codigo }}</td>
-                            <td>{{ $articulo->DatosArticulo->descripcion }}</td>
+                            <td class="col-codigo">{{ $articulo->getCodigo() }}</td>
+                            <td>{{ $articulo->getDescripcion()() }}</td>
                             <td class="col-color">{{ $articulo->color }}</td>
-                            <td class="col-talle">{{ $articulo->Talle->nombre }}</td>
-                            <td class="col-genero">{{ $articulo->DatosArticulo->Genero->nombre }}</td>
-                            <td class="text-right col-precio" data-precio="{{ $articulo->DatosArticulo->precio }}">
-                                ${{ number_format($articulo->DatosArticulo->precio, 2) }}
+                            <td class="col-talle">{{ $articulo->getNombreTalle() }}</td>
+                            <td class="col-genero">{{ $articulo->getNombreGenero() }}</td>
+                            <td class="text-right col-precio" data-precio="{{ $articulo->getPrecio() }}">
+                                ${{ number_format($articulo->getPrecio(), 2) }}
                             </td>
                             <td class="col-cantidad col-xs-1" data-id="{{ $articulo->id }}">
                                 <input type="number"
