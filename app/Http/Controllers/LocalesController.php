@@ -65,7 +65,7 @@ class LocalesController extends BaseController
         // Recreamos la sesion con los locales
         Auth::user()->cargarLocalesYAsignarElPrimero();
 
-        return redirect(route('locales'))->with('local_creado', 'Local creado');
+        return redirect(route('locales'))->with('local_creado', true);
     }
 
     /**
