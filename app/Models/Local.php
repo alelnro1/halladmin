@@ -95,6 +95,11 @@ class Local extends Model
         return $this->hasMany(Caja::class);
     }
 
+    public function Proveedores()
+    {
+        return $this->belongsToMany(Proveedor::class, 'local_proveedor', 'local_id', 'proveedor_id');
+    }
+
     /**
      * Se obtiene la cantidad de ventas canceladas del local
      *

@@ -24,4 +24,9 @@ class Negocio extends Model
     {
         return $this->hasMany(Cliente::class);
     }
+
+    public function Proveedores()
+    {
+        return $this->hasMany(Proveedor::class);
+    }
 }
