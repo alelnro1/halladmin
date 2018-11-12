@@ -21,9 +21,9 @@
                     {!! csrf_field() !!}
 
                     <fieldset>
-                        <span class="help-block">
+                        <div class="callout callout-info" role="alert">
                             Ingrese los datos del local para poder administrarlo
-                        </span>
+                        </div>
 
                         <!-- Nombre -->
                             <div class="form-group {{ $errors->has('nombre') ? ' has-error' : '' }}">
