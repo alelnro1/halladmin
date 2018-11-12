@@ -86,7 +86,7 @@
             </div>
 
             <div class="text-right margin-bottom">
-                <a href="#" class="btn btn-success" id="agregar-articulo">+</a>
+                <a href="#" class="btn btn-success" id="agregar-articulo">+ Agregar artículo</a>
             </div>
 
             <div class="box-footer">
