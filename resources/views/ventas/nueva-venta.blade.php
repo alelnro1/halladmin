@@ -88,7 +88,7 @@
                         <tr class="@if($articulo['seleccionado']) selected @endif">
                             <td>{{ $articulo->id }}</td>
                             <td class="col-codigo">{{ $articulo->getCodigo() }}</td>
-                            <td>{{ $articulo->getDescripcion()() }}</td>
+                            <td>{{ $articulo->getDescripcion() }}</td>
                             <td class="col-color">{{ $articulo->color }}</td>
                             <td class="col-talle">{{ $articulo->getNombreTalle() }}</td>
                             <td class="col-genero">{{ $articulo->getNombreGenero() }}</td>
