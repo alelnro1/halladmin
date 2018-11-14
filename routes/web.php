@@ -184,7 +184,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('comprobantes-disponibles', 'AfipController@getComprobantesDisponibles')->name('afip.comprobantes-disponibles');
 
-        Route::get('contribuyente/{nro_contribuyente}', 'AfipController@getInfoContribuyente')->name('afip.info-contribuyente');
+        Route::post('contribuyente', 'AfipController@getInfoContribuyente')->name('afip.get-info-contribuyente');
 
         Route::get('voucher/generar', 'AfipController@generarFactura')->name('afip.generar-factura');
 

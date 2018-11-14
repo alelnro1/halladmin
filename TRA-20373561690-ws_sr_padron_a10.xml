@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<loginTicketRequest version="1.0"><header><uniqueId>1542050356</uniqueId><generationTime>2018-11-12T16:09:16-03:00</generationTime><expirationTime>2018-11-12T16:29:16-03:00</expirationTime></header><service>ws_sr_padron_a10</service></loginTicketRequest>

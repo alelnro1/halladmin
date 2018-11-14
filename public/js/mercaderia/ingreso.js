@@ -83,11 +83,13 @@ $(document).ready(function() {
     $('#nueva-mercaderia input').each(function() {
         var id = $(this).data('id');
 
-        // Agrego que sea obligatorio
-        $(this).rules("add", {
-            required: true,
-            messages: {required: 'Este campo es obligatorio'}
-        });
+        if (id != "costo") {
+            // Agrego que sea obligatorio
+            $(this).rules("add", {
+                required: true,
+                messages: {required: 'Este campo es obligatorio'}
+            });
+        }
     });
 
     // Agrego las reglas de validaciones de todos los inputs ya existentes

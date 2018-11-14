@@ -3,6 +3,7 @@
 namespace App\Classes\Ventas;
 
 
+use App\Http\Controllers\AfipController;
 use App\Http\Controllers\CambiosController;
 use App\Models\Cliente;
 use Illuminate\Support\Facades\Auth;
@@ -43,11 +44,20 @@ class PrevisualizarVenta extends Ventas
         $cambio = new CambiosController();
         $articulo_a_cambiar = $cambio->getArticuloParaCambiar();
 
+        // Cargamos datos para AFIP
+        $afip = new AfipController();
+        $afip_tipos_comprobantes = $afip->getComprobantesDisponibles();
+        $afip_tipos_documentos = $afip->getTiposDocumentos();
+        $afip_tipos_conceptos = $afip->getTiposConceptos();
+
         return view('ventas.previsualizar', [
             'cliente' => $cliente,
             'articulos' => $articulos,
             'total' => $total,
             'nro_orden' => $nro_orden,
+            'afip_tipos_comprobantes' => $afip_tipos_comprobantes,
+            'afip_tipos_documentos' => $afip_tipos_documentos,
+            'afip_tipos_conceptos' => $afip_tipos_conceptos,
             'cantidad_articulos' => $cantidad_articulos,
             'articulo_a_cambiar' => $articulo_a_cambiar
         ]);

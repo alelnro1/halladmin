@@ -152,18 +152,27 @@
                    style="margin-right: 5px;">
                     <i class="fa fa-print"></i> Imprimir
                 </a>
+
+                <!-- Trigger the modal with a button -->
+                <button type="button" class="btn btn-primary pull-right"
+                        style="margin-right: 5px;"
+                        data-toggle="modal" data-target="#myModal">
+                    Generar Factura
+                </button>
+
+                {{--<a href="{{ route('ventas.generar-factura') }}"
+                   type="button"
+                   class="btn btn-primary pull-right"
+                   style="margin-right: 5px;">
+                    <i class="fa fa-print"></i> Generar Factura
+                </a>--}}
             </div>
         </div>
     </section>
 
-    <div id="dialog-cancelar-venta" title="Cancelar Venta" style="display:none;" >
-        {{ csrf_field() }}
-        <p>Está seguro que desea cancelar la venta? <strong>Perderá todas las acciones realizadas</strong>.</p>
-        <p>Si es así, escriba el motivo de la cancelación y haga click en Cancelar</p>
-        <p>
-            <textarea name="motivo_cancelacion" id="motivo_cancelacion" style="width: 100%" rows="5"></textarea>
-        </p>
-    </div>
+    @include('ventas.nueva.previsualizar.modal-cancelar')
+
+    @include('afip.datos-para-facturar')
 @endsection
 
 @section('javascript')
@@ -172,91 +181,5 @@
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-    <script>
-        $(window).on('load', function() {
-            $('#forma-de-pago').bootstrapToggle({
-                'size' : 'normal'
-            });
-
-            $('#cancelar-venta').on('click', function(e) {
-                e.preventDefault();
-
-                $( "#dialog-cancelar-venta" ).dialog({
-                    modal: true,
-                    buttons: {
-                        Cancelar: function() {
-                            var motivo = $('#motivo_cancelacion').val();
-
-                            if ($.trim(motivo).length < 5) {
-                                alert('Escriba un motivo para cancelar la venta');
-                            } else {
-                                $.ajax({
-                                    url: 'cancelar',
-                                    type: 'POST',
-                                    data: {
-                                        'motivo' : motivo,
-                                        '_token' : $('input[name="_token"]').val()
-                                    },
-                                    dataType: 'json',
-                                    success: function (data) {
-                                        $.confirm({
-                                            title: 'Cancelada!',
-                                            content: 'La venta se canceló',
-                                            type: 'green',
-                                            typeAnimated: true,
-                                            buttons: {
-                                                cerrar: function () {
-                                                }
-                                            }
-                                        });
-
-                                        window.location.href = 'nueva-venta';
-                                    }
-                                })
-                            }
-
-                        }
-                    }
-                });
-            });
-
-            $('#concretar-venta').on('click', function(e) {
-                $.confirm({
-                    title: 'Confirmar',
-                    content: '¿Confirma la venta?',
-                    buttons: {
-                        cancelar: {
-                            text: 'Cancelar',
-                            btnClass: 'btn-red'
-                        },
-                        confirmar: {
-                            text: 'Confirmar',
-                            btnClass: 'btn-green',
-                            action: function(){
-                                // Primero envío el medio de pago y después proceso la venta
-                                $.ajax({
-                                    url: 'medio-y-factura',
-                                    type: 'POST',
-                                    data: {
-                                        'medio': $('#medio-de-pago').prop('checked'),
-                                        '_token': $('input[name="_token"]').val()
-                                    },
-                                    dataType: 'json',
-                                    success: function (data) {
-                                        window.location.href = 'concretar-venta';
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
-            });
-
-            $('#modificar-articulo').on('click', function(e) {
-                if (!confirm('Cambiar artículo?')) {
-                    e.preventDefault();
-                }
-            });
-        });
-    </script>
+    <script src="{{ asset('js/ventas/nueva/previsualizar.js') }}"></script>
 @stop

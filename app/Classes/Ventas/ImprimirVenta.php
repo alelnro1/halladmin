@@ -17,7 +17,7 @@ class ImprimirVenta extends Ventas
         // Busco al cliente
         $cliente = Cliente::where('id', $cliente_id)->first();
 
-        // Busco los articulos que se vieron en la previsualizacion
+        // Busco los articulos que se vieron en la previsualizar
         $articulos = session('VENTA_LOCAL_ID_' . $this->getLocalId() . '_USER_ID_' . Auth::user()->id . '_ARTICULOS');
 
         // Calculo la cantidad total de artículos a vender

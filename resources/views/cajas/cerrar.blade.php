@@ -38,7 +38,51 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('monto') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Monto Actual</label>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="col-xs-4">
+                                        <div class="col-xs-3">
+                                            <img src="{{ asset('img/credit/visa.png') }}" style="width: 100%; margin-top: 10px;" alt="">
+                                        </div>
+                                        <div class="col-xs-5" style="margin-top: 10px;">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">$</span>
+                                                <input type="text" class="form-control" name="monto" id="monto"
+                                                       value="{{ old('monto') }}" placeholder="Ingrese el monto..">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-4">
+                                        <div class="col-xs-3">
+                                            <img src="{{ asset('img/credit/mastercard.png') }}" style="width: 100%" alt="">
+                                        </div>
+                                        <div class="col-xs-5" style="margin-top: 10px;">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">$</span>
+                                                <input type="text" class="form-control" name="monto" id="monto"
+                                                       value="{{ old('monto') }}" placeholder="Ingrese el monto..">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-4">
+                                        <div class="col-xs-3">
+                                            <img src="{{ asset('img/credit/american-express.png') }}" style="width: 100%" alt="">
+                                        </div>
+                                        <div class="col-xs-5" style="margin-top: 10px;">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">$</span>
+                                                <input type="text" class="form-control" name="monto" id="monto"
+                                                       value="{{ old('monto') }}" placeholder="Ingrese el monto..">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br><br>
+                            {{--}}<label class="col-md-4 control-label">Monto Actual</label>
 
                             <div class="col-md-6">
                                 <div class="input-group">
@@ -52,7 +96,7 @@
                                             <strong>{{ $errors->first('monto') }}</strong>
                                         </span>
                                 @endif
-                            </div>
+                            </div>--}}
                         </div>
                     </fieldset>
 
