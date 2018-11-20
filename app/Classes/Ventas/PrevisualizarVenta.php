@@ -49,6 +49,9 @@ class PrevisualizarVenta extends Ventas
         $afip_tipos_comprobantes = $afip->getComprobantesDisponibles();
         $afip_tipos_documentos = $afip->getTiposDocumentos();
         $afip_tipos_conceptos = $afip->getTiposConceptos();
+        $afip_tipos_tributos = $afip->getTiposTributos();
+        $afip_opciones_disponibles = $afip->getOpcionesDisponibles();
+        $afip_tipos_alicuotas = $afip->getTiposAlicuotas();
 
         return view('ventas.previsualizar', [
             'cliente' => $cliente,
@@ -58,6 +61,9 @@ class PrevisualizarVenta extends Ventas
             'afip_tipos_comprobantes' => $afip_tipos_comprobantes,
             'afip_tipos_documentos' => $afip_tipos_documentos,
             'afip_tipos_conceptos' => $afip_tipos_conceptos,
+            'afip_tipos_tributos' => $afip_tipos_tributos,
+            'afip_opciones_disponibles' => $afip_opciones_disponibles,
+            'afip_tipos_alicuotas' => $afip_tipos_alicuotas,
             'cantidad_articulos' => $cantidad_articulos,
             'articulo_a_cambiar' => $articulo_a_cambiar
         ]);

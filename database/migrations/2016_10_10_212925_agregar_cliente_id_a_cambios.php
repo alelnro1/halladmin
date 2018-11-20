@@ -13,12 +13,12 @@ class AgregarClienteIdACambios extends Migration
     public function up()
     {
         Schema::table('cambios', function (Blueprint $table) {
-            $table->string('nombre');
+            //$table->string('nombre');
         });
 
         // Vinculo los negocios con los users
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('negocio_id')->index()->unsigned()->nullable();
+            //$table->integer('negocio_id')->index()->unsigned()->nullable();
         });
     }
 

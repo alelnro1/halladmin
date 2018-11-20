@@ -27,7 +27,7 @@
 
                 <form action="{{ route('proveedores.store') }}" method="POST" class="form-horizontal"
                       enctype="multipart/form-data">
-                {!! csrf_field() !!}
+                @csrf
 
                 <!-- Nombre -->
                     <div class="form-group{{ $errors->has('nombre') ? ' has-error' : '' }}">

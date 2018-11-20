@@ -6,6 +6,13 @@
         </a>
     </li>
 
+    <li @if(Request::is('mi-negocio*') ) class="active" @endif>
+        <a href="{{ url('/mi-negocio') }}">
+            <i class="fa fa-building" aria-hidden="true"></i>
+            <span>Mi Negocio</span>
+        </a>
+    </li>
+
     <li @if(Request::is('locales*') ) class="active" @endif>
         <a href="{{ url('/locales') }}">
             <i class="fa fa-building" aria-hidden="true"></i>

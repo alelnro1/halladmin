@@ -34,8 +34,8 @@ class Articulo extends Model
 
         $articulos = Articulo::whereHas(
             'DatosArticulo', function ($query) use ($controller) {
-                $query->where('local_id', $controller->getLocalId());
-            })->get();
+            $query->where('local_id', $controller->getLocalId());
+        })->get();
 
         $articulos->load([
             'DatosArticulo' => function ($query) {
@@ -80,8 +80,8 @@ class Articulo extends Model
         $controller = new Controller();
 
         $articulos = Articulo::whereHas('DatosArticulo', function ($query) use ($controller) {
-                $query->where('local_id', $controller->getLocalId());
-            })->get();
+            $query->where('local_id', $controller->getLocalId());
+        })->get();
 
         $articulos->load([
             'Talle' => function ($query) {
@@ -106,10 +106,10 @@ class Articulo extends Model
                     $query->where('nombre', $articulo_temporal['talle']);
                 })
                 ->with([
-                    'DatosArticulo' => function($query) {
+                    'DatosArticulo' => function ($query) {
                         $query->select(['id', 'codigo', 'precio', 'descripcion', 'genero_id']);
                     },
-                    'Talle' => function($query) {
+                    'Talle' => function ($query) {
                         $query->select(['id', 'nombre']);
                     }
                 ])
@@ -156,7 +156,7 @@ class Articulo extends Model
     public function Proveedores()
     {
         return $this->belongsToMany(Proveedor::class, 'articulo_proveedor', 'articulo_id', 'proveedor_id')
-            ->withPivot(['costo', 'cantidad'])
+            ->withPivot(['costo', 'cantidad', 'cantidad_remanente'])
             ->withTimestamps();
     }
 
@@ -204,5 +204,78 @@ class Articulo extends Model
     public function getNombreTalle()
     {
         return $this->Talle->getNombre();
+    }
+
+    /**
+     * Armamos un listado ordenado por FIFO para los ingresos de un articulo
+     * Sacamos los que ya fueron consumidos
+     *
+     * @return mixed
+     */
+    public function getIngresosPorProveedorFIFO()
+    {
+        $ingresos =
+            $this->Proveedores
+                ->sortByDesc(function ($item) {
+                    $item->pivot->created_at;
+                })
+                ->filter(function ($item) {
+                    return $item->pivot->cantidad_remanente > 0;
+                });
+
+        return $ingresos;
+    }
+
+    public function actualizarCantidadesDeProveedores($cantidad_venta)
+    {
+        // Vamos a crear el listado FIFO
+        $ingresos = $this->getIngresosPorProveedorFIFO();
+
+        // Vamos a sacar la cantidad que estamos vendiendo de los proveedores del articulo por FIFO
+        //while ($cantidad_venta > 0) {
+            foreach ($ingresos as $ingreso) {
+                if ($cantidad_venta > 0) {
+                    //$cant_remanente_ingreso = $ingreso->pivot->cantidad_remanente;
+
+                    // El proveedor cubre toda la venta
+                    /*if ($cant_remanente_ingreso >= $cantidad_venta) {
+                        $ingreso->pivot->cantidad_remanente = $cant_remanente_ingreso - $cantidad_venta;
+                        $ingreso->pivot->cantidad_remanente->save();
+
+                        // Actualizamos la cantidad remanente a restar de los proveedores
+                        $cantidad_venta = 0;
+
+                        // Ya actualizamos todo, salimos del foreach
+                        break;
+                    } else {*/
+                    // El proveedor no cubre toda la venta
+
+                    if ($ingreso->pivot->cantidad_remanente - $cantidad_venta <= 0) {
+                        $cantidad_venta = $cantidad_venta - $ingreso->pivot->cantidad_remanente;
+
+                        $ingreso->pivot->cantidad_remanente = 0;
+                        $ingreso->pivot->cantidad_remanente->save();
+                    } else {
+                        $ingreso->pivot->cantidad_remanente = $ingreso->pivot->cantidad_remanente - $cantidad_venta;
+                        $ingreso->pivot->save();
+
+                        // Terminamos => Salimos
+                        $cantidad_venta = 0;
+                        break;
+                    }
+                }
+
+                    /*$ingreso->pivot->cantidad_remanente = $cant_remanente_ingreso -
+                }
+
+                if ($ingreso)
+                $ingreso->pivot->cantidad_remanente
+                dd($ingreso);*/
+            }
+        //}
+
+        $articulos_proveedores = $this->load('Proveedores')->orderBy('created_at')->get()->first();
+
+        dd($articulos_proveedores);
     }
 }

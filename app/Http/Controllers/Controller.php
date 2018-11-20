@@ -35,4 +35,13 @@ class Controller extends BaseController
 
         return null;
     }
+
+    public function getNegocioId()
+    {
+        if (session('LOCAL_ACTUAL')) {
+            return session('LOCAL_ACTUAL')->negocio_id;
+        }
+
+        return null;
+    }
 }

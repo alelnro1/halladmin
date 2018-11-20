@@ -14,11 +14,11 @@ class AgregarNegocioIdAProveedores extends Migration
     public function up()
     {
         Schema::table('proveedores', function (Blueprint $table) {
-            $table->integer('negocio_id')->unsigned()->nullable();
+            //$table->integer('negocio_id')->unsigned()->nullable();
         });
 
         Schema::table('proveedores', function (Blueprint $table) {
-            $table->foreign('negocio_id')->references('id')->on('negocios');
+            //$table->foreign('negocio_id')->references('id')->on('negocios');
         });
     }
 

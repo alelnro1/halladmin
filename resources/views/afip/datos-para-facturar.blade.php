@@ -8,12 +8,15 @@
                 <h4 class="modal-title">Generación de Factura</h4>
             </div>
             <div class="modal-body">
+                <div class="callout callout-warning">
+                    Una vez realizada la factura, la venta se dará por finalizada y no podrá modificarse.
+                </div>
                 <!-- Nombre -->
                 <div class="form-group{{ $errors->has('tipo_comprobante') ? ' has-error' : '' }}">
                     <label class="col-md-4 control-label">Tipo de Comprobante</label>
 
                     <div class="col-md-6">
-                        <select name="tipo_comprobante" id="" class="form-control">
+                        <select name="tipo_comprobante" id="tipo_comprobante" class="form-control">
                             @foreach($afip_tipos_comprobantes as $tipo_comprobante)
                                 <option value="{{ $tipo_comprobante->Id }}">{{ $tipo_comprobante->Desc }}</option>
                             @endforeach
@@ -29,7 +32,7 @@
 
                 <br>
 
-                <div class="form-group{{ $errors->has('tipo_concepto') ? ' has-error' : '' }}">
+                {{--<div class="form-group{{ $errors->has('tipo_concepto') ? ' has-error' : '' }}">
                     <label class="col-md-4 control-label">Tipo de Conceptos</label>
 
                     <div class="col-md-6">
@@ -46,6 +49,67 @@
                         @endif
                     </div>
                 </div>
+
+                <br>--}}
+
+                {{--<div class="form-group{{ $errors->has('tipo_tributo') ? ' has-error' : '' }}">
+                    <label class="col-md-4 control-label">Tipo de Tributos</label>
+
+                    <div class="col-md-6">
+                        <select name="tipo_tributo" id="" class="form-control">
+                            @foreach($afip_tipos_tributos as $tipo_tributo)
+                                <option value="{{ $tipo_tributo->Id }}">{{ $tipo_tributo->Desc }}</option>
+                            @endforeach
+                        </select>
+
+                        @if ($errors->has('tipo_tributo'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('tipo_tributo') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+
+                <br>--}}
+
+                {{--<div class="form-group{{ $errors->has('tipo_tributo') ? ' has-error' : '' }}">
+                    <label class="col-md-4 control-label">Opciones</label>
+
+                    <div class="col-md-6">
+                        <select name="tipo_tributo" id="" class="form-control">
+                            @foreach($afip_opciones_disponibles as $afip_opcion)
+                                <option value="{{ $afip_opcion->Id }}">{{ $afip_opcion->Desc }}</option>
+                            @endforeach
+                        </select>
+
+                        @if ($errors->has('tipo_tributo'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('tipo_tributo') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+
+                <br>--}}
+
+                {{--<div class="form-group{{ $errors->has('tipo_tributo') ? ' has-error' : '' }}">
+                    <label class="col-md-4 control-label">Tipos Alicuotas</label>
+
+                    <div class="col-md-6">
+                        <select name="tipo_tributo" id="" class="form-control">
+                            @foreach($afip_tipos_alicuotas as $tipo_alicuota)
+                                <option value="{{ $tipo_alicuota->Id }}">{{ $tipo_alicuota->Desc }}</option>
+                            @endforeach
+                        </select>
+
+                        @if ($errors->has('tipo_tributo'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('tipo_tributo') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+
 
                 <br>
 
@@ -65,47 +129,86 @@
                             </span>
                         @endif
                     </div>
-                </div>
+                </div>--}}
 
                 <br>
 
-                <div class="form-group{{ $errors->has('nro_documento') ? ' has-error' : '' }}">
-                    <label class="col-md-4 control-label">Nro Documento</label>
+                <div class="form-group{{ $errors->has('cuit') ? ' has-error' : '' }}">
+                    <label class="col-md-4 control-label">CUIT</label>
 
                     <div class="col-md-6">
-                        <input type="text" class="form-control" name="nro_documento" value="{{ old('nro_documento') }}"
+                        <input type="text" class="form-control" name="cuit" value="{{ old('cuit') }}"
                                autocomplete="off"
-                               id="nro_documento"
-                               placeholder="Escriba el número de documento">
+                               id="cuit"
+                               data-mask="99-99999999-9"
+                               placeholder="Escriba el CUIT">
 
-                        @if ($errors->has('nro_documento'))
+                        @if ($errors->has('cuit'))
                             <span class="help-block">
-                                <strong>{{ $errors->first('nro_documento') }}</strong>
+                                <strong>{{ $errors->first('cuit') }}</strong>
                             </span>
                         @endif
                     </div>
 
                     <div class="col-md-2">
                         <button class="btn btn-default" id="buscar-contribuyente"
-                            data-buscar-contribuyente-url="{{ route('afip.get-info-contribuyente') }}">
+                                data-buscar-contribuyente-url="{{ route('afip.get-info-contribuyente') }}">
                             Buscar
                         </button>
                     </div>
                 </div>
 
-                <div class="form-group{{ $errors->has('nombre') ? ' has-error' : '' }}">
-                    <label class="col-md-4 control-label">Nombre/Razón Social</label>
+                <br>
 
-                    <div class="col-md-6">
-                        <span id="nombre-razon-social"></span>
+                <div id="cargando-datos-contribuyente" style="display: none;">
+                    <i class="fa fa-spinner fa-spin" style="font-size:24px"></i>
+                </div>
+
+                <br>
+
+                <div id="datos-contribuyente" style="border: 1px dashed gray; display: none;">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Tipo Contribuyente</label>
+
+                            <div class="col-md-6">
+                                <span id="tipo-contribuyente"></span>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Nombre/Razón Social</label>
+
+                            <div class="col-md-6">
+                                <span id="nombre-razon-social"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Domicilio Fiscal</label>
+
+                            <div class="col-md-6">
+                                <span id="domicilio-fiscal"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="clear: both;"></div>
                 </div>
 
                 <div style="clear:both;"></div>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default"
+                        data-facturar-url="{{ route('afip.generar-factura') }}"
+                        id="facturar">
+                    Facturar
+                </button>
             </div>
         </div>
 

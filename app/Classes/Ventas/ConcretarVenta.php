@@ -35,6 +35,18 @@ class ConcretarVenta extends Ventas
             $articulos = $this->armarArticulosParaVenderDeTemporales();
         }
 
+
+            foreach ($articulos as $articulo) {
+                $cantidad_a_vender = $articulo->cantidad_a_vender;
+
+                // Actualizamos la cantidad remanente por ingreso por proveedor
+                $articulo->actualizarCantidadesDeProveedores($cantidad_a_vender);
+                die();
+            }
+
+
+
+
         // Verifico que no se haya creado un nro_orden con el mismo numero mientras se realizaba la venta actual
         if (Venta::where('nro_orden', $nro_orden)->count() > 0) {
             $nro_orden = $this->generarNroOrden();
@@ -80,6 +92,10 @@ class ConcretarVenta extends Ventas
         foreach ($articulos as $articulo) {
             $cantidad_a_vender = $articulo->cantidad_a_vender;
 
+            // Actualizamos la cantidad remanente por ingreso por proveedor
+            $articulo->actualizarCantidadesDeProveedores($cantidad_a_vender);
+            die();
+
             // 2.1) Se resta el stock
             $articulo->cantidad = $articulo->cantidad - 1;
 
@@ -87,6 +103,7 @@ class ConcretarVenta extends Ventas
             $articulo->Ventas()->attach(
                 $venta->id, [
                     'precio' => $articulo->DatosArticulo->precio,
+
                     'cantidad' => $cantidad_a_vender,
                     'descuento' => $articulo->descuento,
                     'subtotal' => $articulo->subtotal,

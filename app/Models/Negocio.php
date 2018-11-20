@@ -11,9 +11,14 @@ class Negocio extends Model
 
     protected $table = "negocios";
 
-    protected $fillable = [ 'nombre' ];
+    protected $fillable = [ 'nombre', 'cuit', 'condicion_iva' ];
 
     protected $dates = ['deleted_at'];
+
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
 
     public function Locales()
     {
@@ -28,5 +33,50 @@ class Negocio extends Model
     public function Proveedores()
     {
         return $this->hasMany(Proveedor::class);
+    }
+
+    public function esResponsableInscripto()
+    {
+        return $this->condicion_iva == "responsable_inscripto";
+    }
+
+    public function esMonotributista()
+    {
+        return $this->condicion_iva == "monotributista";
+    }
+
+    /**
+     * Filtramos los comprobantes que puede emitir un negocio en base a su condicion frente al IVA
+     *
+     * @param $tipos_comprobantes
+     * @return mixed
+     */
+    public function filtrarComprobantesPorCondicionIVA($tipos_comprobantes)
+    {
+        if ($this->esResponsableInscripto()) {
+            // Definimos que comprobantes vamos a aceptar si el negocio es responsable inscripto
+            $comprobantes_validos = [
+                'Factura A',
+                'Nota de Débito A',
+                'Nota de Crédito A',
+                'Factura B',
+                'Nota de Débito B',
+                'Nota de Crédito B',
+            ];
+        } else {
+            // Definimos que comprobantes vamos a aceptar si el negocio es responsable inscripto
+            $comprobantes_validos = [
+                'Factura C',
+                'Nota de Débito C',
+                'Nota de Crédito C'
+            ];
+        }
+
+        $tipos_comprobantes =
+            $tipos_comprobantes->filter(function ($item) use ($comprobantes_validos) {
+                return in_array($item->Desc, $comprobantes_validos);
+            });
+
+        return $tipos_comprobantes;
     }
 }

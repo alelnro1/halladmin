@@ -186,7 +186,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::post('contribuyente', 'AfipController@getInfoContribuyente')->name('afip.get-info-contribuyente');
 
-        Route::get('voucher/generar', 'AfipController@generarFactura')->name('afip.generar-factura');
+        Route::post('facturar', 'AfipController@generarFactura')->name('afip.generar-factura');
 
         Route::get('voucher/{voucher}', 'AfipController@getVoucher')->name('afip.ver-voucher');
     });
@@ -217,5 +217,11 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('modificar', 'PerfilController@editarPerfil')->name('perfil.modificar');
         Route::post('modificar', 'PerfilController@actualizarPerfil')->name('perfil.procesar-modificacion');
+    });
+
+    Route::group(['prefix' => 'mi-negocio'], function () {
+        Route::get('/', 'NegocioController@index')->name('negocio');
+
+        Route::post('actualizar', 'NegocioController@actualizarConfig')->name('negocio.actualizar');
     });
 });

@@ -3,12 +3,18 @@
 namespace App\Http\Controllers;
 
 use Afip;
+use App\Classes\Ventas\Ventas;
+use App\Models\Negocio;
+use App\Traits\DatosParaFacturasAfip;
 use Illuminate\Http\Request;
+use MyProject\Proxies\__CG__\stdClass;
 
 //use Gonzakpo\AfipBundle\Controller\AfipController as AfipBundleController;
 
 class AfipController extends Controller
 {
+    use DatosParaFacturasAfip;
+
     private $afipws;
 
     public function __construct()
@@ -34,28 +40,12 @@ class AfipController extends Controller
      */
     public function getComprobantesDisponibles()
     {
-        $afip = $this->afipws;
-
         // Obtenemos todos los comprobantes de AFIP
-        $tipos_comprobantes = collect($afip->ElectronicBilling->GetVoucherTypes());
+        $tipos_comprobantes = collect($this->afipws->ElectronicBilling->GetVoucherTypes());
 
-        // Definimos que comprobantes vamos a aceptar
-        $comprobantes_validos = [
-            'Factura A',
-            'Nota de Débito A',
-            'Nota de Crédito A',
-            'Factura B',
-            'Nota de Débito B',
-            'Nota de Crédito B',
-            'Factura C',
-            'Nota de Débito C',
-            'Nota de Crédito C'
-        ];
+        $negocio = Negocio::findOrFail($this->getNegocioId());
 
-        $tipos_comprobantes =
-            $tipos_comprobantes->filter(function ($item) use ($comprobantes_validos) {
-                return in_array($item->Desc, $comprobantes_validos);
-            });
+        $tipos_comprobantes = $negocio->filtrarComprobantesPorCondicionIVA($tipos_comprobantes);
 
         return $tipos_comprobantes;
     }
@@ -89,7 +79,6 @@ class AfipController extends Controller
     }
 
     /**
-     *
      * Obtenemos los tipos de conceptos de AFIP y filtramos los que queremos mostrar
      *
      * @return \Illuminate\Support\Collection
@@ -103,43 +92,114 @@ class AfipController extends Controller
     }
 
     /**
+     * Devolvemos todos los datos del contribuyente
+     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function getInfoContribuyente(Request $request)
     {
-        $afip = $this->afipws;
+        // El CUIT viene con una mascara => La limpiamos
+        $cuit = str_replace('-', '', $request->cuit);
 
-        $nro_documento = (float) $request->nro_documento;
+        $tipo_comprobante = $request->tipo_comprobante;
 
+        $contribuyente_afip = $this->getContribuyenteAfip($cuit);
 
-        // Buscamos el contribuyente en los WS de AFIP
-        $contribuyente = $afip->RegisterScopeFive->GetTaxpayerDetails($nro_documento);
+        // Inicializamos el contribuyente return
+        $contribuyente = new \stdClass();
+
+        // Aca validamos que la CUIT exista, ya sea persona fisica o jurídica
+        if ($contribuyente_afip) {
+
+            /*****/
+            // Vamos a validar que el contribuyente que se buscó corresponda con el que puede recibir factura A, B o C
+
+            // Si es responsable inscripto, solo queremos ver CUITs responsables inscriptas
+            if ($tipo_comprobante == "Factura A") {
+                $contribuyente = $this->getDatosDeContribuyenteParaFacturaA($contribuyente_afip);
+            } else {
+                $contribuyente = $this->getDatosDeContribuyenteParaFacturaBoC($contribuyente_afip);
+            }
+    }
 
         return response()->json($contribuyente);
     }
 
-    public function generarFactura()
+    /**
+     * Buscamos al contribuyente en AFIP
+     *
+     * @param $cuit
+     * @return mixed
+     */
+    public function getContribuyenteAfip($cuit)
     {
+        $cuit = (float)$cuit;
+
+        // Buscamos el contribuyente en los WS de AFIP
+        $contribuyente = $this->afipws->RegisterScopeFive->GetTaxpayerDetails($cuit);
+
+        return $contribuyente;
+    }
+
+    /**
+     * Obtenemos los tipos de tributos de AFIP
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getTiposTributos()
+    {
+        $tipos_tributos = collect($this->afipws->ElectronicBilling->GetTaxTypes());
+
+        return $tipos_tributos;
+    }
+
+    public function getOpcionesDisponibles()
+    {
+        $opciones_disponibles = collect($this->afipws->ElectronicBilling->GetOptionsTypes());
+
+        return $opciones_disponibles;
+    }
+
+    public function getTiposAlicuotas()
+    {
+        $tipos_alicuotas = collect($this->afipws->ElectronicBilling->GetAliquotTypes());
+
+        return $tipos_alicuotas;
+    }
+
+    public function generarFactura(Request $request)
+    {
+        // El CUIT viene con una mascara => La limpiamos
+        $cuit = (float) str_replace('-', '', $request->cuit);
+
+        $tipo_comprobante = $request->tipo_comprobante;
+
+        $ventas = new Ventas();
+        $articulos = $ventas->armarArticulosParaVenderDeTemporales();
+
+        dd($articulos);
+
+        dd('aca');
         $data = array(
             'CantReg' => 1, // Cantidad de comprobantes a registrar
             'PtoVta' => 1, // Punto de venta
-            'CbteTipo' => 6, // Tipo de comprobante (ver tipos disponibles)
+            'CbteTipo' => $tipo_comprobante, // Tipo de comprobante (ver tipos disponibles)
             'Concepto' => 1, // Concepto del Comprobante: (1)Productos, (2)Servicios, (3)Productos y Servicios
             'DocTipo' => 80, // Tipo de documento del comprador (ver tipos disponibles)
-            'DocNro' => 20111111112, // Numero de documento del comprador
-            'CbteDesde' => 2, // Numero de comprobante o numero del primer comprobante en caso de ser mas de uno
-            'CbteHasta' => 2, // Numero de comprobante o numero del ultimo comprobante en caso de ser mas de uno
-            'CbteFch' => intval(date('Ymd')), // (Opcional) Fecha del comprobante (yyyymmdd) o fecha actual si es nulo
+            'DocNro' => $cuit, // Numero de documento del comprador
+            //'CbteDesde' => 2, // Numero de comprobante o numero del primer comprobante en caso de ser mas de uno
+            //'CbteHasta' => 2, // Numero de comprobante o numero del ultimo comprobante en caso de ser mas de uno
+            //'CbteFch' => intval(date('Ymd')), // (Opcional) Fecha del comprobante (yyyymmdd) o fecha actual si es nulo
             'ImpTotal' => 150, // Importe total del comprobante
             'ImpTotConc' => 150, // Importe neto no gravado
             'ImpNeto' => 0, // Importe neto gravado
             'ImpOpEx' => 0, // Importe exento de IVA
             'ImpIVA' => 0, //Importe total de IVA
             'ImpTrib' => 0, //Importe total de tributos
-            'FchServDesde' => NULL, // (Opcional) Fecha de inicio del servicio (yyyymmdd), obligatorio para Concepto 2 y 3
-            'FchServHasta' => NULL, // (Opcional) Fecha de fin del servicio (yyyymmdd), obligatorio para Concepto 2 y 3
-            'FchVtoPago' => NULL, // (Opcional) Fecha de vencimiento del servicio (yyyymmdd), obligatorio para Concepto 2 y 3
+            //'FchServDesde' => NULL, // (Opcional) Fecha de inicio del servicio (yyyymmdd), obligatorio para Concepto 2 y 3
+            //'FchServHasta' => NULL, // (Opcional) Fecha de fin del servicio (yyyymmdd), obligatorio para Concepto 2 y 3
+            //'FchVtoPago' => NULL, // (Opcional) Fecha de vencimiento del servicio (yyyymmdd), obligatorio para Concepto 2 y 3
             'MonId' => 'PES', //Tipo de moneda usada en el comprobante (ver tipos disponibles)('PES' para pesos argentinos)
             'MonCotiz' => 1, // Cotización de la moneda usada (1 para pesos argentinos)
             /*'CbtesAsoc' 	=> array( // (Opcional) Comprobantes asociados
@@ -171,14 +231,14 @@ class AfipController extends Controller
                     'Id' 		=> 17, // Codigo de tipo de opcion (ver tipos disponibles)
                     'Valor' 	=> 2 // Valor
                 )
-            ),
+            ),*/
             'Compradores' 	=> array( // (Opcional) Detalles de los clientes del comprobante
                 array(
                     'DocTipo' 		=> 80, // Tipo de documento (ver tipos disponibles)
-                    'DocNro' 		=> 20111111112, // Numero de documento
+                    'DocNro' 		=> $cuit, // Numero de documento
                     'Porcentaje' 	=> 100 // Porcentaje de titularidad del comprador
                 )
-            )*/
+            )
         );
 
         try {
@@ -198,12 +258,5 @@ class AfipController extends Controller
         $afip = $this->afipws->getWS();
 
         dd($afip->ElectronicBilling->GetVoucherInfo($voucher, 1, 6));
-    }
-
-    public function cargarDatosParaFacturar()
-    {
-        $datos['tipos_comprobantes'] = $this->getComprobantesDisponibles();
-
-        return $datos;
     }
 }
