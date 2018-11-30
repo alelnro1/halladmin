@@ -123,7 +123,7 @@
 
                 </fieldset>
 
-                <fieldset>
+                {{--<fieldset>
                     <legend>Datos Exclusivos</legend>
 
                     <div class="help-block">
@@ -199,7 +199,7 @@
                             @endif
                         </div>
                     </div>
-                </fieldset>
+                </fieldset>--}}
 
                 <div class="form-group">
                     <div class="col-md-6 col-md-offset-4">

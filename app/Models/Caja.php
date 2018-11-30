@@ -118,4 +118,16 @@ class Caja extends Model
 
         return $caja;
     }
+
+    /**
+     * Cerramos los saldos de un local
+     *
+     * @param $getLocalId
+     * @param $saldo
+     * @param string $string
+     */
+    public function cerrarCaja($local_id, $saldos)
+    {
+
+    }
 }

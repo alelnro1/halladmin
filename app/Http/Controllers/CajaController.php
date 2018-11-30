@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Caja;
 use App\Http\Controllers\Auth\AuthController;
+use App\Models\MedioPago;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -79,8 +80,15 @@ class CajaController extends Controller
             return redirect('caja/abrir')->with(['primero_apertura' => true]);
         }
 
+        $medios_pago = MedioPago::all();
+
+        // Agrupo los medios de pago de a 3 para la vista
+        //$medios_pago_agrupados =
+
         // Si el usuario actual ya abrio la caja, va a poder editarla, no se podrá crear una nueva
-        return view('cajas.cerrar');
+        return view('cajas.cerrar', [
+            'medios_pago' => $medios_pago
+        ]);
     }
 
     public function procesarCierre(Request $request)
@@ -88,7 +96,7 @@ class CajaController extends Controller
         // Valido el input
         $validator = Validator::make(
             $request->all(), [
-                'monto' => 'required|numeric',
+                'saldo.*' => 'required|numeric',
             ]
         );
 
@@ -96,8 +104,12 @@ class CajaController extends Controller
             return redirect(route('caja.cerrar'))->withErrors($validator)->withInput();
         }
 
+
         // Guardo que el usuario abrió la caja
         $caja = new Caja();
+        $caja->cerrarCaja($this->getLocalId(), $request->saldo);
+
+
         $caja = $caja->registrarTransaccion($this->getLocalId(), Auth::user()->id, $request->monto, 'cierre');
 
         // Deslogueo al usuario

@@ -34,51 +34,44 @@
 
                     <fieldset>
                         <div class="callout callout-info">
-                            Está a punto de cerrar la caja. Al cerrarla, saldrá del sistema. Ingrese el dinero actual en caja
+                            Está a punto de cerrar la caja. Al cerrarla, saldrá del sistema. Ingrese el dinero actual en
+                            caja
                         </div>
 
                         <div class="form-group {{ $errors->has('monto') ? ' has-error' : '' }}">
                             <div class="row">
-                                <div class="col-xs-12">
-                                    <div class="col-xs-4">
-                                        <div class="col-xs-3">
-                                            <img src="{{ asset('img/credit/visa.png') }}" style="width: 100%; margin-top: 10px;" alt="">
-                                        </div>
-                                        <div class="col-xs-5" style="margin-top: 10px;">
-                                            <div class="input-group">
-                                                <span class="input-group-addon">$</span>
-                                                <input type="text" class="form-control" name="monto" id="monto"
-                                                       value="{{ old('monto') }}" placeholder="Ingrese el monto..">
+                                @foreach ($medios_pago as $key => $medio_pago)
+                                    @if ($key / 3 == 0)
+                                        <div class="col-xs-12">
+                                    @endif
+                                        <div class="col-xs-4">
+                                            <div class="input-group input-group-lg">
+                                                <span class="input-group-addon" id="sizing-addon1" style="padding: 5px;">
+                                                    <img src="{{ asset('img/credit/' . $medio_pago->getImagen()) }}"
+                                                         style="width: 33px;" title="{{ $medio_pago->getNombre() }}" alt="{{ $medio_pago->getNombre() }}">
+                                                </span>
+                                                <input type="text" class="form-control" placeholder="Saldo {{ $medio_pago->getNombre() }}"
+                                                       name="saldo[{{ $medio_pago->id }}]"
+                                                       autocomplete="off"
+                                                       value="{{  old("saldo." . $medio_pago->id ) }}"
+                                                       aria-describedby="sizing-addon1">
                                             </div>
-                                        </div>
-                                    </div>
 
-                                    <div class="col-xs-4">
-                                        <div class="col-xs-3">
-                                            <img src="{{ asset('img/credit/mastercard.png') }}" style="width: 100%" alt="">
-                                        </div>
-                                        <div class="col-xs-5" style="margin-top: 10px;">
-                                            <div class="input-group">
-                                                <span class="input-group-addon">$</span>
-                                                <input type="text" class="form-control" name="monto" id="monto"
-                                                       value="{{ old('monto') }}" placeholder="Ingrese el monto..">
-                                            </div>
-                                        </div>
-                                    </div>
+                                            <br>
 
-                                    <div class="col-xs-4">
-                                        <div class="col-xs-3">
-                                            <img src="{{ asset('img/credit/american-express.png') }}" style="width: 100%" alt="">
+                                            {{--<div class="col-xs-5" style="margin-top: 10px;">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                         <img src="{{ asset('img/credit/' . $medio_pago->getImagen()) }}"
+                                                              style="width: 100%; margin-top: 10px;" alt="">
+                                                    </span>
+                                                    <input type="text" class="form-control" name="monto" id="monto"
+                                                           value="{{ old('monto') }}"
+                                                           placeholder="Ingrese el monto..">
+                                                </div>
+                                            </div>--}}
                                         </div>
-                                        <div class="col-xs-5" style="margin-top: 10px;">
-                                            <div class="input-group">
-                                                <span class="input-group-addon">$</span>
-                                                <input type="text" class="form-control" name="monto" id="monto"
-                                                       value="{{ old('monto') }}" placeholder="Ingrese el monto..">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
 
                             <br><br>
@@ -101,7 +94,7 @@
                     </fieldset>
 
                     <div class="box-footer">
-                        <div class="col-md-6 col-md-offset-4">
+                        <div class="col-md-6 col-md-offset-5">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-btn fa-times"></i>&nbsp;Cerrar Caja
                             </button>

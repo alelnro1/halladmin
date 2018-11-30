@@ -215,67 +215,48 @@ class Articulo extends Model
     public function getIngresosPorProveedorFIFO()
     {
         $ingresos =
-            $this->Proveedores
+            $this->Proveedores()->get()
                 ->sortByDesc(function ($item) {
-                    $item->pivot->created_at;
+                    return $item->pivot->created_at;
                 })
                 ->filter(function ($item) {
+                    dump($item->pivot);
                     return $item->pivot->cantidad_remanente > 0;
                 });
+
 
         return $ingresos;
     }
 
+    /**
+     * En base a la cantidad de productos que se quieren vender, vamos a restar la cantidad restante de cada ingreso
+     * por cada proveedor
+     *
+     * @param $cantidad_venta
+     */
     public function actualizarCantidadesDeProveedores($cantidad_venta)
     {
         // Vamos a crear el listado FIFO
         $ingresos = $this->getIngresosPorProveedorFIFO();
 
         // Vamos a sacar la cantidad que estamos vendiendo de los proveedores del articulo por FIFO
-        //while ($cantidad_venta > 0) {
-            foreach ($ingresos as $ingreso) {
-                if ($cantidad_venta > 0) {
-                    //$cant_remanente_ingreso = $ingreso->pivot->cantidad_remanente;
+        foreach ($ingresos as $ingreso) {
+            if ($cantidad_venta > 0) {
 
-                    // El proveedor cubre toda la venta
-                    /*if ($cant_remanente_ingreso >= $cantidad_venta) {
-                        $ingreso->pivot->cantidad_remanente = $cant_remanente_ingreso - $cantidad_venta;
-                        $ingreso->pivot->cantidad_remanente->save();
+                if ($ingreso->pivot->cantidad_remanente - $cantidad_venta <= 0) {
+                    $cantidad_venta = $cantidad_venta - $ingreso->pivot->cantidad_remanente;
 
-                        // Actualizamos la cantidad remanente a restar de los proveedores
-                        $cantidad_venta = 0;
+                    $ingreso->pivot->cantidad_remanente = 0;
+                    $ingreso->pivot->save();
 
-                        // Ya actualizamos todo, salimos del foreach
-                        break;
-                    } else {*/
-                    // El proveedor no cubre toda la venta
+                } else {
+                    $ingreso->pivot->cantidad_remanente = $ingreso->pivot->cantidad_remanente - $cantidad_venta;
+                    $ingreso->pivot->save();
 
-                    if ($ingreso->pivot->cantidad_remanente - $cantidad_venta <= 0) {
-                        $cantidad_venta = $cantidad_venta - $ingreso->pivot->cantidad_remanente;
-
-                        $ingreso->pivot->cantidad_remanente = 0;
-                        $ingreso->pivot->cantidad_remanente->save();
-                    } else {
-                        $ingreso->pivot->cantidad_remanente = $ingreso->pivot->cantidad_remanente - $cantidad_venta;
-                        $ingreso->pivot->save();
-
-                        // Terminamos => Salimos
-                        $cantidad_venta = 0;
-                        break;
-                    }
+                    // Terminamos => Salimos
+                    break;
                 }
-
-                    /*$ingreso->pivot->cantidad_remanente = $cant_remanente_ingreso -
-                }
-
-                if ($ingreso)
-                $ingreso->pivot->cantidad_remanente
-                dd($ingreso);*/
             }
-        //}
-
-        $articulos_proveedores = $this->load('Proveedores')->orderBy('created_at')->get()->first();
-
-        dd($articulos_proveedores);
+        }
     }
 }

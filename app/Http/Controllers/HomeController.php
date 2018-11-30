@@ -6,6 +6,7 @@ use App\Http\Requests;
 use App\Models\Local;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Khill\Lavacharts\Laravel\LavachartsFacade as Lava;
 
 class HomeController extends Controller
 {

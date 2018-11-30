@@ -19,7 +19,7 @@ $(function(){
             } else {
                 $.confirm({
                     title: 'Confirmar',
-                    content: 'El monto que ha ingresado es $' + monto + ' ¿Es correcto?',
+                    content: '¿Confirma el cierre de caja?',
                     buttons: {
                         cancelar: {
                             text: 'Cancelar',
