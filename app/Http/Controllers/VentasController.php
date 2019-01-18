@@ -28,11 +28,7 @@ class VentasController extends Ventas
     public function index()
     {
         // Obtengo todas las ventas del local actual
-        $ventas =
-            Venta::where('local_id', $this->getLocalId())
-                ->with('Usuario')
-                ->orderBy('created_at', 'DESC')
-                ->get();
+        $ventas = Venta::getUltimasVentasParaHome();
 
         return view('ventas.listar', ['ventas' => $ventas]);
     }

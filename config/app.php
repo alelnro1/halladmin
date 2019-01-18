@@ -159,7 +159,6 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Barryvdh\Debugbar\ServiceProvider::class,
-
 		PragmaRX\Tracker\Vendor\Laravel\ServiceProvider::class,
 		Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
 
@@ -211,7 +210,9 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
 
-	'Tracker' => PragmaRX\Tracker\Vendor\Laravel\Facade::class,
+        'Tracker' => PragmaRX\Tracker\Vendor\Laravel\Facade::class,
+
+        //'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
 
     ],
 

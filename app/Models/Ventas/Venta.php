@@ -56,6 +56,18 @@ class Venta extends Model
         return $venta;
     }
 
+    public static function getUltimasVentasParaHome()
+    {
+        // Inicializo el controller para poder acceder a las funciones
+        $controller = new Controller();
+
+        return
+            Venta::where('local_id', $controller->getLocalId())
+                ->with('Usuario')
+                ->orderBy('created_at', 'DESC')
+                ->get();
+    }
+
     /* Mutators */
     public function setClienteIdAttribute($value)
     {
