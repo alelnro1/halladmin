@@ -36,6 +36,20 @@ class Controller extends BaseController
         return null;
     }
 
+    /**
+     * Getter del objeto Local
+     *
+     * @return \Illuminate\Session\SessionManager|\Illuminate\Session\Store|mixed|null
+     */
+    public function getLocal()
+    {
+        if (session('LOCAL_ACTUAL')) {
+            return session('LOCAL_ACTUAL');
+        }
+
+        return null;
+    }
+
     public function getNegocioId()
     {
         if (session('LOCAL_ACTUAL')) {

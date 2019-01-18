@@ -29,6 +29,30 @@ class Local extends Model
      */
     protected $dates = ['deleted_at'];
 
+    /**
+     * Obtenemos todos los usuarios del local solicitado, menos
+     *
+     * @param $local_id
+     * @return mixed
+     */
+    public function getUsuarios()
+    {
+        // Obtenemos todos los usuarios del local
+        $usuarios =
+            self::where('id', $this->id)
+                ->with('Usuarios')
+                ->first()
+                ->Usuarios;
+
+        // Eliminamos el usuario actual del listado
+        $usuarios =
+            $usuarios->filter(function ($usuario) {
+                return $usuario->id != Auth::user()->id;
+            });
+
+        return $usuarios;
+    }
+
     public function getNombre()
     {
         return $this->nombre;

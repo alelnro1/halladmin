@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UsuarioRequest;
+use App\Models\Local;
 use App\Models\Menu;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -20,7 +21,6 @@ class UsuariosController extends BaseController
     public function __construct()
     {
         $this->middleware('section:usuarios');
-
     }
 
     /**
@@ -30,13 +30,7 @@ class UsuariosController extends BaseController
      */
     public function index()
     {
-        // Obtengo todos los usuarios del local actual
-        $usuarios = User::whereHas(
-            'Locales', function ($query) {
-            $query->where('local_id', $this->getLocalId())
-                ->where('user_id', '!=', Auth::user()->id);
-        }
-        )->get();
+        $usuarios = $this->getLocal()->getUsuarios();
 
         return view('usuarios.listar')->with('usuarios', $usuarios);
     }
