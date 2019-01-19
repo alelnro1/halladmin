@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Local;
 use App\Menu;
+use App\Models\Local;
+use App\Models\Negocio;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -25,9 +26,10 @@ class Controller extends BaseController
 
     /**
      * Getter del ID del local
-     * @return null
+     *
+     * @return int
      */
-    public function getLocalId()
+    public function getLocalId(): int
     {
         if (session('LOCAL_ACTUAL')) {
             return session('LOCAL_ACTUAL')->id;
@@ -39,9 +41,9 @@ class Controller extends BaseController
     /**
      * Getter del objeto Local
      *
-     * @return \Illuminate\Session\SessionManager|\Illuminate\Session\Store|mixed|null
+     * @return \App\Models\Local
      */
-    public function getLocal()
+    public function getLocal(): Local
     {
         if (session('LOCAL_ACTUAL')) {
             return session('LOCAL_ACTUAL');
@@ -50,10 +52,15 @@ class Controller extends BaseController
         return null;
     }
 
-    public function getNegocioId()
+    /**
+     * Getter del negocio id
+     *
+     * @return Negocio |null
+     */
+    public function getNegocio(): Negocio
     {
-        if (session('LOCAL_ACTUAL')) {
-            return session('LOCAL_ACTUAL')->negocio_id;
+        if (session('NEGOCIO_ACTUAL')) {
+            return session('NEGOCIO_ACTUAL');
         }
 
         return null;

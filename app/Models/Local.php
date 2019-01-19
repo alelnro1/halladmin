@@ -11,6 +11,8 @@ use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use phpDocumentor\Reflection\Types\Boolean;
+use phpDocumentor\Reflection\Types\Integer;
 
 class Local extends Model
 {
@@ -28,30 +30,6 @@ class Local extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
-
-    /**
-     * Obtenemos todos los usuarios del local solicitado, menos
-     *
-     * @param $local_id
-     * @return mixed
-     */
-    public function getUsuarios()
-    {
-        // Obtenemos todos los usuarios del local
-        $usuarios =
-            self::where('id', $this->id)
-                ->with('Usuarios')
-                ->first()
-                ->Usuarios;
-
-        // Eliminamos el usuario actual del listado
-        $usuarios =
-            $usuarios->filter(function ($usuario) {
-                return $usuario->id != Auth::user()->id;
-            });
-
-        return $usuarios;
-    }
 
     public function getNombre()
     {
@@ -129,7 +107,7 @@ class Local extends Model
      *
      * @return mixed
      */
-    public function cantidadDeVentas()
+    public function getCantidadDeVentas()
     {
         return $this->Ventas()->whereDate('created_at', '=', date("Y-m-d", time()))->count();
     }
@@ -139,7 +117,7 @@ class Local extends Model
      *
      * @return mixed
      */
-    public function cantidadDeVentasCanceladas()
+    public function getCantidadDeVentasCanceladas()
     {
         return $this->VentasCanceladas()->whereDate('created_at', '=', date("Y-m-d", time()))->count();
     }
@@ -149,7 +127,7 @@ class Local extends Model
      *
      * @return mixed
      */
-    public function cantidadDeCambios()
+    public function getCantidadDeCambios()
     {
         return $this->Cambios()->whereDate('created_at', '=', date("Y-m-d", time()))->count();
     }
@@ -157,11 +135,11 @@ class Local extends Model
     /**
      * Se obtiene la cantidad de cambios del local
      *
-     * @return mixed
+     * @return int
      */
-    public function cantidadDeUsuarios()
+    public function getCantidadDeUsuarios() : int
     {
-        return $this->Usuarios()->where('user_id', '!=', Auth::user()->id)->count();
+        return $this->Usuarios()->where('user_id', '<>', Auth::user()->id)->count();
     }
 
     public static function getLocalesConUsuarios()
@@ -169,8 +147,8 @@ class Local extends Model
         return
             Local::whereHas(
                 'Usuarios', function ($query) {
-                    $query->where('user_id', Auth::user()->id);
-                }
+                $query->where('user_id', Auth::user()->id);
+            }
             )
                 ->select(['id', 'nombre', 'email', 'telefono'])
                 ->get();
@@ -182,8 +160,62 @@ class Local extends Model
      * @param $articulo
      * @return bool
      */
-    public function articuloPerteneceALocal($articulo)
+    public function articuloPerteneceALocal($articulo) : Boolean
     {
         return $this->id == $articulo->getLocal();
+    }
+
+    /**
+     * Obtenemos todos los usuarios del local solicitado, menos el usuario actual
+     *
+     * @param $local_id
+     * @return mixed
+     */
+    public function getUsuarios()
+    {
+        // Obtenemos todos los usuarios del local
+        $usuarios =
+            $this->load([
+                'Usuarios'
+            ])
+                ->Usuarios;
+
+        // Eliminamos el usuario actual del listado
+        $usuarios =
+            $usuarios->filter(function ($usuario) {
+                return $usuario->id != Auth::user()->id;
+            });
+
+        return $usuarios;
+    }
+
+    /**
+     * Obtenemos las ventas del local, con la posibilidad de limitar los resultados
+     *
+     * @param null $limit
+     * @return mixed
+     */
+    public function getVentas($limit = null)
+    {
+        $local_ventas =
+            $this->load([
+                'Ventas' => function ($query) use ($limit) {
+                    $query->with('Usuario')
+                        ->orderBy('created_at', 'desc')
+                        ->limit($limit);
+                }
+            ]);
+
+        return $local_ventas->Ventas;
+    }
+
+    /**
+     * Obtenemos los proveedores del local
+     *
+     * @return mixed
+     */
+    public function getProveedores()
+    {
+        return $this->Proveedores;
     }
 }

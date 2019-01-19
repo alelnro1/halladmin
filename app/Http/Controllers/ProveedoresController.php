@@ -24,11 +24,13 @@ class ProveedoresController extends BaseController
      */
     public function index()
     {
-        $local_id = session('LOCAL_ACTUAL')->id;
+        $local = $this->getLocal();
 
-        $proveedores = Proveedor::getProveedoresDeLocal($local_id);
+        $proveedores = $local->getProveedores();
 
-        return view('proveedores.listar')->with('proveedores', $proveedores);
+        return view('proveedores.listar', [
+            'proveedores' => $proveedores
+        ]);
     }
 
     /**
@@ -39,10 +41,10 @@ class ProveedoresController extends BaseController
     public function create()
     {
         // Obtengo el negocio actual
-        $negocio_id = session('LOCAL_ACTUAL')->negocio_id;
+        $negocio = $this->getNegocio();
 
         // Obtenemos los proveedores del negocio actual
-        $proveedores = Proveedor::getProveedoresDeNegocio($negocio_id);
+        $proveedores = $negocio->getProveedores();//Proveedor::getProveedoresDeNegocio($negocio_id);
 
         $negocio_tiene_proveedores = count($proveedores) > 0;
 

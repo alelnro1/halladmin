@@ -325,6 +325,9 @@ class User extends Authenticatable
 
                     // Seteo el primer local como el seleccionado
                     $this->setLocal($primer_local);
+
+                    // Seteo el negocio
+                    $this->setNegocio($primer_local->negocio_id);
                 }
             }
 
@@ -360,5 +363,17 @@ class User extends Authenticatable
         }
 
         return null;
+    }
+
+    /**
+     * Seteo el negocio
+     *
+     * @param $negocio_id
+     */
+    private function setNegocio($negocio_id)
+    {
+        $negocio = Negocio::getNegocioPorId($negocio_id);
+
+        session(['NEGOCIO_ACTUAL' => $negocio]);
     }
 }

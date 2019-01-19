@@ -34,30 +34,22 @@ class HomeController extends Controller
             $ventas = [];
             $grafico_lineal = $grafico_pie = false;
         } else {
-            $local = session('LOCAL_ACTUAL');
+            $local = $this->getLocal();
 
-            $local = $local->load([
-                'Ventas' => function ($query) {
-                    $query->with('Usuario')
-                        ->orderBy('created_at', 'desc')
-                        ->limit(20);
-                }
-            ]);
-
-            // Ventas
-            $ventas = $local->Ventas;
+            // Obtenemos las ventas
+            $ventas = $local->getVentas(20);
 
             // Cantidad Ventas
-            $cantidad_ventas = $local->cantidadDeVentas();
+            $cantidad_ventas = $local->getCantidadDeVentas();
 
             // Cantidad Ventas Canceladas
-            $cantidad_ventas_canceladas = $local->cantidadDeVentasCanceladas();
+            $cantidad_ventas_canceladas = $local->getCantidadDeVentasCanceladas();
 
             // Cantidad Cambios
-            $cantidad_cambios = $local->cantidadDeCambios();
+            $cantidad_cambios = $local->getCantidadDeCambios();
 
             // Cantidad Usuarios
-            $cantidad_usuarios = $local->cantidadDeUsuarios();
+            $cantidad_usuarios = $local->getCantidadDeUsuarios();
 
             // Voy a crear un grafico de todas las ventas y cambios
             $graficos = new GraficosController();

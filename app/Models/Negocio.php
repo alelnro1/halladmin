@@ -79,4 +79,20 @@ class Negocio extends Model
 
         return $tipos_comprobantes;
     }
+
+    /**
+     * Getter del negocio
+     *
+     * @param $negocio_id
+     * @return mixed
+     */
+    public static function getNegocioPorId($negocio_id) : self
+    {
+        return self::where('id', $negocio_id)->first();
+    }
+
+    public function getProveedores()
+    {
+        return $this->Proveedores;
+    }
 }
