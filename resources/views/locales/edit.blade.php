@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('site-name', 'Locales')
+@section('site-name', 'Local')
 
 @section('page-header', 'Locales')
 

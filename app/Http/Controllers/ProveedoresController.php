@@ -44,7 +44,7 @@ class ProveedoresController extends BaseController
         $negocio = $this->getNegocio();
 
         // Obtenemos los proveedores del negocio actual
-        $proveedores = $negocio->getProveedores();//Proveedor::getProveedoresDeNegocio($negocio_id);
+        $proveedores = $negocio->getProveedores();
 
         $negocio_tiene_proveedores = count($proveedores) > 0;
 
@@ -72,7 +72,7 @@ class ProveedoresController extends BaseController
         $this->subirYGuardarArchivoSiHay($request, $proveedor);
 
         // Local actual
-        $local_actual_id = session('LOCAL_ACTUAL')->id;
+        $local_actual_id = $this->getLocalId();
 
         // Vinculamos al proveedor con el local actual
         $proveedor->locales()->attach($local_actual_id);
@@ -88,18 +88,7 @@ class ProveedoresController extends BaseController
      */
     public function show(Proveedor $proveedor)
     {
-        $proveedor->load([
-            'Articulos' => function ($query) {
-                $query->with([
-                    'DatosArticulo',
-                    'Local' => function ($query) {
-                        $query->select(['id', 'nombre']);
-                    }
-                ]);
-            },
-        ]);
-
-        $articulos = $proveedor->Articulos;
+        $articulos = $proveedor->getArticulos();
 
         return view('proveedores.show', ['proveedor' => $proveedor, 'articulos' => $articulos]);
     }
@@ -118,8 +107,8 @@ class ProveedoresController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param ProveedoresRequest $request
+     * @param Proveedor $proveedor
      * @return \Illuminate\Http\Response
      */
     public function update(ProveedoresRequest $request, Proveedor $proveedor)
@@ -137,8 +126,9 @@ class ProveedoresController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param Proveedor $proveedor
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Proveedor $proveedor)
     {
@@ -158,9 +148,9 @@ class ProveedoresController extends BaseController
     {
         $proveedor = Proveedor::find($request->proveedor);
 
-        $local = session('LOCAL_ACTUAL');
+        $local = $this->getLocal();
 
-        $negocio_actual_id = session('LOCAL_ACTUAL')->negocio_id;
+        $negocio_actual_id = $this->getNegocioId();
 
         // Si el proveedor pertenece a todo el negocio => lo puedo asignar a un local del negocio
         if ($proveedor->perteneceAlNegocio($negocio_actual_id)) {

@@ -88,7 +88,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('alarmas', 'AlarmasController');
 
     Route::group(['prefix' => 'caja'], function () {
-        Route::get('/', 'CajaController@listar')->name('caja');
+        Route::get('/', 'CajaController@index')->name('caja');
         Route::get('abrir', 'CajaController@abrirCaja')->name('caja.abrir');
         Route::post('abrir', 'CajaController@procesarApertura')->name('caja.procesar-apertura');
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Caja;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LocalRequest extends FormRequest
+class AperturaCajaRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,7 @@ class LocalRequest extends FormRequest
     public function rules()
     {
         return [
-            'nombre'      => 'required|max:100',
-            'archivo'     => 'mimes:jpg,jpeg,png,gif',
-            'email'       => 'email|max:100',
-            'telefono'    => 'required'
+            'monto' => 'required|numeric'
         ];
     }
 }

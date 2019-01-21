@@ -77,12 +77,23 @@ class VentasController extends Ventas
         return $articulos;
     }
 
+    /**
+     * Obtenemos todas las ventas del local
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function ventasCanceladas()
     {
-        $ventas_canceladas =
-            VentaCancelada::where('local_id', $this->getLocalId())
+        $ventas_canceladas = $this->getLocal()->getVentas();
+
+        $ventas_canceladas->load([
+            'Usuario',
+            'Cliente'
+        ]);
+
+        /*VentaCancelada::where('local_id', $this->getLocalId())
                 ->with(['Usuario', 'Cliente'])
-                ->get();
+                ->get();*/
 
         return view('ventas.listado-ventas-canceladas', ['ventas_canceladas' => $ventas_canceladas]);
     }

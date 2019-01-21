@@ -61,8 +61,8 @@ class HomeController extends Controller
 
         $local_nombre = "";
 
-        if (session('LOCAL_ACTUAL') != null) {
-            $local_nombre = session('LOCAL_ACTUAL')->nombre;
+        if ($this->getLocal() != null) {
+            $local_nombre = $this->getLocalNombre();
         }
 
         return view(

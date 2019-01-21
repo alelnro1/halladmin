@@ -161,6 +161,7 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
 		PragmaRX\Tracker\Vendor\Laravel\ServiceProvider::class,
 		Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
+        Illuminate\Notifications\NotificationServiceProvider::class,
 
         //Gonzakpo\AfipBundle\AfipBundle::class => ['all' => true],
     ],

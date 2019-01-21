@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LocalRequest;
+use App\Http\Requests\Local\AltaLocalRequest;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
 use App\Models\Local;
@@ -48,7 +48,7 @@ class LocalesController extends BaseController
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(LocalRequest $request)
+    public function store(AltaLocalRequest $request)
     {
         // Le agrego el negocio al local
         $request->request->add(['negocio_id' => Auth::user()->negocio_id]);
@@ -105,7 +105,7 @@ class LocalesController extends BaseController
     public function update(Request $request, $id)
     {
         // Valido el input
-        $validator = Validator::make(
+        /*$validator = Validator::make(
             $request->all(), [
                 'nombre' => 'required|max:100',
                 'archivo' => 'mimes:jpg,jpeg,png,gif',
@@ -117,19 +117,10 @@ class LocalesController extends BaseController
 
         if ($validator->fails()) {
             return redirect('locales/' . $id . '/edit')->withErrors($validator)->withInput();
-        }
+        }*/
 
         // Busco el local
         $local = Local::findOrFail($id);
-
-        // Cargo los ID's de las categorias del local
-        /*$local->load(
-            [
-            'Categorias' => function ($query) {
-                $query->select(['categoria_id']);
-            }
-            ]
-        );*/
 
         // Actualizo el local
         $local->update($request->except(['_method', '_token']));
@@ -174,34 +165,6 @@ class LocalesController extends BaseController
         return redirect(route('locales'))->with('local_eliminado', 'Local eliminado');
     }
 
-    /**
-     * Subir un archivo
-     *
-     * @param  Request $request
-     * @return JSON
-     */
-    public function subirArchivo(Request $request)
-    {
-        $directorio_destino = 'uploads/archivos/';
-        $nombre_original = $request->archivo->getClientOriginalName();
-        $extension = $request->archivo->getClientOriginalExtension();
-        $nombre_archivo = rand(111111, 999999) . '_' . time() . "_." . $extension;
-
-        if ($request->archivo->isValid()) {
-            if ($request->archivo->move($directorio_destino, $nombre_archivo)) {
-                $url = $directorio_destino . $nombre_archivo;
-                $error = false;
-            } else {
-                $url = false;
-                $error = "No se pudo mover el archivo";
-            }
-        } else {
-            $url = false;
-            $error = $request->archivo->getErrorMessage();
-        }
-
-        return array('url' => $url, 'err' => $error);
-    }
     /** DEPRACATED
      * Se borran todas las categorias asignadas al local y se vuelven a crear
      *

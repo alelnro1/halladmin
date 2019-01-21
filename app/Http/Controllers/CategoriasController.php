@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Categorias\EditarCategoriaRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Categoria;
 use Illuminate\Support\Facades\Validator;
 
-class CategoriasController extends Controller
+class CategoriasController extends BaseController
 {
     use SoftDeletes;
 
@@ -52,24 +53,25 @@ class CategoriasController extends Controller
      */
     public function store(Request $request)
     {
-        // Valido el input
+        /*// Valido el input
         $validator = Validator::make($request->all(), [
             'nombre'      => 'required|max:100',
         ]);
         
         if ($validator->fails())
-            return redirect('categorias/create')->withErrors($validator)->withInput();
+            return redirect('categorias/create')->withErrors($validator)->withInput();*/
         
         // Creo el tipoTalle
         $categoria = Categoria::create($request->all());
         
         // Si se trató de guardar una foto para el local, validarla y subirla
-        $validator = $this->subirYGuardarArchivoSiHay($request, $validator, $categoria);
+        //$validator = $this->subirYGuardarArchivoSiHay($request, $validator, $categoria);
+        $this->subirYGuardarArchivoSiHay($request, $categoria);
 
-        if ($validator) {
+        /*if ($validator) {
             if ($validator->fails())
                 return redirect('categorias/create')->withErrors($validator)->withInput();
-        }
+        }*/
 
         return redirect('/categorias/')->with('categoria_creada', 'Categoría con nombre ' . $request->nombre . ' creado');
     }
@@ -81,7 +83,7 @@ class CategoriasController extends Controller
      * @param $tipoTalle
      * @return mixed
      */
-    private function subirYGuardarArchivoSiHay($request, $validator, $tipoTalle)
+    /*private function subirYGuardarArchivoSiHay($request, $validator, $tipoTalle)
     {
         if (isset($request->archivo) && count($request->archivo) > 0) {
             $archivo = $this->subirArchivo($request);
@@ -95,7 +97,7 @@ class CategoriasController extends Controller
                 return $validator;
             }
         }
-    }
+    }*/
 
     /**
      * Display the specified resource.
@@ -136,15 +138,15 @@ class CategoriasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EditarCategoriaRequest $request, $id)
     {
         // Valido el input
-        $validator = Validator::make($request->all(), [
+        /*$validator = Validator::make($request->all(), [
             'nombre'      => 'required|max:100',
         ]);
         
         if ($validator->fails()) 
-            return redirect('categorias/' . $id .'/edit')->withErrors($validator)->withInput();
+            return redirect('categorias/' . $id .'/edit')->withErrors($validator)->withInput();*/
 
         // Busco el tipoTalle
         $categoria = Categoria::findOrFail($id);
@@ -153,12 +155,13 @@ class CategoriasController extends Controller
         $categoria->update($request->except(['_method', '_token']));
 
        // Si se trató de guardar una foto para el local, validarla y subirla
-        $validator = $this->subirYGuardarArchivoSiHay($request, $validator, $categoria);
+        //$validator = $this->subirYGuardarArchivoSiHay($request, $validator, $categoria);
+        $this->subirYGuardarArchivoSiHay($request, $categoria);
 
-        if ($validator) {
+        /*if ($validator) {
             if ($validator->fails())
                 return redirect('categorias/create')->withErrors($validator)->withInput();
-        }
+        }*/
 
         return redirect('/categorias')->with('categoria_actualizado', 'TipoTalle actualizado');
     }
@@ -177,34 +180,4 @@ class CategoriasController extends Controller
 
         return redirect('/categorias/')->with('categoria_eliminada', 'Categoria con nombre ' . $categoria->nombre . ' eliminada');
     }
-
-        /**
-     * Subir un archivo
-     * @param Request $request
-     * @return JSON
-     */
-    public function subirArchivo(Request $request)
-    {
-        $directorio_destino = 'uploads/archivos/';
-        $nombre_original    = $request->archivo->getClientOriginalName();
-        $extension          = $request->archivo->getClientOriginalExtension();
-        $nombre_archivo     = rand(111111,999999) .'_'. time() . "_.". $extension;
-
-        if ($request->archivo->isValid()) {
-            if ($request->archivo->move($directorio_destino, $nombre_archivo)) {
-                $url = $directorio_destino . $nombre_archivo;
-                $error = false;
-            } else {
-                $url = false;
-                $error = "No se pudo mover el archivo";
-            }
-        } else {
-            $url = false;
-            $error = $request->archivo->getErrorMessage();
-        }
-
-        return array('url' => $url, 'err' => $error);
-    }
-
-
 }

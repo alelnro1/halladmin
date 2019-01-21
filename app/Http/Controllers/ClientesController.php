@@ -39,7 +39,7 @@ class ClientesController extends Controller
      */
     public function store(Request $request)
     {
-        // Valido el input
+        /*// Valido el input
         $validator = Validator::make(
             $request->all(), [
             'nombre'      => 'required|max:100',
@@ -51,9 +51,9 @@ class ClientesController extends Controller
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
-        }
+        }*/
 
-        $request->request->add(['negocio_id' => Auth::user()->negocio_id]);
+        $request->request->add(['negocio_id' => $this->getNegocioId()]);
 
         // Creo el cliente
         $cliente = Cliente::create($request->all());

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Caja\AperturaCajaRequest;
 use App\Models\Caja;
 use App\Http\Controllers\Auth\AuthController;
 use App\Models\MedioPago;
@@ -18,19 +19,29 @@ class CajaController extends Controller
         parent::__construct();
     }
 
-    public function listar()
+    /**
+     * Mostramos el listado de cajas
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index()
     {
-        $cajas = Caja::where('local_id', $this->getLocalId())->get();
+        $cajas = $this->getLocal()->getCajas();
 
         return view('cajas.listar')->with([
             'cajas' => $cajas
         ]);
     }
 
+    /**
+     * Mostramos el formulario de Apertura de Caja
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function abrirCaja()
     {
         // Obtengo el local actual
-        $local_actual_id = session('LOCAL_ACTUAL')->id;
+        $local_actual_id = $this->getLocalId();
 
         $caja = Caja::getCajaLocalUserActual($local_actual_id, Auth::user()->id);
 
@@ -51,10 +62,10 @@ class CajaController extends Controller
         return view('cajas.abrir');
     }
 
-    public function procesarApertura(Request $request)
+    public function procesarApertura(AperturaCajaRequest $request)
     {
         // Valido el input
-        $validator = Validator::make(
+        /*$validator = Validator::make(
             $request->all(), [
                 'monto' => 'required|numeric',
             ]
@@ -62,11 +73,17 @@ class CajaController extends Controller
 
         if ($validator->fails()) {
             return redirect('caja/abrir')->withErrors($validator)->withInput();
-        }
+        }*/
 
         // Guardo que el usuario abrió la caja
         $caja = new Caja();
-        $caja = $caja->registrarTransaccion($this->getLocalId(), Auth::user()->id, $request->monto, 'apertura');
+
+        $caja = $caja->registrarTransaccion(
+            $this->getLocalId()
+            , Auth::user()->id
+            , $request->monto
+            , 'apertura'
+        );
 
         // Indico que el usuario abrió la caja en esta sesión
         Auth::user()->registrarCaja($caja->id);
@@ -94,7 +111,7 @@ class CajaController extends Controller
     public function procesarCierre(Request $request)
     {
         // Valido el input
-        $validator = Validator::make(
+        /*$validator = Validator::make(
             $request->all(), [
                 'saldo.*' => 'required|numeric',
             ]
@@ -102,7 +119,7 @@ class CajaController extends Controller
 
         if ($validator->fails()) {
             return redirect(route('caja.cerrar'))->withErrors($validator)->withInput();
-        }
+        }*/
 
 
         // Guardo que el usuario abrió la caja
@@ -110,7 +127,7 @@ class CajaController extends Controller
         $caja->cerrarCaja($this->getLocalId(), $request->saldo);
 
 
-        $caja = $caja->registrarTransaccion($this->getLocalId(), Auth::user()->id, $request->monto, 'cierre');
+        $caja->registrarTransaccion($this->getLocalId(), Auth::user()->id, $request->monto, 'cierre');
 
         // Deslogueo al usuario
         Auth::logout();

@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Menu;
 use App\Models\Local;
 use App\Models\Negocio;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesResources;
 use Illuminate\Support\Facades\Auth;
 
 class Controller extends BaseController
@@ -22,20 +20,6 @@ class Controller extends BaseController
     public function __construct()
     {
 
-    }
-
-    /**
-     * Getter del ID del local
-     *
-     * @return int
-     */
-    public function getLocalId(): int
-    {
-        if (session('LOCAL_ACTUAL')) {
-            return session('LOCAL_ACTUAL')->id;
-        }
-
-        return null;
     }
 
     /**
@@ -53,7 +37,35 @@ class Controller extends BaseController
     }
 
     /**
-     * Getter del negocio id
+     * Getter del ID del local
+     *
+     * @return int
+     */
+    public function getLocalId(): int
+    {
+        if ($this->getLocal()) {
+            return $this->getLocal()->id;
+        }
+
+        return null;
+    }
+
+    /**
+     * Getter del nombre del local
+     *
+     * @return string
+     */
+    public function getLocalNombre(): string
+    {
+        if ($this->getLocal()) {
+            return $this->getLocal()->getNombre();
+        }
+
+        return null;
+    }
+
+    /**
+     * Getter del objecto negocio
      *
      * @return Negocio |null
      */
@@ -65,4 +77,19 @@ class Controller extends BaseController
 
         return null;
     }
+
+    /**
+     * Getter del ID del negocio
+     *
+     * @return int
+     */
+    public function getNegocioId(): int
+    {
+        if ($this->getNegocio()) {
+            return $this->getNegocio()->id;
+        }
+
+        return null;
+    }
+
 }

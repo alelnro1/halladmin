@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Talles\AltaTalleRequest;
+use App\Http\Requests\Talles\EditarTalleRequest;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -26,7 +28,10 @@ class TallesController extends Controller
     public function index()
     {
         $talles = Talle::all();
-        return view('talles.listar')->with('talles', $talles);
+
+        return view('talles.listar', [
+            'talles' => $talles
+        ]);
     }
 
     /**
@@ -37,7 +42,10 @@ class TallesController extends Controller
     public function create()
     {
         $categorias = Categoria::all();
-        return view('talles.create', array('categorias' => $categorias));
+
+        return view('talles.create', [
+            'categorias' => $categorias
+        ]);
     }
 
     /**
@@ -46,16 +54,16 @@ class TallesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AltaTalleRequest $request)
     {
         // Valido el input
-        $validator = Validator::make($request->all(), [
+        /*$validator = Validator::make($request->all(), [
             'nombre'        => 'required|max:100',
             'categoria_id'  => 'required'
         ]);
         
         if ($validator->fails())
-            return redirect('talles/create')->withErrors($validator)->withInput();
+            return redirect('talles/create')->withErrors($validator)->withInput();*/
         
         // Creo el talle
         Talle::create($request->all());
@@ -79,7 +87,10 @@ class TallesController extends Controller
 
         $categorias = Categoria::all();
 
-        return view('talles.edit', array('talle' => $talle, 'categorias' => $categorias));
+        return view('talles.edit', [
+            'talle' => $talle,
+            'categorias' => $categorias
+        ]);
     }
 
     /**
@@ -89,9 +100,9 @@ class TallesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EditarTalleRequest $request, $id)
     {
-        // Valido el input
+        /*// Valido el input
         $validator = Validator::make($request->all(), [
             'nombre'        => 'required|max:100',
             'categoria_id'  => 'required|not_in:0'
@@ -99,6 +110,7 @@ class TallesController extends Controller
         
         if ($validator->fails()) 
             return redirect('talles/' . $id .'/edit')->withErrors($validator)->withInput();
+        */
 
         // Busco el talle
         $talle = Talle::findOrFail($id);

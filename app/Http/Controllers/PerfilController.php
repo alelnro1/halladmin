@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Perfil\EditarPerfilRequest;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class PerfilController extends Controller
+class PerfilController extends BaseController
 {
     public function __construct()
     {
@@ -38,17 +39,17 @@ class PerfilController extends Controller
     /**
      * Actualizar el perfil con los campos ingresados (y foto si la hay)
      */
-    public function actualizarPerfil(Request $request)
+    public function actualizarPerfil(EditarPerfilRequest $request)
     {
-        $validator = Validator::make($request->all(), [
+        /*$validator = Validator::make($request->all(), [
             'nombre' => 'required|max:255',
             'apellido' => 'required|max:255',
             'email' => 'required|email|max:255',
             'telefono' => 'max:60',
             'archivo'  => 'max:5000|mimes:jpg,jpeg,png',
-        ]);
+        ]);*/
 
-        $validator->after(function($validator) use ($request) {
+        /*$validator->after(function($validator) use ($request) {
             // Obtengo todos los usuarios con mail igual al ingresado
             $usuarios_con_mail_igual  = User::where('email', $request->email)->select(['id'])->get();
 
@@ -64,7 +65,7 @@ class PerfilController extends Controller
             return redirect('perfil/edit')
                 ->withErrors($validator)
                 ->withInput();
-        }
+        }*/
 
         $usuario = Auth::user();
 
@@ -77,12 +78,13 @@ class PerfilController extends Controller
         $usuario->save();
 
         // Si se trató de guardar una foto para el local, validarla y subirla
-        $validator = $this->subirYGuardarArchivoSiHay($request, $validator, $usuario);
+        //$validator = $this->subirYGuardarArchivoSiHay($request, $validator, $usuario);
+        $this->subirYGuardarArchivoSiHay($request, $usuario);
 
-        if ($validator) {
+        /*if ($validator) {
             if ($validator->fails())
                 return redirect('perfil/edit')->withErrors($validator)->withInput();
-        }
+        }*/
 
         return redirect('perfil')->with('perfil_actualizado', 'Su perfil se actualizó');
     }
@@ -94,7 +96,7 @@ class PerfilController extends Controller
      * @param $local
      * @return mixed
      */
-    private function subirYGuardarArchivoSiHay($request, $validator, $local)
+    /*private function subirYGuardarArchivoSiHay($request, $validator, $local)
     {
         if (isset($request->archivo) && count($request->archivo) > 0) {
             $archivo = $this->subirArchivo($request);
@@ -108,7 +110,7 @@ class PerfilController extends Controller
                 return $validator;
             }
         }
-    }
+    }*/
 
     /**
      * Mostrar el formulario para cambiar la contraseña
@@ -125,15 +127,15 @@ class PerfilController extends Controller
      */
     public function actualizarClave(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        /*$validator = Validator::make($request->all(), [
             'old_password'  => 'required',
             'password'      => 'required|min:6|confirmed',
-        ]);
+        ]);*/
 
         // Busco el email y contraseña del usuario actual
         $usuario = User::where('id', '=', Auth::user()->id)->first(['id', 'email', 'password']);
 
-        // Valido que la contraseña vieja sea la actual
+        /*// Valido que la contraseña vieja sea la actual
         $validator->after(function($validator) use ($request, $usuario) {
             if (!Hash::check($request->old_password, $usuario->password)){
                 $validator->errors()->add('old_password', 'Contraseña actual incorrecta');
@@ -144,7 +146,7 @@ class PerfilController extends Controller
             return redirect('perfil/edit')
                 ->withErrors($validator)
                 ->withInput();
-        }
+        }*/
 
         // Todo funcionó => cambio la contraseña
         $nueva_pass = Hash::make($request->password);
@@ -158,33 +160,5 @@ class PerfilController extends Controller
         Session::flush();
 
         return redirect('/login')->with('password_changed', true);
-    }
-
-    /**
-     * Subir un archivo
-     * @param Request $request
-     * @return JSON
-     */
-    public function subirArchivo(Request $request)
-    {
-        $directorio_destino = 'uploads/archivos/';
-        $nombre_original    = $request->archivo->getClientOriginalName();
-        $extension          = $request->archivo->getClientOriginalExtension();
-        $nombre_archivo     = rand(111111,999999) .'_'. time() . "_.". $extension;
-
-        if ($request->archivo->isValid()) {
-            if ($request->archivo->move($directorio_destino, $nombre_archivo)) {
-                $url = $directorio_destino . $nombre_archivo;
-                $error = false;
-            } else {
-                $url = false;
-                $error = "No se pudo mover el archivo";
-            }
-        } else {
-            $url = false;
-            $error = $request->archivo->getErrorMessage();
-        }
-
-        return array('url' => $url, 'err' => $error);
     }
 }

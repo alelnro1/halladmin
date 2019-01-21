@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('page-header', 'Locales')
+@section('page-header', 'Local')
 @section('page-description', 'Nuevo')
 
 @section('styles')

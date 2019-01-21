@@ -62,6 +62,7 @@ class Caja extends Model
      * @param $local_id
      * @param $user_id
      * @param string $tipo
+     * @return
      */
     public function getUltimaCajaSinCerrar($local_id, $user_id, $tipo)
     {

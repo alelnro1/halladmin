@@ -93,4 +93,25 @@ class Proveedor extends Model
         return $negocio->Proveedores->contains($this);
     }
 
+    /**
+     * Obtenemos los articulos del proveedor
+     *
+     * @return mixed
+     */
+    public function getArticulos()
+    {
+        return
+            $this->load([
+                'Articulos' => function ($query) {
+                    $query->with([
+                        'DatosArticulo',
+                        'Local' => function ($query) {
+                            $query->select(['id', 'nombre']);
+                        }
+                    ]);
+                },
+            ])
+                ->Articulos;
+    }
+
 }

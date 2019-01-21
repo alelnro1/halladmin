@@ -8,12 +8,15 @@ use Illuminate\Http\Request;
 
 class NegocioController extends Controller
 {
+    /**
+     * Mostramos la info del negocio actual
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
-        $negocio_id = $this->getNegocioId();
-
-        // Busco el negocio
-        $negocio = Negocio::where('id', $negocio_id)->first();
+        // Traigo el negocio
+        $negocio = $this->getNegocio();
 
         return view('negocio.index', [
             'negocio' => $negocio
@@ -28,10 +31,8 @@ class NegocioController extends Controller
      */
     public function actualizarConfig(NegocioRequest $request)
     {
-        $negocio_id = $this->getNegocioId();
-
         // Busco el negocio
-        $negocio = Negocio::where('id', $negocio_id)->first();
+        $negocio = $this->getNegocio();
 
         // El CUIT viene con una mascara => La limpiamos
         $cuit = str_replace('-', '', $request->cuit);

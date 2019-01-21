@@ -218,4 +218,14 @@ class Local extends Model
     {
         return $this->Proveedores;
     }
+
+    /**
+     * Obtenemos las cajas del local
+     *
+     * @return mixed
+     */
+    public function getCajas()
+    {
+        return $this->Cajas;
+    }
 }
