@@ -51,7 +51,7 @@ class LocalesController extends BaseController
     public function store(AltaLocalRequest $request)
     {
         // Le agrego el negocio al local
-        $request->request->add(['negocio_id' => Auth::user()->negocio_id]);
+        $request->request->add(['negocio_id' => $this->getNegocioId()]);
 
         // Creo el local
         $local = Local::create($request->all());
@@ -102,7 +102,7 @@ class LocalesController extends BaseController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Local $local)
     {
         // Valido el input
         /*$validator = Validator::make(
@@ -118,9 +118,6 @@ class LocalesController extends BaseController
         if ($validator->fails()) {
             return redirect('locales/' . $id . '/edit')->withErrors($validator)->withInput();
         }*/
-
-        // Busco el local
-        $local = Local::findOrFail($id);
 
         // Actualizo el local
         $local->update($request->except(['_method', '_token']));
@@ -151,10 +148,7 @@ class LocalesController extends BaseController
         $local->delete();
 
         // Busco a ver si el usuario tiene algun local y si tiene lo seteo
-        $hay_local =
-            Local::whereHas('Usuarios', function ($query) {
-                $query->where('user_id', Auth::user()->id);
-            })->first();
+        $hay_local = Auth::user()->getPrimerLocal();
 
         // Si hay locales del usuario => pongo la sesión en true
         if (!$hay_local) {

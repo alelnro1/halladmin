@@ -74,21 +74,7 @@ class MercaderiaController extends ArchivosTemporalesController
         $datos['talles'] = Talle::all();
 
         // Busco todas las mercaderias (ya ingresadas) del local
-        $datos['mercaderia_existente'] =
-            Articulo::select(['id', 'talle_id', 'color', 'datos_articulo_id'])
-                ->with([
-                    'DatosArticulo' => function ($query) {
-                        $query->where('local_id', $this->getLocalId());
-
-                        $query->with('Categoria');
-                    },
-                    'Talle',
-                ])
-                ->whereHas(
-                    'DatosArticulo', function ($query) {
-                    $query->where('local_id', $this->getLocalId());
-                })
-                ->get();
+        $datos['mercaderia_existente'] = $this->getLocal()->getMercaderia();
 
         return $datos;
     }
@@ -243,16 +229,14 @@ class MercaderiaController extends ArchivosTemporalesController
 
                 // Creo los datos comunes del articulo
                 $datos_articulo =
-                    DatosArticulo::create(
-                        [
-                            'codigo' => trim($fila_de_archivo_temporal['codigo']),
-                            'precio' => $fila_de_archivo_temporal['precio'],
-                            'descripcion' => $fila_de_archivo_temporal['descripcion'],
-                            'categoria_id' => $fila_de_archivo_temporal['categoria_id'],
-                            'genero_id' => $fila_de_archivo_temporal['genero'],
-                            'local_id' => $this->getLocalId()
-                        ]
-                    );
+                    DatosArticulo::create([
+                        'codigo' => trim($fila_de_archivo_temporal['codigo']),
+                        'precio' => $fila_de_archivo_temporal['precio'],
+                        'descripcion' => $fila_de_archivo_temporal['descripcion'],
+                        'categoria_id' => $fila_de_archivo_temporal['categoria_id'],
+                        'genero_id' => $fila_de_archivo_temporal['genero'],
+                        'local_id' => $this->getLocalId()
+                    ]);
 
                 // No existe un articulo con ese codigo => hay que crearlo
                 // Vinculo los datos comunes con el articulo recien creado
@@ -275,21 +259,20 @@ class MercaderiaController extends ArchivosTemporalesController
      *
      * @param $fila_temporal
      * @param $datos_articulo
+     * @return Articulo
      */
     private function crearArticuloConDatosExistentes($fila_temporal, $datos_articulo)
     {
         // El articulo con el codigo existe, pero no con talle y color
         return
-            Articulo::create(
-                [
-                    'cantidad' => $fila_temporal['cantidad'],
-                    'color' => $fila_temporal['color'],
-                    'genero' => $fila_temporal['genero'],
-                    'local_id' => $this->getLocalId(),
-                    'talle_id' => $fila_temporal['talle_id'],
-                    'datos_articulo_id' => $datos_articulo->id
-                ]
-            );
+            Articulo::create([
+                'cantidad' => $fila_temporal['cantidad'],
+                'color' => $fila_temporal['color'],
+                'genero' => $fila_temporal['genero'],
+                'local_id' => $this->getLocalId(),
+                'talle_id' => $fila_temporal['talle_id'],
+                'datos_articulo_id' => $datos_articulo->id
+            ]);
     }
 
     /**

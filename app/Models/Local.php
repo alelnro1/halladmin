@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\Controller;
 use App\Models\Mercaderia\Articulo;
 use App\Models\Mercaderia\MercaderiaTemporal;
 use App\Models\Ventas\Venta;
@@ -137,7 +138,7 @@ class Local extends Model
      *
      * @return int
      */
-    public function getCantidadDeUsuarios() : int
+    public function getCantidadDeUsuarios(): int
     {
         return $this->Usuarios()->where('user_id', '<>', Auth::user()->id)->count();
     }
@@ -160,7 +161,7 @@ class Local extends Model
      * @param $articulo
      * @return bool
      */
-    public function articuloPerteneceALocal($articulo) : Boolean
+    public function articuloPerteneceALocal($articulo): bool
     {
         return $this->id == $articulo->getLocal();
     }
@@ -210,6 +211,16 @@ class Local extends Model
     }
 
     /**
+     * Obtenemos los articulos del local
+     *
+     * @return mixed
+     */
+    public function getArticulos()
+    {
+        return $this->Articulos;
+    }
+
+    /**
      * Obtenemos los proveedores del local
      *
      * @return mixed
@@ -227,5 +238,65 @@ class Local extends Model
     public function getCajas()
     {
         return $this->Cajas;
+    }
+
+    /**
+     * Obtenemos la mercaderia del local
+     *
+     * @return mixed
+     */
+    public function getMercaderia()
+    {
+        $controller = new Controller();
+
+        $mercaderia =
+            Articulo::select(['id', 'talle_id', 'color', 'datos_articulo_id'])
+                ->where('local_id', $controller->getLocalId());
+
+        $mercaderia->load([
+            'DatosArticulo' => function ($query) {
+                $query->with('Categoria');
+            },
+            'Talle'
+        ]);
+
+        return $mercaderia;
+    }
+
+    /**
+     * Obtenemos todos los cambios realizados en el local, para mostrar en la vista index de los cambios
+     *
+     * @return mixed
+     */
+    public function getCambiosParaIndexCambios()
+    {
+        $cambios = $this->Cambios;
+
+        $cambios->load([
+            'Venta' => function ($query) {
+                $query->select(['id', 'nro_orden', 'monto_total', 'user_id']);
+                $query->with(
+                    [
+                        'Articulos',
+
+                        'Usuario' => function ($query) {
+                            $query->select(['id', 'nombre', 'apellido']);
+                        }
+                    ]
+                );
+            },
+            'Articulo' => function ($query) {
+                $query->select(['id', 'datos_articulo_id']);
+                $query->with(
+                    [
+                        'DatosArticulo' => function ($query) {
+                            $query->select('id', 'descripcion');
+                        }
+                    ]
+                );
+            }
+        ]);
+
+        return $cambios;
     }
 }

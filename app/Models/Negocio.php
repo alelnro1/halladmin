@@ -95,4 +95,14 @@ class Negocio extends Model
     {
         return $this->Proveedores;
     }
+
+    /**
+     * Obtenemos todos los clientes del local
+     *
+     * @return mixed
+     */
+    public function getClientes()
+    {
+        return $this->Clientes;
+    }
 }

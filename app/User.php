@@ -376,4 +376,13 @@ class User extends Authenticatable
 
         session(['NEGOCIO_ACTUAL' => $negocio]);
     }
+
+    /**
+     * Traemos el primer local dentro del listado de locales del usuario
+     * @return mixed
+     */
+    public function getPrimerLocal()
+    {
+        return $this->Locales()->first();
+    }
 }

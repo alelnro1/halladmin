@@ -91,10 +91,6 @@ class VentasController extends Ventas
             'Cliente'
         ]);
 
-        /*VentaCancelada::where('local_id', $this->getLocalId())
-                ->with(['Usuario', 'Cliente'])
-                ->get();*/
-
         return view('ventas.listado-ventas-canceladas', ['ventas_canceladas' => $ventas_canceladas]);
     }
 
@@ -143,9 +139,11 @@ class VentasController extends Ventas
      */
     public function pedirDatosDeCliente()
     {
-        $clientes = Cliente::where('negocio_id', Auth::user()->negocio_id)->get();
+        $clientes = $this->getNegocio()->getClientes();
 
-        return view('clientes.pedir-datos-de-venta', array('clientes' => $clientes));
+        return view('clientes.pedir-datos-de-venta', [
+            'clientes' => $clientes
+        ]);
     }
 
     /**

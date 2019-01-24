@@ -35,9 +35,11 @@ class CambiosController extends VentasController
         }
 
         // Busco todos los articulos que tiene el local
-        $articulos = Articulo::where('local_id', $this->getLocalId())->get();
+        $articulos = $this->getLocal()->getArticulos();
 
-        return view('cambios.nuevo')->with('articulos', $articulos);
+        return view('cambios.nuevo', [
+            'articulos' => $articulos
+        ]);
     }
 
     /**
@@ -48,7 +50,7 @@ class CambiosController extends VentasController
     public function seleccionarArticuloACambiar(Request $request)
     {
         // Obtengo el articulo a cambiar
-        $articulo = Articulo::where('id', $request->articulo)->first();
+        $articulo = Articulo::find($request->articulo);
 
         // Creo la sesion con el articulo a cambiar
         session(['CAMBIO_LOCAL_' . $this->getLocalId() . '_USER_ID' . Auth::user()->id => $articulo]);
@@ -90,37 +92,7 @@ class CambiosController extends VentasController
 
     public function index()
     {
-        $cambios =
-            Cambio::where('local_id', $this->getLocalId())
-                ->with(
-                    [
-                        'Venta' => function ($query) {
-                            $query->select(['id', 'nro_orden', 'monto_total', 'user_id']);
-                            $query->with(
-                                [
-                                    'Articulos',
-
-                                    'Usuario' => function ($query) {
-                                        $query->select(['id', 'nombre', 'apellido']);
-                                    }
-                                ]
-                            );
-                        },
-                        'Articulo' => function ($query) {
-                            $query->select(['id', 'datos_articulo_id']);
-                            $query->with(
-                                [
-                                    'DatosArticulo' => function ($query) {
-                                        $query->select('id', 'descripcion');
-                                    }
-                                ]
-                            );
-                        }
-                    ]
-                )
-                ->select(['id', 'venta_id', 'created_at', 'articulo_id'])
-                ->orderBy('created_at')
-                ->get();
+        $cambios = $this->getLocal()->getCambiosParaIndexCambios();
 
         return view('cambios.index', ['cambios' => $cambios]);
     }

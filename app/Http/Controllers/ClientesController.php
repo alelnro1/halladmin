@@ -81,7 +81,7 @@ class ClientesController extends Controller
             $this->crearSesionVentaClienteLocal($cliente_id);
         } else {
             // Verifico que el cliente exista
-            $cliente = Cliente::where('id', $request->cliente)->first();
+            $cliente = Cliente::firstOrFail($request->cliente);
 
             // El cliente existe
             if ($cliente) {

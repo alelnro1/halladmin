@@ -26,14 +26,17 @@ class Venta extends Model
                     'Articulos' => function ($query) {
                         $query->with([
                             'DatosArticulo' => function ($query) {
+                                $query->with([
+                                    'Genero' => function ($query) {
+                                        $query->select(['id', 'nombre']);
+                                    }
+                                ]);
                                 $query->select(['id', 'codigo', 'precio', 'descripcion', 'genero_id']);
-                            }
-                        ]);
+                            },
 
-                        $query->with([
                             'Talle' => function ($query) {
                                 $query->select(['id', 'nombre']);
-                            }
+                            },
                         ]);
                     },
                     'Usuario' => function ($query) {

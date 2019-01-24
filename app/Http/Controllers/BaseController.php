@@ -33,18 +33,16 @@ class BaseController extends Controller
      * Desde la vista se setea el local a gestionar
      * @param $local_id
      */
-    public function setLocalDesdeVista($local_id)
+    public function setLocalDesdeVista(Local $local)
     {
 
         // Verifico que el local corresponda al usuario actual
-        if ( $this->localPerteneceAlUsuario($local_id)) {
-            // Busco el local en la base
-            $local = Local::findOrFail($local_id);
+        if ($this->localPerteneceAlUsuario($local->id)) {
 
             // Sobreescribo la sesion
             $this->setLocal($local);
 
-            session(['LOCAL_NOMBRE' => $local->nombre]);
+            session(['LOCAL_NOMBRE' => $local->getNombre()]);
 
             return response()->json([
                 'valid' => true
@@ -62,9 +60,10 @@ class BaseController extends Controller
         // Busco los locales del usuario
         $locales_usuario = Auth::user()->locales;
 
-        $locales_usuario = $locales_usuario->filter(function ($local_usuario) use ($local_id){
-            return $local_usuario->id == $local_id;
-        });
+        $locales_usuario =
+            $locales_usuario->filter(function ($local_usuario) use ($local_id) {
+                return $local_usuario->id == $local_id;
+            });
 
         return $locales_usuario->count() > 0;
     }
