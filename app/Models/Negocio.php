@@ -93,7 +93,7 @@ class Negocio extends Model
 
     public function getProveedores()
     {
-        return $this->Proveedores;
+        return $this->Proveedores()->get();
     }
 
     /**
@@ -103,6 +103,6 @@ class Negocio extends Model
      */
     public function getClientes()
     {
-        return $this->Clientes;
+        return $this->Clientes()->get();
     }
 }

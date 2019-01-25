@@ -18,7 +18,7 @@
         <div class="box-body">
             <form action="{{ route('locales.store') }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
                 <div class="box-body">
-                    {!! csrf_field() !!}
+                    @csrf
 
                     <fieldset>
                         <div class="callout callout-info" role="alert">

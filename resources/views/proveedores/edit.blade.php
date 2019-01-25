@@ -17,7 +17,7 @@
         <div class="panel-body">
         <form class="form-horizontal" method="POST" action="{{ route('proveedores.update', ['proveedor' => $proveedor->id]) }}"
               enctype="multipart/form-data">
-            {!! csrf_field() !!}
+            @csrf
 
             <!-- Nombre -->
             <div class="form-group{{ $errors->has('nombre') ? ' has-error' : '' }}">

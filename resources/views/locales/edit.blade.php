@@ -19,7 +19,7 @@
 
         <div class="box-body">
         <form class="form-horizontal" method="POST" action="{{ route('locales.update', ['id' => $local->id]) }}" enctype="multipart/form-data">
-            {!! csrf_field() !!}
+            @csrf
 
             <fieldset>
                 <legend>Datos</legend>

@@ -25,7 +25,7 @@
             <form action="{{ route('caja.procesar-apertura') }}" method="POST" id="abrir-caja-form"
                   class="form-horizontal">
                 <div class="box-body">
-                    {!! csrf_field() !!}
+                    @csrf
 
                     <fieldset>
                             <span class="help-block">

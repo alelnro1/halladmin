@@ -12,7 +12,7 @@
 
         <div class="panel-body">
         <form action="{{ url('ABM-PLURAL') }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
-            {!! csrf_field() !!}
+            @csrf
 
             <!-- Nombre -->
             <div class="form-group{{ $errors->has('nombre') ? ' has-error' : '' }}">

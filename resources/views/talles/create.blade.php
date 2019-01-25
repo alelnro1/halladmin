@@ -19,7 +19,7 @@
 
         <div class="panel-body">
         <form action="{{ url('talles') }}" method="POST" class="form-horizontal">
-            {!! csrf_field() !!}
+            @csrf
 
             <!-- Nombre -->
             <div class="form-group{{ $errors->has('nombre') ? ' has-error' : '' }}">

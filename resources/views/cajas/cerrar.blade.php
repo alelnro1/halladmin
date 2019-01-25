@@ -30,7 +30,7 @@
             <form action="{{ route('caja.procesar-cierre') }}" method="POST" id="cerrar-caja-form"
                   class="form-horizontal">
                 <div class="box-body">
-                    {!! csrf_field() !!}
+                    @csrf
 
                     <fieldset>
                         <div class="callout callout-info">

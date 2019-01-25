@@ -22,7 +22,7 @@
         <div class="panel-body">
         <form action="{{ route('usuarios.store') }}" method="POST" class="form-horizontal" enctype="multipart/form-data"
               id="form-nuevo-usuario">
-            {!! csrf_field() !!}
+            @csrf
 
             <fieldset>
                 <legend>Datos Personales</legend>

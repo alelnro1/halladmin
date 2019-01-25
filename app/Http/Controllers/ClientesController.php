@@ -18,7 +18,11 @@ class ClientesController extends Controller
      */
     public function index()
     {
-        //
+        $clientes = $this->getNegocio()->getClientes();
+
+        return view('clientes.index', [
+            'clientes' => $clientes
+        ]);
     }
 
     /**
@@ -28,7 +32,7 @@ class ClientesController extends Controller
      */
     public function create()
     {
-        //
+        return view('clientes.create');
     }
 
     /**
@@ -111,9 +115,11 @@ class ClientesController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Cliente $cliente)
     {
-        //
+        return view('clientes.show', [
+            'cliente' => $cliente
+        ]);
     }
 
     /**

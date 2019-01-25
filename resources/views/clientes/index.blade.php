@@ -1,15 +1,16 @@
 @extends('layouts.app')
 
-@section('page-header', 'Local')
-@section('page-description', 'Listado de Locales')
+@section('page-header', 'Clientes')
+@section('page-description', 'Listado de Clientes')
 
 @section('styles')
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/jquery.dataTables.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.1.0/css/responsive.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/responsive/2.1.0/css/responsive.dataTables.min.css">
 @stop
 
 @section('niveles')
-    <li><a href="#"><i class="fa fa-dashboard"></i>&nbsp;Locales</a></li>
+    <li><a href="#"><i class="fa fa-dashboard"></i>&nbsp;Clientes</a></li>
     <li class="active">Listado</li>
 @stop
 
@@ -18,9 +19,9 @@
         <div class="box-header">
             <h3 class="box-title"></h3>
             <div class="box-tools">
-                <a href="{{ route('locales.create') }}" class="btn btn-block btn-success btn-sm">
+                <a href="{{ route('clientes.create') }}" class="btn btn-block btn-success btn-sm">
                     <i class="fa fa-fw fa-plus" aria-hidden="true"></i>
-                    Nuevo Local
+                    Nuevo Cliente
                 </a>
             </div>
         </div>
@@ -51,14 +52,15 @@
             @if (Session::has('user_no_tiene_locales'))
                 <div class="callout callout-danger">
                     <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-                    Para poder ingresar mercadería, realizar ventas o cambios, administrar usuarios y ofertas, debe tener al menos un local
+                    Para poder ingresar mercadería, realizar ventas o cambios, administrar usuarios y ofertas, debe
+                    tener al menos un local
                     sobre el cual operar.
                     Por favor cree uno haciendo <a href="{{ route('locales.create') }}">click aquí</a>
                 </div>
             @endif
 
-            @if (count($locales) > 0)
-                <table class="table table-bordered table-hover table-striped responsive" id="locales" width="100%">
+            @if (count($clientes) > 0)
+                <table class="table table-bordered table-hover table-striped responsive" id="clientes" width="100%">
                     <!-- Table Headings -->
                     <thead>
                     <tr>
@@ -70,30 +72,23 @@
                     </thead>
 
                     <tbody>
-                    @foreach ($locales as $local)
+                    @foreach ($clientes as $cliente)
                         <tr>
-                            <td>{{ $local->nombre }}</td>
-                            <td>{{ $local->email }}</td>
-                            <td>{{ $local->telefono }}</td>
+                            <td>{{ $cliente->getNombreCompleto() }}</td>
+                            <td>{{ $cliente->getEmail() }}</td>
+                            <td>{{ $cliente->getTelefono() }}</td>
 
                             <td>
-                                <a href="{{ route('locales.view', ['id' => $local['id']])   }}" class="btn btn-default btn-xs">
+                                <a href="{{ route('clientes.show', ['id' => $cliente['id']])   }}"
+                                   class="btn btn-default btn-xs">
                                     <i class="fa fa-eye" aria-hidden="true"></i>
                                     Ver
                                 </a>
 
-                                <a href="{{ route('locales.edit', ['id' => $local['id']]) }}" class="btn btn-default btn-xs">
+                                <a href="{{ route('clientes.edit', ['id' => $cliente['id']]) }}"
+                                   class="btn btn-default btn-xs">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                     Editar
-                                </a>
-
-                                <a href="{{ url('locales/' . $local['id']) }}"
-                                   class="btn btn-danger btn-xs"
-                                   data-method="delete"
-                                   data-token="{{ csrf_token() }}"
-                                   data-confirm="Esta seguro que desea eliminar a local con nombre {{ $local->nombre }}?">
-                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                    Eliminar
                                 </a>
                             </td>
                         </tr>
@@ -101,7 +96,7 @@
                     </tbody>
                 </table>
             @else
-                No hay locales
+                No hay clientes
             @endif
         </div>
     </div>
@@ -109,7 +104,8 @@
 
 @section('javascript')
     <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="{{ asset('/js/locales/listar.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/clientes/index.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/js/delete-link.js') }}"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
 @stop

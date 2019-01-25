@@ -12,7 +12,7 @@
 
                 <form class="form-horizontal" method="POST"
                       action="{{ route('administradores.update', ['administrador' => $administrador->id]) }}">
-                {!! csrf_field() !!}
+                @csrf
 
                 <!-- Nombre -->
                     <div class="form-group{{ $errors->has('nombre') ? ' has-error' : '' }}">

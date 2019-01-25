@@ -13,7 +13,7 @@
             <fieldset>
                 <form class="form-horizontal" method="POST" action="{{ route('perfil.procesar-modificacion') }}"
                       enctype="multipart/form-data">
-                    {!! csrf_field() !!}
+                    @csrf
 
                     @if($usuario->archivo != "")
                         <div class="form-group text-center">

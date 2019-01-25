@@ -20,7 +20,7 @@
 
         <div class="panel-body">
             <form action="{{ route('administradores.store') }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
-                {!! csrf_field() !!}
+                @csrf
 
                 <fieldset>
                     <legend>Datos Personales</legend>

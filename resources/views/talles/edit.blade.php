@@ -11,7 +11,7 @@
         <div class="panel-body">
         <form class="form-horizontal" method="POST" action="{{ url('talles/' . $talle->id) }}" enctype="multipart/form-data">
             {{ method_field('PATCH') }}
-            {!! csrf_field() !!}
+            @csrf
 
             <!-- Nombre -->
             <div class="form-group{{ $errors->has('nombre') ? ' has-error' : '' }}">

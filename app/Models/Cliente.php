@@ -11,8 +11,38 @@ class Cliente extends Model
     protected $table = 'clientes';
 
     protected $fillable = [
-        'nombre', 'apellido', 'email', 'telefono', 'saldo', 'negocio_id'
+        'nombre', 'apellido', 'domicilio', 'email', 'telefono', 'saldo', 'negocio_id'
     ];
+    
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    public function getApellido()
+    {
+        return $this->apellido;
+    }
+
+    public function getNombreCompleto()
+    {
+        return $this->getNombre() . " " . $this->getApellido();
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function getTelefono()
+    {
+        return $this->telefono;
+    }
+
+    public function getDomicilio()
+    {
+        return $this->domicilio;
+    }
 
     /*public function Locales()
     {

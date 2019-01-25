@@ -22,7 +22,7 @@
         <div class="panel-body">
         <form class="form-horizontal" method="POST" action="{{ route('usuarios.update', ['usuario' => $usuario->id]) }}"
               enctype="multipart/form-data" id="form-editar-usuario">
-            {!! csrf_field() !!}
+            @csrf
 
             <fieldset>
                 <legend>Datos Personales</legend>
