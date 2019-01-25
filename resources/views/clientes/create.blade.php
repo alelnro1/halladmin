@@ -31,4 +31,15 @@
 
 @section('javascript')
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+    <script src="{{ asset('js/buscar-contribuyente.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('body')
+                .on('click', '#buscar-contribuyente', function (e) {
+                    e.preventDefault();
+
+                    BuscarContribuyente();
+                })
+        });
+    </script>
 @stop

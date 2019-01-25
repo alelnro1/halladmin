@@ -1,7 +1,7 @@
 <ul class="sidebar-menu">
     <li @if(Request::is('home/*')) class="active" @endif>
         <a href="{{ url('home') }}">
-            <i class="fa fa-tachometer" aria-hidden="true"></i>
+            <i class="fa fa-tachometer-alt" aria-hidden="true"></i>
             <span>Inicio</span>
         </a>
     </li>
@@ -21,6 +21,14 @@
         </a>
     </li>
 
+    <li @if(Request::is('clientes') ) class="active" @endif>
+        <a href="{{ url('/clientes') }}">
+            <i class="fa fa-users" aria-hidden="true"></i>
+            <span>Clientes</span>
+        </a>
+    </li>
+
+
     <li @if(Request::is('proveedores*') ) class="active" @endif>
         <a href="{{ route('proveedores') }}">
             <i class="fa fa-truck" aria-hidden="true"></i>
@@ -37,7 +45,7 @@
 
     <li @if(Request::is('usuarios') ) class="active" @endif>
         <a href="{{ url('/usuarios') }}">
-            <i class="fa fa-users" aria-hidden="true"></i>
+            <i class="fa fa-user-tie" aria-hidden="true"></i>
             <span>Usuarios</span>
         </a>
     </li>
@@ -58,7 +66,7 @@
 
     <li @if(Request::is('cambios') ) class="active" @endif>
         <a href="{{ url('/cambios') }}">
-            <i class="fa fa-exchange" aria-hidden="true"></i>
+            <i class="fa fa-exchange-alt" aria-hidden="true"></i>
             <span>Cambios</span>
         </a>
     </li>

@@ -32,105 +32,6 @@
 
                 <br>
 
-                {{--<div class="form-group{{ $errors->has('tipo_concepto') ? ' has-error' : '' }}">
-                    <label class="col-md-4 control-label">Tipo de Conceptos</label>
-
-                    <div class="col-md-6">
-                        <select name="tipo_concepto" id="" class="form-control">
-                            @foreach($afip_tipos_conceptos as $tipo_concepto)
-                                <option value="{{ $tipo_concepto->Id }}">{{ $tipo_concepto->Desc }}</option>
-                            @endforeach
-                        </select>
-
-                        @if ($errors->has('tipo_concepto'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('tipo_concepto') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                </div>
-
-                <br>--}}
-
-                {{--<div class="form-group{{ $errors->has('tipo_tributo') ? ' has-error' : '' }}">
-                    <label class="col-md-4 control-label">Tipo de Tributos</label>
-
-                    <div class="col-md-6">
-                        <select name="tipo_tributo" id="" class="form-control">
-                            @foreach($afip_tipos_tributos as $tipo_tributo)
-                                <option value="{{ $tipo_tributo->Id }}">{{ $tipo_tributo->Desc }}</option>
-                            @endforeach
-                        </select>
-
-                        @if ($errors->has('tipo_tributo'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('tipo_tributo') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                </div>
-
-                <br>--}}
-
-                {{--<div class="form-group{{ $errors->has('tipo_tributo') ? ' has-error' : '' }}">
-                    <label class="col-md-4 control-label">Opciones</label>
-
-                    <div class="col-md-6">
-                        <select name="tipo_tributo" id="" class="form-control">
-                            @foreach($afip_opciones_disponibles as $afip_opcion)
-                                <option value="{{ $afip_opcion->Id }}">{{ $afip_opcion->Desc }}</option>
-                            @endforeach
-                        </select>
-
-                        @if ($errors->has('tipo_tributo'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('tipo_tributo') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                </div>
-
-                <br>--}}
-
-                {{--<div class="form-group{{ $errors->has('tipo_tributo') ? ' has-error' : '' }}">
-                    <label class="col-md-4 control-label">Tipos Alicuotas</label>
-
-                    <div class="col-md-6">
-                        <select name="tipo_tributo" id="" class="form-control">
-                            @foreach($afip_tipos_alicuotas as $tipo_alicuota)
-                                <option value="{{ $tipo_alicuota->Id }}">{{ $tipo_alicuota->Desc }}</option>
-                            @endforeach
-                        </select>
-
-                        @if ($errors->has('tipo_tributo'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('tipo_tributo') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                </div>
-
-
-                <br>
-
-                <div class="form-group{{ $errors->has('tipo_comprobante') ? ' has-error' : '' }}">
-                    <label class="col-md-4 control-label">Tipo de Documento</label>
-
-                    <div class="col-md-6">
-                        <select name="tipo_comprobante" id="" class="form-control">
-                            @foreach($afip_tipos_documentos as $tipo_documento)
-                                <option value="{{ $tipo_documento->Id }}">{{ $tipo_documento->Desc }}</option>
-                            @endforeach
-                        </select>
-
-                        @if ($errors->has('tipo_comprobante'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('tipo_comprobante') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                </div>--}}
-
                 <br>
 
                 <div class="form-group{{ $errors->has('cuit') ? ' has-error' : '' }}">
@@ -166,39 +67,7 @@
 
                 <br>
 
-                <div id="datos-contribuyente" style="border: 1px dashed gray; display: none;">
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Tipo Contribuyente</label>
-
-                            <div class="col-md-6">
-                                <span id="tipo-contribuyente"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Nombre/Razón Social</label>
-
-                            <div class="col-md-6">
-                                <span id="nombre-razon-social"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Domicilio Fiscal</label>
-
-                            <div class="col-md-6">
-                                <span id="domicilio-fiscal"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="clear: both;"></div>
-                </div>
+                @include('afip.datos-contribuyente')
 
                 <div style="clear:both;"></div>
             </div>

@@ -217,7 +217,7 @@ class Local extends Model
      */
     public function getArticulos()
     {
-        return $this->Articulos;
+        return $this->Articulos->get();
     }
 
     /**
@@ -227,7 +227,7 @@ class Local extends Model
      */
     public function getProveedores()
     {
-        return $this->Proveedores;
+        return $this->Proveedores->get();
     }
 
     /**
@@ -237,7 +237,7 @@ class Local extends Model
      */
     public function getCajas()
     {
-        return $this->Cajas;
+        return $this->Cajas->get();
     }
 
     /**

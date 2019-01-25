@@ -89,6 +89,53 @@
             @endif
         </div>
 
+
+        <!-- Domicilio -->
+        <div class="form-group{{ $errors->has('tipo_contribuyente') ? ' has-error' : '' }}">
+            <label for="tipo_contribuyente">Tipo Contribuyente</label>
+
+            <select name="tipo_contribuyente" id="tipo_contribuyente" class="form-control">
+                <option value="">Seleccione...</option>
+                <option value="responsable_inscripto">Responsable Inscripto en IVA</option>
+                <option value="monotributista">Monotributista</option>
+                <option value="consumidor_final">Consumidor Final</option>
+            </select>
+
+            @if ($errors->has('tipo_contribuyente'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('tipo_contribuyente') }}</strong>
+                </span>
+            @endif
+        </div>
+
+        <div class="form-group{{ $errors->has('cuit') ? ' has-error' : '' }}">
+            <label for="cuit">CUIT</label>
+
+            <input type="text" class="form-control" name="cuit" value="{{ old('cuit') }}"
+                   autocomplete="off"
+                   id="cuit"
+                   data-mask="99-99999999-9"
+                   placeholder="Escriba el CUIT">
+
+            @if ($errors->has('cuit'))
+                <span class="help-block">
+                                <strong>{{ $errors->first('cuit') }}</strong>
+                            </span>
+            @endif
+            <button class="btn btn-default" id="buscar-contribuyente"
+                    data-buscar-contribuyente-url="{{ route('afip.get-info-contribuyente') }}">
+                Buscar
+            </button>
+        </div>
+
+        <br>
+
+        <div id="cargando-datos-contribuyente" style="display: none;">
+            <i class="fa fa-spinner fa-spin" style="font-size:24px"></i>
+        </div>
+
+        <br>
+
     </div>
     <!-- /.box-body -->
 

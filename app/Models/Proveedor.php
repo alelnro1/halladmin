@@ -50,39 +50,6 @@ class Proveedor extends Model
     {
         return $this->belongsToMany(Local::class, 'local_proveedor', 'proveedor_id', 'local_id');
     }
-
-    /**
-     * Obtenemos todos los proveedores de un negocio
-     *
-     * @param $negocio_id
-     * @return mixed
-     */
-    public static function getProveedoresDeNegocio($negocio_id)
-    {
-        $proveedores =
-            self::whereHas('Usuario', function ($query) use ($negocio_id) {
-                $query->where('negocio_id', $negocio_id);
-            })->get();
-
-        return $proveedores;
-    }
-
-    /**
-     * Obtenemos todos los proveedores de un local
-     *
-     * @param $local_id
-     * @return
-     */
-    public static function getProveedoresDeLocal($local_id)
-    {
-        $proveedores =
-            self::whereHas('Locales', function ($query) use ($local_id) {
-                $query->where('local_id', $local_id);
-            })->get();
-
-        return $proveedores;
-    }
-
     /**
      * Verificamos que un proveedor dado pertenezca al negocio actual
      */

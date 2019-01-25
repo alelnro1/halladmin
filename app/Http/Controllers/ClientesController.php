@@ -43,20 +43,6 @@ class ClientesController extends Controller
      */
     public function store(Request $request)
     {
-        /*// Valido el input
-        $validator = Validator::make(
-            $request->all(), [
-            'nombre'      => 'required|max:100',
-            'apellido'    => 'required|max:100',
-            'email'       => 'required|email|max:100',
-            'telefono'    => 'max:30',
-            ]
-        );
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }*/
-
         $request->request->add(['negocio_id' => $this->getNegocioId()]);
 
         // Creo el cliente
@@ -85,7 +71,7 @@ class ClientesController extends Controller
             $this->crearSesionVentaClienteLocal($cliente_id);
         } else {
             // Verifico que el cliente exista
-            $cliente = Cliente::firstOrFail($request->cliente);
+            $cliente = Cliente::find($request->cliente);
 
             // El cliente existe
             if ($cliente) {
