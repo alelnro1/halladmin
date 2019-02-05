@@ -85,6 +85,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('talles', 'TallesController');
     Route::resource('categorias', 'CategoriasController');
     Route::resource('clientes', 'ClientesController');
+
+    Route::group(['prefix' => 'clientes'], function () {
+
+    });
+
     Route::resource('alarmas', 'AlarmasController');
 
     Route::group(['prefix' => 'caja'], function () {

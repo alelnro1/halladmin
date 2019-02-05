@@ -27,7 +27,9 @@ class AltaClienteRequest extends FormRequest
             'nombre'      => 'required|max:100',
             'apellido'    => 'required|max:100',
             'email'       => 'required|email|max:100',
-            'telefono'    => 'max:30'
+            'telefono'    => 'required|max:30',
+            'domicilio'   => 'required',
+            'cuit'        => 'required'
         ];
     }
 }

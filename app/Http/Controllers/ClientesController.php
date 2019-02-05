@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Cliente\AltaClienteRequest;
 use App\Models\Cliente;
 use Illuminate\Http\Request;
 
@@ -41,7 +42,7 @@ class ClientesController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AltaClienteRequest $request)
     {
         $request->request->add(['negocio_id' => $this->getNegocioId()]);
 

@@ -22,18 +22,66 @@
                 </div>
             </fieldset>
 
-            <div class="col-xs-6">
-                @include('clientes.nuevo-cliente-form')
-            </div>
+            <form action="{{ url('clientes') }}" id="crear-cliente" method="POST">
+                @csrf
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-4">
+                            @include('clientes.form-inputs.nombre')
+                        </div>
+                        <div class="col-xs-4">
+                            @include('clientes.form-inputs.apellido')
+                        </div>
+                        <div class="col-xs-4">
+                            @include('clientes.form-inputs.email')
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-4">
+                            @include('clientes.form-inputs.domicilio')
+                        </div>
+                        <div class="col-xs-4">
+                            @include('clientes.form-inputs.telefono')
+                        </div>
+                        <div class="col-xs-4">
+                            @include('clientes.form-inputs.cuit')
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        @include('afip.datos-contribuyente')
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-5"></div>
+                        <div class="col-xs-7">
+                            <input type="submit" class="btn btn-primary" value="Crear cliente">
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 @stop
 
 @section('javascript')
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+    <script type="text/javascript"
+            src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
     <script src="{{ asset('js/buscar-contribuyente.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
+            $('form#crear-cliente').submit(function () {
+                alert('aca');
+
+            });
             $('body')
                 .on('click', '#buscar-contribuyente', function (e) {
                     e.preventDefault();
