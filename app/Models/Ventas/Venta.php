@@ -126,4 +126,64 @@ class Venta extends Model
                 ->orderBy('created_at', 'ASC')
                 ->get();
     }
+
+    public function getCantidadArticulos()
+    {
+        return $this->cantidad_articulos;
+    }
+
+    public function getNroOrden()
+    {
+        return $this->nro_orden;
+    }
+
+    public function getMedioPago()
+    {
+        return $this->medio_de_pago;
+    }
+
+    public function getVendedorId()
+    {
+        return $this->user_id;
+    }
+
+    public function getMontoTotal()
+    {
+        return $this->monto_total;
+    }
+
+    public function getNombreLocal()
+    {
+        return $this->Local->getNombre();
+    }
+
+    public function getEmpleadoNombre()
+    {
+        return $this->Usuario->getNombre();
+    }
+
+    public function getEmpleadoApellido()
+    {
+        return $this->Usuario->getApellido();
+    }
+
+    public function getEmpleadoNombreCompleto()
+    {
+        return $this->getEmpleadoNombre() . " " . $this->getEmpleadoApellido();
+    }
+
+    public function getNombreCompletoCliente()
+    {
+        return $this->Cliente->getNombre() . " " . $this->Cliente->getApellido();
+    }
+
+    public function getTelefonoCliente()
+    {
+        return $this->Cliente->getTelefono();
+    }
+
+    public function getEmailCliente()
+    {
+        return $this->Cliente->getEmail();
+    }
 }

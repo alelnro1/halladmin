@@ -47,6 +47,16 @@ class User extends Authenticatable
      */
     protected $dates = ['deleted_at'];
 
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    public function getApellido()
+    {
+        return $this->apellido;
+    }
+
     public function cargarRelaciones($administrador)
     {
         $administrador->load([

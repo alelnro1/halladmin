@@ -54,7 +54,7 @@ class Cliente extends Model
         return $this->belongsTo(Negocio::class);
     }
 
-    public function Ventas()
+    public function Compras()
     {
         return $this->hasMany(Venta::class);
     }
@@ -85,5 +85,10 @@ class Cliente extends Model
         }
 
         $this->save();
+    }
+
+    public function getCompras()
+    {
+        return $this->Compras()->get();
     }
 }

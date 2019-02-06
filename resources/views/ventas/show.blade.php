@@ -23,8 +23,8 @@
                         Fecha de la Venta: {{ date("d/m/Y", strtotime($venta->created_at)) }}
                         <br>
                         Vendedor:
-                        <a href="{{ url('usuarios/' . $venta->user_id) }}">
-                            {{ $venta->Usuario->nombre }} {{ $venta->Usuario->apellido }}
+                        <a href="{{ url('usuarios/' . $venta->getVendedorId()) }}">
+                            {{ $venta->getEmpleadoNombreCompleto() }}
                         </a>
                     </small>
                 </h2>
@@ -37,9 +37,9 @@
                 @if($venta->Cliente != null)
                     Cliente
                     <address>
-                        <strong>{{ $venta->Cliente->nombre }} {{ $venta->Cliente->apellido }}</strong><br>
-                        Teléfono: {{ $venta->Cliente->telefono }}<br>
-                        Email: {{ $venta->Cliente->email }}
+                        <strong>{{ $venta->getClienteNombreCompleto() }}</strong><br>
+                        Teléfono: {{ $venta->getTelefonoCliente() }}<br>
+                        Email: {{ $venta->getEmailCliente() }}
                     </address>
                 @endif
             </div>
@@ -47,8 +47,8 @@
             <div class="col-xs-4 invoice-col">
                 @if ($articulo_a_cambiar)
                     <strong>Artículo Cambiado</strong><br>
-                    Descripción: {{ $articulo_a_cambiar->DatosArticulo->descripcion }}<br>
-                    Precio: ${{ number_format($articulo_a_cambiar->DatosArticulo->precio, 2) }}<br>
+                    Descripción: {{ $articulo_a_cambiar->getDescripcion() }}<br>
+                    Precio: ${{ number_format($articulo_a_cambiar->getPrecio(), 2) }}<br>
 
                     <a href="{{ url('articulos/' . $articulo_a_cambiar->id) }}">Ver Artículo</a>
                 @endif
@@ -56,10 +56,10 @@
 
             <!-- /.col -->
             <div class="col-xs-4 invoice-col text-right">
-                <b>Orden #{{ $venta->nro_orden }}</b><br>
+                <b>Orden #{{ $venta->getNroOrden() }}</b><br>
                 <br>
-                <b>Cantidad de Artículos:</b> {{ $venta->cantidad_articulos }} <br>
-                <b>Total:</b> ${{ number_format($venta->monto_total, 2) }}<br>
+                <b>Cantidad de Artículos:</b> {{ $venta->getCantidadArticulos() }} <br>
+                <b>Total:</b> ${{ number_format($venta->getMontoTotal(), 2) }}<br>
             </div>
             <!-- /.col -->
         </div>
@@ -87,12 +87,12 @@
                     @if(count($venta->Articulos) > 0)
                         @foreach($venta->Articulos as $articulo)
                             <tr>
-                                <td>{{ $articulo->DatosArticulo->codigo }}</td>
+                                <td>{{ $articulo->getCodigo() }}</td>
                                 <td>{{ $articulo->pivot->cantidad }}</td>
-                                <td>{{ $articulo->DatosArticulo->descripcion }}</td>
-                                <td>{{ $articulo->Talle->nombre }}</td>
-                                <td>{{ $articulo->color }}</td>
-                                <td>{{ $articulo->DatosArticulo->Genero->nombre }}</td>
+                                <td>{{ $articulo->getDescripcion() }}</td>
+                                <td>{{ $articulo->getNombreTalle() }}</td>
+                                <td>{{ $articulo->getColor() }}</td>
+                                <td>{{ $articulo->getNombreGenero() }}</td>
                                 <td class="text-right">
                                     ${{ number_format($articulo->pivot->precio, 2) }}
                                 </td>

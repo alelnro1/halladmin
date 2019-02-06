@@ -55,13 +55,13 @@
                         <tr>
                             <td>{{ $cambio->created_at }}</td>
                             <td class="text-right">
-                                <a href="{{ url('ventas/ver/' . $cambio->Venta->nro_orden) }}">
-                                    #{{ $cambio->Venta->nro_orden }}
+                                <a href="{{ url('ventas/ver/' . $cambio->getNroOrden()) }}">
+                                    #{{ $cambio->getNroOrden() }}
                                 </a>
                             </td>
                             <td>
                                 <a href="{{ url('articulos/' . $cambio->Articulo->id) }}">
-                                    {{ $cambio->Articulo->DatosArticulo->descripcion }}
+                                    {{ $cambio->getDescripcionArticulo() }}
                                 </a>
                             </td>
                             <td class="text-right">
@@ -70,7 +70,7 @@
                             <td>{{ count($cambio->Venta->Articulos) }}</td>
                             <td>
                                 <a href="{{ url('usuarios/' . $cambio->Venta->Usuario->id) }}">
-                                    {{ $cambio->Venta->Usuario->nombre }} {{ $cambio->Venta->Usuario->apellido }}
+                                    {{ $cambio->getEmpleado() }}
                                 </a>
                             </td>
                             <td>{{ date("d/m/Y H:i:s", strtotime($cambio->created_at)) }}</td>

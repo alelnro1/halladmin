@@ -37,7 +37,7 @@ class HomeController extends Controller
             $local = $this->getLocal();
 
             // Obtenemos las ventas
-            $ventas = $local->getVentas(20);
+            $ventas = $local->getVentas(5);
 
             // Cantidad Ventas
             $cantidad_ventas = $local->getCantidadDeVentas();

@@ -23,15 +23,15 @@
             <tr>
                 <td>{{ $venta->created_at }}</td>
                 <td class="text-right">
-                    <a href="{{ route('ventas.ver', ['venta' => $venta->nro_orden]) }}">
-                        #{{ $venta->nro_orden }}
+                    <a href="{{ route('ventas.ver', ['venta' => $venta->getNroOrden()]) }}">
+                        #{{ $venta->getNroOrden() }}
                     </a>
                 </td>
                 <td class="text-right">{{ $venta->cantidad_articulos }}</td>
                 <td class="text-right">${{ number_format($venta->monto_total, 2) }}</td>
                 <td class="text-right">
-                    @if ($venta->medio_de_pago != "")
-                        {{ $venta->medio_de_pago }}
+                    @if ($venta->getMedioPago() != "")
+                        {{ $venta->getMedioPago() }}
                     @else
                         -
                     @endif

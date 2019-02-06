@@ -38,6 +38,26 @@ class Cambio extends Model
         return $this->belongsTo(Articulo::class);
     }
 
+    public function getDescripcionArticulo()
+    {
+        return $this->Articulo->getDescripcion();
+    }
+
+    public function getMontoVenta()
+    {
+        return $this->Venta->getMontoTotal();
+    }
+
+    public function getNroOrden()
+    {
+        return $this->Venta->getNroOrden();
+    }
+
+    public function getEmpleado()
+    {
+        return $this->Venta->getEmpleadoNombreCompleto();
+    }
+
     public function dameCambiosParaGraficoDeHome($fecha_desde, $fecha_hasta)
     {
         // Inicializo el controller para poder acceder a las funciones

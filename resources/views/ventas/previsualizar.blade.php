@@ -92,18 +92,18 @@
                     @if(count($articulos) > 0)
                         @foreach($articulos as $articulo)
                             <tr>
-                                <td class="codigo">{{ $articulo->DatosArticulo->codigo }}</td>
+                                <td class="codigo">{{ $articulo->getCodigo() }}</td>
                                 <td>{{ $articulo->cantidad_a_vender }}</td>
-                                <td>{{ $articulo->DatosArticulo->descripcion }}</td>
-                                <td>{{ $articulo->Talle->nombre }}</td>
+                                <td>{{ $articulo->getDescripcion() }}</td>
+                                <td>{{ $articulo->getNombreTalle() }}</td>
                                 <td>{{ $articulo->color }}</td>
-                                <td>{{ $articulo->DatosArticulo->Genero->nombre }}</td>
+                                <td>{{ $articulo->getNombreGenero() }}</td>
                                 <td class="text-right">
-                                    ${{ number_format($articulo->DatosArticulo->precio, 2) }}
+                                    ${{ number_format($articulo->getPrecio(), 2) }}
                                 </td>
                                 <td class="text-right subtotal"
                                     data-subtotal="{{ $articulo->subtotal }}"
-                                    data-subtotal-dto="{{ $articulo->DatosArticulo->precio * $articulo->cantidad_a_vender }}">
+                                    data-subtotal-dto="{{ $articulo->getPrecio() * $articulo->cantidad_a_vender }}">
                                     ${{ number_format($articulo->subtotal, 2) }}
                                 </td>
                                 <td class="descuento col-xs-2 text-right">

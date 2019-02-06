@@ -104,8 +104,11 @@ class ClientesController extends Controller
      */
     public function show(Cliente $cliente)
     {
+        $compras = $cliente->getCompras();
+
         return view('clientes.show', [
-            'cliente' => $cliente
+            'cliente' => $cliente,
+            'compras' => $compras
         ]);
     }
 

@@ -176,6 +176,11 @@ class Articulo extends Model
         return $this->local_id;
     }
 
+    public function getColor()
+    {
+        return $this->color;
+    }
+
     public function getCodigo()
     {
         return $this->DatosArticulo->codigo;
