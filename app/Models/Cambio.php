@@ -53,6 +53,11 @@ class Cambio extends Model
         return $this->Venta->getNroOrden();
     }
 
+    public function getFecha()
+    {
+        return date("d/m/Y H:i:s", strtotime($this->created_at));
+    }
+
     public function getEmpleado()
     {
         return $this->Venta->getEmpleadoNombreCompleto();

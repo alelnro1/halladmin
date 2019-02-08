@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Mercaderia\DatosArticulo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -33,6 +34,11 @@ class Negocio extends Model
     public function Proveedores()
     {
         return $this->hasMany(Proveedor::class);
+    }
+
+    public function DatosArticulos()
+    {
+        return $this->hasMany(DatosArticulo::class);
     }
 
     public function esResponsableInscripto()

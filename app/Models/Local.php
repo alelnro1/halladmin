@@ -227,7 +227,7 @@ class Local extends Model
      */
     public function getProveedores()
     {
-        return $this->Proveedores->get();
+        return $this->Proveedores()->get();
     }
 
     /**
@@ -251,7 +251,8 @@ class Local extends Model
 
         $mercaderia =
             Articulo::select(['id', 'talle_id', 'color', 'datos_articulo_id'])
-                ->where('local_id', $controller->getLocalId());
+                ->where('local_id', $controller->getLocalId())
+                ->get();
 
         $mercaderia->load([
             'DatosArticulo' => function ($query) {

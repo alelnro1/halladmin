@@ -92,6 +92,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('alarmas', 'AlarmasController');
 
+    Route::resource('lista-precios', 'PriceListController');
+
     Route::group(['prefix' => 'caja'], function () {
         Route::get('/', 'CajaController@index')->name('caja');
         Route::get('abrir', 'CajaController@abrirCaja')->name('caja.abrir');

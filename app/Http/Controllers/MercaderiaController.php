@@ -7,6 +7,7 @@ use App\Models\Categoria;
 use App\Models\Mercaderia\DatosArticulo;
 use App\Models\Mercaderia\Genero;
 use App\Models\Mercaderia\MercaderiaTemporal;
+use App\Models\Negocio;
 use App\Models\Proveedor;
 use App\Models\Mercaderia\Talle;
 use Illuminate\Http\Request;
@@ -235,7 +236,8 @@ class MercaderiaController extends ArchivosTemporalesController
                         'descripcion' => $fila_de_archivo_temporal['descripcion'],
                         'categoria_id' => $fila_de_archivo_temporal['categoria_id'],
                         'genero_id' => $fila_de_archivo_temporal['genero'],
-                        'local_id' => $this->getLocalId()
+                        'local_id' => $this->getLocalId(),
+                        'negocio_id' => $this->getNegocioId()
                     ]);
 
                 // No existe un articulo con ese codigo => hay que crearlo
@@ -321,7 +323,7 @@ class MercaderiaController extends ArchivosTemporalesController
 
         $articulo =
             DatosArticulo::where('codigo', $codigo)
-                ->where('local_id', $this->getLocalId())
+                ->where('negocio_id', $this->getNegocioId())
                 ->select(['id', 'precio', 'descripcion', 'categoria_id', 'genero_id'])
                 ->with(
                     [

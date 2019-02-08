@@ -12,8 +12,8 @@
 
 @section('content')
     <div class="box box-primary">
-        <div class="panel-heading">
-            Proveedor <b><i>{{ $proveedor->nombre }}</i></b>
+        <div class="box-header with-border">
+            <h3 class="box-title">Proveedor <b><i>{{ $proveedor->nombre }}</i></b></h3>
         </div>
 
         <div class="panel-body">

@@ -17,7 +17,7 @@
 
 @section('content')
     <div class="box box-primary">
-        <div class="box-header">
+        <div class="box-header with-border">
             <h3 class="box-title">Proveedores</h3>
             <div class="box-tools">
                 <a href="{{ route('proveedores.create') }}" class="btn btn-block btn-success btn-sm">
@@ -62,7 +62,11 @@
                 <tbody>
                 @foreach ($proveedores as $proveedor)
                     <tr>
-                        <td>{{ $proveedor->nombre }}</td>
+                        <td>
+                            <a href="{{ route('proveedores.view', ['proveedor' => $proveedor['id']]) }}">
+                                {{ $proveedor->nombre }}
+                            </a>
+                        </td>
                         {{--<td>{{ $proveedor->descripcion }}</td>--}}
                         <td>{{ $proveedor->email }}</td>
                         <td>{{ $proveedor->telefono }}</td>

@@ -66,14 +66,14 @@
                             </td>
                             <td class="text-right">
                                 ${{ number_format($cambio->Venta->monto_total, 2) }}
-                            </td>
+                            </td>ca
                             <td>{{ count($cambio->Venta->Articulos) }}</td>
                             <td>
                                 <a href="{{ url('usuarios/' . $cambio->Venta->Usuario->id) }}">
                                     {{ $cambio->getEmpleado() }}
                                 </a>
                             </td>
-                            <td>{{ date("d/m/Y H:i:s", strtotime($cambio->created_at)) }}</td>
+                            <td>{{ $cambio->getFecha() }}</td>
                         </tr>
                     @endforeach
                     </tbody>
