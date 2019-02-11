@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PriceList\AltaPriceListRequest;
 use App\Models\Precios\PriceList;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PriceListController extends Controller
@@ -15,7 +16,8 @@ class PriceListController extends Controller
      */
     public function index()
     {
-        //
+        $listas = $this->getLocal()->getPriceLists();
+        return view('price-list.index');
     }
 
     /**
@@ -31,16 +33,37 @@ class PriceListController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(AltaPriceListRequest $request)
     {
-        $negocio_id = false;
+        //try {
+        $negocio_id = $dias = $vigencia_desde = $vigencia_hasta = null;
 
-        if ($request->negocio) {
+        // Si mandan el negocio, le asignamos el id
+        if ($request->negocio)
             $negocio_id = $this->getNegocioId();
+
+        // Convertimos el array de dias a un string. Las claves son los dias
+        if ($request->dias)
+            $dias = implode(',', array_keys($request->dias));
+
+        // Transformamos al formato fecha de base de datos
+        if ($request->vigencia_desde)
+            $vigencia_desde = Carbon::createFromFormat('d/m/Y H:i', $request->vigencia_desde);
+
+        // Transformamos al formato fecha de base de datos
+        if ($request->vigencia_hasta)
+            $vigencia_hasta = Carbon::createFromFormat('d/m/Y H:i', $request->vigencia_hasta);
+
+        /* Validamos si la lista debe/puede estar activa
+         Debe, porque no activo el check de activa, y la fecha está en el rango de fechas
+         Puede, porque sí marco el check de activa pero no está en el rango de fechas */
+        if ($vigencia_desde && $vigencia_hasta) {
+            $activo = Carbon::create()->between($vigencia_desde, $vigencia_hasta);
         }
+        dd($activo);
 
         PriceList::create([
             'negocio_id' => $negocio_id,
@@ -48,17 +71,22 @@ class PriceListController extends Controller
 
             'nombre' => $request->nombre,
             'descripcion' => $request->descripcion,
-            'vigencia_desde' => $request->vigencia_desde,
-            'vigencia_hasta' => $request->vigencia_hasta,
-            'dias' => $request->dias, // TODO: Esto va a tener que ser de un DatePicker para que seleccione los dias
-            'activo' => $request->activo
+            'vigencia_desde' => $vigencia_desde->format('Y-m-d H:i'),
+            'vigencia_hasta' => $vigencia_hasta->format('Y-m-d H:i'),
+            'dias' => $dias,
+            'activo' => $activo
         ]);
+
+        return redirect(url('lista-precios'));
+        /*} catch (\Exception $exception) {
+            abort(500);
+        }*/
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -69,7 +97,7 @@ class PriceListController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -80,8 +108,8 @@ class PriceListController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -92,7 +120,7 @@ class PriceListController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

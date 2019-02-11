@@ -26,6 +26,13 @@ class AltaPriceListRequest extends FormRequest
         return [
             'nombre' => 'required|string|max:100',
             'descripcion' => 'max:150|string',
+            'vigencia_desde' => 'required_with:vigencia_hasta',
+            'vigencia_hasta' => 'required_with:vigencia_desde|after:vigencia_hasta',
         ];
+    }
+
+    public function after()
+    {
+        die('aca');
     }
 }

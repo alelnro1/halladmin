@@ -240,6 +240,11 @@ class Local extends Model
         return $this->Cajas->get();
     }
 
+    public function getPriceLists()
+    {
+        return $this->PriceLists;
+    }
+
     /**
      * Obtenemos la mercaderia del local
      *
