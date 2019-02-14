@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AdministradoresRequest;
 use App\Models\Menu;
 use App\Models\Negocio;
+use App\Models\Precios\PriceList;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Validator;
+use Nexmo\Account\Price;
 
 class AdministradoresController extends BaseController
 {
@@ -54,6 +56,14 @@ class AdministradoresController extends BaseController
         // Creo el negocio para poder vincularlo con el usuario
         $negocio = Negocio::create([
             'nombre' => $request->negocio
+        ]);
+
+        // Creamos el price list default para el negocio
+        PriceList::create([
+            'nombre' => 'Default PL',
+            'negocio_id' => $negocio->id,
+            'es_default' => true,
+            'activo' => true
         ]);
 
         $request->request->add(['negocio_id' => $negocio->id]);

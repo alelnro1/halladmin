@@ -27,7 +27,7 @@ class Controller extends BaseController
      *
      * @return \App\Models\Local
      */
-    public function getLocal(): Local
+    public function getLocal()
     {
         if (session('LOCAL_ACTUAL')) {
             return session('LOCAL_ACTUAL');
@@ -69,7 +69,7 @@ class Controller extends BaseController
      *
      * @return Negocio |null
      */
-    public function getNegocio(): Negocio
+    public function getNegocio()
     {
         if (session('NEGOCIO_ACTUAL')) {
             return session('NEGOCIO_ACTUAL');
@@ -83,7 +83,7 @@ class Controller extends BaseController
      *
      * @return int
      */
-    public function getNegocioId(): int
+    public function getNegocioId()
     {
         if ($this->getNegocio()) {
             return $this->getNegocio()->id;

@@ -6,6 +6,7 @@ use App\Http\Requests\PriceList\AltaPriceListRequest;
 use App\Models\Precios\PriceList;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Nexmo\Account\Price;
 
 class PriceListController extends Controller
 {
@@ -63,7 +64,6 @@ class PriceListController extends Controller
         if ($vigencia_desde && $vigencia_hasta) {
             $activo = Carbon::create()->between($vigencia_desde, $vigencia_hasta);
         }
-        dd($activo);
 
         PriceList::create([
             'negocio_id' => $negocio_id,
@@ -91,7 +91,13 @@ class PriceListController extends Controller
      */
     public function show($id)
     {
-        //
+        $price_list = PriceList::findOrFail($id);
+
+        $articulos = $this->getNegocio()->getArticulos();
+
+        return view('price-list.show', [
+            'price_list' => $price_list
+        ]);
     }
 
     /**

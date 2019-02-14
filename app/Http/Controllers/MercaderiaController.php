@@ -6,8 +6,11 @@ use App\Models\Mercaderia\Articulo;
 use App\Models\Categoria;
 use App\Models\Mercaderia\DatosArticulo;
 use App\Models\Mercaderia\Genero;
+use App\Models\Mercaderia\LocalStock;
 use App\Models\Mercaderia\MercaderiaTemporal;
 use App\Models\Negocio;
+use App\Models\Precios\PriceList;
+use App\Models\Precios\PriceListEntry;
 use App\Models\Proveedor;
 use App\Models\Mercaderia\Talle;
 use Illuminate\Http\Request;
@@ -75,7 +78,7 @@ class MercaderiaController extends ArchivosTemporalesController
         $datos['talles'] = Talle::all();
 
         // Busco todas las mercaderias (ya ingresadas) del local
-        $datos['mercaderia_existente'] = $this->getLocal()->getMercaderia();
+        $datos['mercaderia_existente'] = $this->getNegocio()->getArticulos();
 
         return $datos;
     }
@@ -208,6 +211,10 @@ class MercaderiaController extends ArchivosTemporalesController
                     ->where('local_id', $this->getLocalId())
                     ->first();
 
+            // Reemplazo las comas por puntos para tener decimales
+            $fila_de_archivo_temporal['codigo'] = str_replace(" ", "", $fila_de_archivo_temporal['codigo']);
+            $fila_de_archivo_temporal['precio'] = str_replace(",", ".", $fila_de_archivo_temporal['precio']);
+
             if ($datos_articulo) {
                 // Ya existe un articulo con ese codigo => busco el articulo con los parametros recibidos
                 $articulo_existente =
@@ -224,15 +231,12 @@ class MercaderiaController extends ArchivosTemporalesController
                     $articulo_existente = $this->crearArticuloConDatosExistentes($fila_de_archivo_temporal, $datos_articulo);
                 }
             } else {
-                // Reemplazo las comas por puntos para tener decimales
-                $fila_de_archivo_temporal['precio'] = str_replace(",", ".", $fila_de_archivo_temporal['precio']);
-                $fila_de_archivo_temporal['codigo'] = str_replace(" ", "", $fila_de_archivo_temporal['codigo']);
 
                 // Creo los datos comunes del articulo
                 $datos_articulo =
                     DatosArticulo::create([
                         'codigo' => trim($fila_de_archivo_temporal['codigo']),
-                        'precio' => $fila_de_archivo_temporal['precio'],
+                        //'precio' => $fila_de_archivo_temporal['precio'],
                         'descripcion' => $fila_de_archivo_temporal['descripcion'],
                         'categoria_id' => $fila_de_archivo_temporal['categoria_id'],
                         'genero_id' => $fila_de_archivo_temporal['genero'],
@@ -244,6 +248,12 @@ class MercaderiaController extends ArchivosTemporalesController
                 // Vinculo los datos comunes con el articulo recien creado
                 $articulo_existente = $this->crearArticuloConDatosExistentes($fila_de_archivo_temporal, $datos_articulo);
             }
+
+            // Creamos el PLE para la default PL
+            PriceListEntry::crearDefaultParaArticulo($articulo_existente, $fila_de_archivo_temporal['precio']);
+
+            // Actualizamos el stock del articulo en el local actual
+            LocalStock::ingresarStockArticulo($articulo_existente, $articulo_existente->cantidad);
 
             // Si existe el costo del articulo o el proveedor => Lo relaciono en la tabla
             $this->relacionarArticuloConProveedorYCosto($articulo_existente, $fila_de_archivo_temporal);

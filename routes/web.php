@@ -84,7 +84,10 @@ Route::group(['middleware' => ['auth']], function () {
     //Route::resource('articulos', 'ArticulosController');
     Route::resource('talles', 'TallesController');
     Route::resource('categorias', 'CategoriasController');
-    Route::resource('clientes', 'ClientesController');
+
+    Route::group(['middleware' => 'tiene-algun-local'], function () {
+        Route::resource('clientes', 'ClientesController');
+    });
 
     Route::group(['prefix' => 'clientes'], function () {
 

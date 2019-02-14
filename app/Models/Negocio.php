@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Mercaderia\Articulo;
 use App\Models\Mercaderia\DatosArticulo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,7 +13,7 @@ class Negocio extends Model
 
     protected $table = "negocios";
 
-    protected $fillable = [ 'nombre', 'cuit', 'condicion_iva' ];
+    protected $fillable = ['nombre', 'cuit', 'condicion_iva'];
 
     protected $dates = ['deleted_at'];
 
@@ -39,6 +40,11 @@ class Negocio extends Model
     public function DatosArticulos()
     {
         return $this->hasMany(DatosArticulo::class);
+    }
+
+    public function Articulos()
+    {
+        return $this->hasManyThrough(Articulo::class, DatosArticulo::class);
     }
 
     public function esResponsableInscripto()
@@ -92,7 +98,7 @@ class Negocio extends Model
      * @param $negocio_id
      * @return mixed
      */
-    public static function getNegocioPorId($negocio_id) : self
+    public static function getNegocioPorId($negocio_id)
     {
         return self::where('id', $negocio_id)->first();
     }
@@ -110,5 +116,17 @@ class Negocio extends Model
     public function getClientes()
     {
         return $this->Clientes()->get();
+    }
+
+    public function getArticulos()
+    {
+        $articulos = $this->Articulos()->get();
+
+        return $articulos;
+    }
+
+    public function getDefaultPriceList()
+    {
+        
     }
 }

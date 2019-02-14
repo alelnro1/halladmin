@@ -335,11 +335,11 @@ class User extends Authenticatable
 
                     // Seteo el primer local como el seleccionado
                     $this->setLocal($primer_local);
-
-                    // Seteo el negocio
-                    $this->setNegocio($primer_local->negocio_id);
                 }
             }
+
+            // Seteo el negocio
+            $this->setNegocio(Auth::user()->getNegocioId());
 
             // Comparto con las vistas el local actual
             session(['LOCAL_NOMBRE' => $this->getLocalNombre()]);
@@ -394,5 +394,10 @@ class User extends Authenticatable
     public function getPrimerLocal()
     {
         return $this->Locales()->first();
+    }
+
+    public function getNegocioId()
+    {
+        return $this->negocio_id;
     }
 }

@@ -17,4 +17,24 @@ class PriceList extends Model
     {
         return $this->hasMany(PriceListEntry::class);
     }
+
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
+    public function getVigenciaDesde()
+    {
+        return $this->vigencia_desde;
+    }
+
+    public function getVigenciaHasta()
+    {
+        return $this->vigencia_hasta;
+    }
 }

@@ -51,6 +51,16 @@ class DatosArticulo extends Model
         return $this->precio;
     }
 
+    public function getCodigo()
+    {
+        return $this->codigo;
+    }
+
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
     public function getNombreGenero()
     {
         return $this->Genero->getNombre();

@@ -264,4 +264,21 @@ class Articulo extends Model
             }
         }
     }
+
+    /**
+     * Traemos todos los articulos del negocio
+     *
+     * @param $negocio_id
+     * @return mixed
+     */
+    public static function getArticulosDeNegocio($negocio_id)
+    {
+        $articulos =
+            self::whereHas('DatosArticulo', function ($query) use ($negocio_id) {
+                $query->where('negocio_id', $negocio_id);
+            })
+            ->get();
+
+        return $articulos;
+    }
 }
