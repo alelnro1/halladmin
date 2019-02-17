@@ -334,7 +334,7 @@ class MercaderiaController extends ArchivosTemporalesController
         $articulo =
             DatosArticulo::where('codigo', $codigo)
                 ->where('negocio_id', $this->getNegocioId())
-                ->select(['id', 'precio', 'descripcion', 'categoria_id', 'genero_id'])
+                ->select(['id', 'descripcion', 'categoria_id', 'genero_id'])
                 ->with(
                     [
                         'Categoria' => function ($query) {

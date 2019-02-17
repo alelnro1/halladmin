@@ -13,7 +13,7 @@ class PriceListEntry extends Model
     protected $table = "price_list_entry";
 
     protected $fillable = [
-        'articulo_id', 'precio', 'es_absoluto'
+        'articulo_id', 'precio', 'es_absoluto', 'price_list_id'
     ];
 
     public function getPrecio()
@@ -24,6 +24,11 @@ class PriceListEntry extends Model
     public function PriceList()
     {
         return $this->belongsTo(PriceList::class);
+    }
+
+    public function Articulo()
+    {
+        return $this->belongsTo(Articulo::class);
     }
 
     /**
@@ -62,7 +67,8 @@ class PriceListEntry extends Model
                 self::create([
                     'articulo_id' => $articulo->id,
                     'price_list_id' => $default_price_list->id,
-                    'precio' => $precio
+                    'precio' => $precio,
+                    'es_absoluto' => true
                 ]);
 
                 // Eliminamos la ple vieja
@@ -72,8 +78,22 @@ class PriceListEntry extends Model
             // Nunca se creo un PLE para este producto
             self::create([
                 'articulo_id' => $articulo->id,
-                'precio' => $precio
+                'precio' => $precio,
+                'price_list_id' => $default_price_list->id,
+                'es_absoluto' => true
             ]);
+        }
+    }
+
+    public static function getPLParaArticulo($articulo_id)
+    {
+        // Buscamos todas las PLE del articulo
+        $pl_entries = self::where('articulo_id', $articulo_id)->get();
+
+        if ($pl_entries->count() > 1) {
+
+        } else {
+            return $pl_entries[0];
         }
     }
 }

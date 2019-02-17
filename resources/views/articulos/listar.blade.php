@@ -111,7 +111,7 @@
                                     Editar
                                 </a>
 
-                                <a href="{{ url('articulos/' . $articulo['id']) }}"
+                                {{--<a href="{{ url('articulos/' . $articulo['id']) }}"
                                    class="btn btn-default btn-sm btn-xs"
                                    data-method="delete"
                                    data-token="{{ csrf_token() }}"
@@ -120,7 +120,7 @@
                                     <span class="text-danger">
                                                 Eliminar
                                             </span>
-                                </a>
+                                </a>--}}
 
                             </td>
                         </tr>

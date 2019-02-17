@@ -5,6 +5,8 @@ namespace App\Models\Mercaderia;
 use App\Http\Controllers\Controller;
 use App\Models\Categoria;
 use App\Models\Local;
+use App\Models\Precios\PriceList;
+use App\Models\Precios\PriceListEntry;
 use App\Models\Proveedor;
 use App\Models\Ventas\Venta;
 use Illuminate\Database\Eloquent\Model;
@@ -28,96 +30,6 @@ class Articulo extends Model
         'deleted_at'
     ];
 
-    public static function getArticulos()
-    {
-        $controller = new Controller();
-
-        $articulos = Articulo::whereHas(
-            'DatosArticulo', function ($query) use ($controller) {
-            $query->where('local_id', $controller->getLocalId());
-        })->get();
-
-        $articulos->load([
-            'DatosArticulo' => function ($query) {
-                $query->with([
-                    'Genero', 'Categoria'
-                ]);
-            },
-            'Talle'
-        ]);
-
-        return $articulos;
-    }
-
-    public static function getArticulo($id)
-    {
-        $articulo = Articulo::findOrFail($id);
-
-        $articulo->load([
-            'Proveedores',
-            'DatosArticulo' => function ($query) {
-                $query->with([
-                    'Articulo' => function ($query) {
-                        $query->with(
-                            [
-                                'Talle' => function ($query) {
-                                    $query->select(['id', 'nombre']);
-                                }
-                            ]
-                        );
-
-                        $query->select(['id', 'cantidad', 'color', 'talle_id', 'datos_articulo_id']);
-                    }
-                ]);
-            }
-        ]);
-
-        return $articulo;
-    }
-
-    public static function getArticulosParaVentaForm()
-    {
-        $controller = new Controller();
-
-        $articulos = Articulo::whereHas('DatosArticulo', function ($query) use ($controller) {
-            $query->where('local_id', $controller->getLocalId());
-        })->get();
-
-        $articulos->load([
-            'Talle' => function ($query) {
-                $query->select(['id', 'nombre']);
-            },
-            'DatosArticulo' => function ($query) {
-                $query->select(['id', 'codigo', 'descripcion', 'precio', 'genero_id']);
-
-                $query->with('Genero');
-            }
-        ]);
-
-        return $articulos;
-    }
-
-    public static function filtrarArticuloDeDatosId($datos_articulo, $articulo_temporal)
-    {
-        $articulo =
-            Articulo::where('datos_articulo_id', $datos_articulo->id)
-                ->where('color', $articulo_temporal['color'])
-                ->whereHas('Talle', function ($query) use ($articulo_temporal) {
-                    $query->where('nombre', $articulo_temporal['talle']);
-                })
-                ->with([
-                    'DatosArticulo' => function ($query) {
-                        $query->select(['id', 'codigo', 'precio', 'descripcion', 'genero_id']);
-                    },
-                    'Talle' => function ($query) {
-                        $query->select(['id', 'nombre']);
-                    }
-                ])
-                ->first();
-
-        return $articulo;
-    }
-
     public function setCodigoAttribute($value)
     {
         $this->attributes['codigo'] = strtoupper($value) ?: null;
@@ -136,6 +48,11 @@ class Articulo extends Model
     public function Local()
     {
         return $this->belongsTo(Local::class);
+    }
+
+    public function PLEntries()
+    {
+        return $this->hasMany(PriceListEntry::class);
     }
 
     public function Ofertas()
@@ -193,7 +110,13 @@ class Articulo extends Model
 
     public function getPrecio()
     {
-        return $this->DatosArticulo->getPrecio();
+        $pl = PriceList::getPriceListParaHoy();
+
+        dump(
+            PriceListEntry::getPLParaArticulo($this->id)
+        );
+
+        return $this->PLEntries()->getPrecio();
     }
 
     public function getNombreGenero()
@@ -263,6 +186,96 @@ class Articulo extends Model
                 }
             }
         }
+    }
+
+    public static function getArticulosParaVentaForm()
+    {
+        $controller = new Controller();
+
+        $articulos = self::whereHas('DatosArticulo', function ($query) use ($controller) {
+            $query->where('local_id', $controller->getLocalId());
+        })->get();
+
+        $articulos->load([
+            'Talle' => function ($query) {
+                $query->select(['id', 'nombre']);
+            },
+            'DatosArticulo' => function ($query) {
+                $query->select(['id', 'codigo', 'descripcion', 'precio', 'genero_id']);
+
+                $query->with('Genero');
+            }
+        ]);
+
+        return $articulos;
+    }
+
+    public static function getArticulos()
+    {
+        $controller = new Controller();
+
+        $articulos = self::whereHas(
+            'DatosArticulo', function ($query) use ($controller) {
+            $query->where('local_id', $controller->getLocalId());
+        })->get();
+
+        $articulos->load([
+            'DatosArticulo' => function ($query) {
+                $query->with([
+                    'Genero', 'Categoria'
+                ]);
+            },
+            'Talle'
+        ]);
+
+        return $articulos;
+    }
+
+    public static function getArticulo($id)
+    {
+        $articulo = self::findOrFail($id);
+
+        $articulo->load([
+            'Proveedores',
+            'DatosArticulo' => function ($query) {
+                $query->with([
+                    'Articulo' => function ($query) {
+                        $query->with(
+                            [
+                                'Talle' => function ($query) {
+                                    $query->select(['id', 'nombre']);
+                                }
+                            ]
+                        );
+
+                        $query->select(['id', 'cantidad', 'color', 'talle_id', 'datos_articulo_id']);
+                    }
+                ]);
+            }
+        ]);
+
+        return $articulo;
+    }
+
+    public static function filtrarArticuloDeDatosId($datos_articulo, $articulo_temporal)
+    {
+        $articulo =
+            Articulo::where('datos_articulo_id', $datos_articulo->id)
+                ->where('color', $articulo_temporal['color'])
+                ->whereHas('Talle', function ($query) use ($articulo_temporal) {
+                    $query->where('nombre', $articulo_temporal['talle']);
+                })
+                ->with([
+                    'DatosArticulo' => function ($query) {
+                        $query->select(['id', 'codigo', 'precio', 'descripcion', 'genero_id']);
+                    },
+                    'Talle' => function ($query) {
+                        $query->select(['id', 'nombre']);
+                    }
+                ])
+                ->first();
+
+        return $articulo;
     }
 
     /**

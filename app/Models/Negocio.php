@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Mercaderia\Articulo;
 use App\Models\Mercaderia\DatosArticulo;
+use App\Models\Precios\PriceList;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -25,6 +26,11 @@ class Negocio extends Model
     public function Locales()
     {
         return $this->hasMany(Local::class);
+    }
+
+    public function PriceLists()
+    {
+        return $this->hasMany(PriceList::class);
     }
 
     public function Clientes()
@@ -125,8 +131,13 @@ class Negocio extends Model
         return $articulos;
     }
 
+    /**
+     * Obtenemos la lista de precios por default del negocio
+     */
     public function getDefaultPriceList()
     {
-        
+        $default_pl = PriceList::getDefaultDeNegocio($this->id);
+
+        return $default_pl;
     }
 }
