@@ -62,19 +62,71 @@ trait DatosParaFacturasAfip
         return $contribuyente->datosGenerales->razonSocial;
     }
 
+    /**
+     * Obtenemos la razon social de un monotributista
+     *
+     * @param $contribuyente
+     * @return string
+     */
     private function getRazonSocialMonotributista($contribuyente)
     {
-        return $contribuyente->datosGenerales->nombre . " " . $contribuyente->datosGenerales->apellido;
+        // Inicializo la razon social
+        $razon_social = "";
+
+        // Si hay un nombre lo agrego
+        if (isset($contribuyente->datosGenerales->nombre)) {
+            $razon_social .= $contribuyente->datosGenerales->nombre;
+        }
+
+        if (isset($contribuyente->errorConstancia->apellido)) {
+            $razon_social .= $contribuyente->datosGenerales->apellido;
+        }
+
+        return $razon_social;
     }
 
+    /**
+     * Obtenemos la razon social de un consumidor final
+     *
+     * @param $contribuyente
+     * @return string
+     */
     private function getRazonSocialConsumidorFinal($contribuyente)
     {
-        return $contribuyente->errorConstancia->nombre . " " . $contribuyente->errorConstancia->apellido;
+        // Inicializo la razon social
+        $razon_social = "";
+
+        // Si hay un nombre lo agrego
+        if (isset($contribuyente->errorConstancia->nombre)) {
+            $razon_social .= $contribuyente->errorConstancia->nombre;
+        }
+
+        if (isset($contribuyente->errorConstancia->apellido)) {
+            $razon_social .= $contribuyente->errorConstancia->apellido;
+        }
+
+        return $razon_social;
     }
 
+    /**
+     * Obtenemos el domicilio fiscal de un contribuyente
+     *
+     * @param $contribuyente
+     * @return string
+     */
     private function getDomicilioFiscal($contribuyente)
     {
-        return $contribuyente->datosGenerales->domicilioFiscal->direccion . ", " .
-            $contribuyente->datosGenerales->domicilioFiscal->descripcionProvincia;
+        // Inicializo el domicilio fiscal
+        $domicilio_fiscal = "";
+
+        if (isset($contribuyente->datosGenerales->domicilioFiscal->direccion)) {
+            $domicilio_fiscal .= $contribuyente->datosGenerales->domicilioFiscal->direccion;
+        }
+
+        if (isset($contribuyente->datosGenerales->domicilioFiscal->descripcionProvincia)) {
+            $domicilio_fiscal .= $contribuyente->datosGenerales->domicilioFiscal->descripcionProvincia;
+        }
+
+        return $domicilio_fiscal;
     }
 }

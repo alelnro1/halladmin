@@ -155,7 +155,7 @@ desired effect
                     <!-- Control Sidebar Toggle Button -->
                     @if(session('LOCAL_ACTUAL') != null && (Auth::user()->esAdmin() || Auth::user()->esSuperAdmin()))
                         <li>
-                            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                            <a href="#" data-toggle="control-sidebar"><i class="fas fa-cogs"></i></a>
                         </li>
                     @endif
                 </ul>

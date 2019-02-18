@@ -29,7 +29,7 @@ class ArticulosController extends Controller
      */
     public function index()
     {
-        $articulos = Articulo::getArticulos();
+        $articulos = Articulo::getArticulos(true);
 
         return view('articulos.listar')->with('articulos', $articulos);
     }

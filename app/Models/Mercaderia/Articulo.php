@@ -108,15 +108,16 @@ class Articulo extends Model
         return $this->DatosArticulo->descripcion;
     }
 
+    /**
+     * Traigo el precio de un articulo
+     *
+     * @return mixed
+     */
     public function getPrecio()
     {
-        $pl = PriceList::getPriceListParaHoy();
-
-        dump(
-            PriceListEntry::getPLParaArticulo($this->id)
-        );
-
-        return $this->PLEntries()->getPrecio();
+        if ($this->PLEntries->first()) {
+            return $this->PLEntries->first()->getPrecio();
+        }
     }
 
     public function getNombreGenero()
@@ -201,32 +202,53 @@ class Articulo extends Model
                 $query->select(['id', 'nombre']);
             },
             'DatosArticulo' => function ($query) {
-                $query->select(['id', 'codigo', 'descripcion', 'precio', 'genero_id']);
+                $query->select(['id', 'codigo', 'descripcion', 'genero_id']);
 
-                $query->with('Genero');
+                $query->with([
+                    'Genero',
+                    'PLEntries' => function ($query) {
+                        $query->whereHas('PriceList', function ($query) {
+                            $query->where('es_default', true);
+                        });
+                    }
+
+                ]);
             }
         ]);
 
         return $articulos;
     }
 
-    public static function getArticulos()
+    /**
+     * Traemos todos los articulos para listar
+     *
+     * @return mixed
+     */
+    public static function getArticulos($pl_default = false)
     {
         $controller = new Controller();
 
-        $articulos = self::whereHas(
-            'DatosArticulo', function ($query) use ($controller) {
-            $query->where('local_id', $controller->getLocalId());
-        })->get();
-
-        $articulos->load([
-            'DatosArticulo' => function ($query) {
-                $query->with([
-                    'Genero', 'Categoria'
-                ]);
-            },
-            'Talle'
-        ]);
+        $articulos =
+            self::whereHas(
+                'DatosArticulo', function ($query) use ($controller) {
+                    $query->where('negocio_id', $controller->getNegocioId());
+                })
+                ->with([
+                    'DatosArticulo' => function ($query) {
+                        $query->with([
+                            'Genero', 'Categoria'
+                        ]);
+                    },
+                    'Talle',
+                    'PLEntries' => function ($query) use ($pl_default) {
+                        if ($pl_default) {
+                            $query->whereHas('PriceList', function ($query) {
+                                $query->where('es_default', true);
+                            });
+                        }
+                    }
+                ])
+                ->get();
 
         return $articulos;
     }
@@ -290,7 +312,7 @@ class Articulo extends Model
             self::whereHas('DatosArticulo', function ($query) use ($negocio_id) {
                 $query->where('negocio_id', $negocio_id);
             })
-            ->get();
+                ->get();
 
         return $articulos;
     }

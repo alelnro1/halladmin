@@ -65,6 +65,11 @@ class PriceList extends Model
                 ->first();
     }
 
+    public function getPrecioDefault()
+    {
+
+    }
+
     /**
      * Obtengo la price list para un negicio
      */
@@ -84,9 +89,12 @@ class PriceList extends Model
                 })
                 ->get();
 
+        dump($pl_fechas);
+
         // Si hay fechas => filtro las que me devolvió por día
         if($pl_fechas) {
             // Hay días
+            $dia_hoy = date('N');
         } else {
             // Si no hay fechas => busco por día
 

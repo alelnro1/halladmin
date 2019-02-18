@@ -85,15 +85,20 @@ class PriceListEntry extends Model
         }
     }
 
-    public static function getPLParaArticulo($articulo_id)
+    /**
+     * Obtenemos todas las PLE donde figura el articulo
+     *
+     * @param $articulo_id
+     * @return mixed
+     */
+    public static function getPLEntriesParaArticulo($articulo_id)
     {
         // Buscamos todas las PLE del articulo
-        $pl_entries = self::where('articulo_id', $articulo_id)->get();
+        $pl_entries =
+            self::where('articulo_id', $articulo_id)
+                ->with('PriceList')
+                ->get();
 
-        if ($pl_entries->count() > 1) {
-
-        } else {
-            return $pl_entries[0];
-        }
+        return $pl_entries;
     }
 }
