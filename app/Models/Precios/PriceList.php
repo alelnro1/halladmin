@@ -65,11 +65,6 @@ class PriceList extends Model
                 ->first();
     }
 
-    public function getPrecioDefault()
-    {
-
-    }
-
     /**
      * Obtengo la price list para un negicio
      */

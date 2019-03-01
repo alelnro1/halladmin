@@ -73,7 +73,7 @@ class Articulo extends Model
     public function Proveedores()
     {
         return $this->belongsToMany(Proveedor::class, 'articulo_proveedor', 'articulo_id', 'proveedor_id')
-            ->withPivot(['costo', 'cantidad', 'cantidad_remanente'])
+            ->withPivot(['costo', 'cantidad'/*, 'cantidad_remanente'*/])
             ->withTimestamps();
     }
 
@@ -118,6 +118,16 @@ class Articulo extends Model
         if ($this->PLEntries->first()) {
             return $this->PLEntries->first()->getPrecio();
         }
+    }
+
+    /**
+     * Traigo el precio default de un articulo
+     *
+     * @return mixed
+     */
+    public function getPrecioDefault()
+    {
+        return PriceListEntry::getPLEDefaultParaArticulo($this->id)->getPrecio();
     }
 
     public function getNombreGenero()
@@ -189,32 +199,37 @@ class Articulo extends Model
         }
     }
 
+    /**
+     * Traemos los articulos del local para vender, con su price list correspondiente
+     *
+     * @return mixed
+     */
     public static function getArticulosParaVentaForm()
     {
         $controller = new Controller();
 
-        $articulos = self::whereHas('DatosArticulo', function ($query) use ($controller) {
-            $query->where('local_id', $controller->getLocalId());
-        })->get();
+        $articulos =
+            self::whereHas('DatosArticulo', function ($query) use ($controller) {
+                $query->where('local_id', $controller->getLocalId());
+            })
+                ->with([
+                    'Talle' => function ($query) {
+                        $query->select(['id', 'nombre']);
+                    },
+                    'DatosArticulo' => function ($query) {
+                        $query->select(['id', 'codigo', 'descripcion', 'genero_id']);
 
-        $articulos->load([
-            'Talle' => function ($query) {
-                $query->select(['id', 'nombre']);
-            },
-            'DatosArticulo' => function ($query) {
-                $query->select(['id', 'codigo', 'descripcion', 'genero_id']);
-
-                $query->with([
-                    'Genero',
+                        $query->with([
+                            'Genero',
+                        ]);
+                    },
                     'PLEntries' => function ($query) {
                         $query->whereHas('PriceList', function ($query) {
                             $query->where('es_default', true);
                         });
                     }
-
-                ]);
-            }
-        ]);
+                ])
+                ->get();
 
         return $articulos;
     }
@@ -289,7 +304,7 @@ class Articulo extends Model
                 })
                 ->with([
                     'DatosArticulo' => function ($query) {
-                        $query->select(['id', 'codigo', 'precio', 'descripcion', 'genero_id']);
+                        $query->select(['id', 'codigo', 'descripcion', 'genero_id']);
                     },
                     'Talle' => function ($query) {
                         $query->select(['id', 'nombre']);

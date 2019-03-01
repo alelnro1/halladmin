@@ -28,12 +28,12 @@
         </a>
     </li>
 
-    <li @if(Request::is('lista-precios*') ) class="active" @endif>
+    {{--<li @if(Request::is('lista-precios*') ) class="active" @endif>
         <a href="{{ url('lista-precios') }}">
             <i class="fa fa-dollar-sign" aria-hidden="true"></i>
             <span>Listas de Precios</span>
         </a>
-    </li>
+    </li>--}}
 
     <li @if(Request::is('proveedores*') ) class="active" @endif>
         <a href="{{ route('proveedores') }}">

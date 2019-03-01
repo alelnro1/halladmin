@@ -31,7 +31,7 @@ class Venta extends Model
                                         $query->select(['id', 'nombre']);
                                     }
                                 ]);
-                                $query->select(['id', 'codigo', 'precio', 'descripcion', 'genero_id']);
+                                $query->select(['id', 'codigo', /*'precio',*/ 'descripcion', 'genero_id']);
                             },
 
                             'Talle' => function ($query) {

@@ -54,13 +54,14 @@ class PriceListEntry extends Model
 
             // Verificamos que el precio de la bd sea o no el mismo que el que recibimos
             if ($pl_entry != $precio) {
-                $hoy = Carbon::createFromFormat('Y-m-d H:i:s', time());
+                $hoy = Carbon::now()->format('Y-m-d H:i:s');
 
                 // Guardar en historico el precio que está ahora y crear el nuevo (desde, hasta) y borrar el que está
                 PLEHistorico::create([
                     'vigencia_desde' => $pl_entry->created_at,
                     'vigencia_hasta' => $hoy,
                     'precio' => $pl_entry->getPrecio(),
+                    'articulo_id' => $articulo->id,
                 ]);
 
                 // Creamos el nuevo ple
@@ -100,5 +101,22 @@ class PriceListEntry extends Model
                 ->get();
 
         return $pl_entries;
+    }
+
+    /**
+     * Obtenemos el PLE de un articulo
+     *
+     * @param $articulo_id
+     */
+    public static function getPLEDefaultParaArticulo($articulo_id)
+    {
+        $pl =
+            self::where('articulo_id', $articulo_id)
+                ->whereHas('PriceList', function ($query) {
+                    $query->where('es_default', true);
+                })
+        ->first();
+
+        return $pl;
     }
 }

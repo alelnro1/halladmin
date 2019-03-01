@@ -9,7 +9,7 @@ class PLEHistorico extends Model
     protected $table = "ple_historicos";
 
     protected $fillable = [
-        'vigencia_desde', 'vigencia_hasta', 'precio'
+        'vigencia_desde', 'vigencia_hasta', 'precio', 'articulo_id'
     ];
 
 }

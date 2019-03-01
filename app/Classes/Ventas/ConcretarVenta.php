@@ -89,7 +89,7 @@ class ConcretarVenta extends Ventas
             // 2.2) Se guarda en la tabla articulo_venta con el precio y la cantidad
             $articulo->Ventas()->attach(
                 $venta->id, [
-                    'precio' => $articulo->DatosArticulo->precio,
+                    'precio' => $articulo->getPrecioDefault(),
                     'cantidad' => $cantidad_a_vender,
                     'descuento' => $articulo->descuento,
                     'subtotal' => $articulo->subtotal,

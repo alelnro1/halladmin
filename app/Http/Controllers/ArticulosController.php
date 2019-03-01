@@ -56,7 +56,7 @@ class ArticulosController extends Controller
         // por ej: short rojo, verde, con talle 40, 41, etc
         $articulos_iguales = $articulo->DatosArticulo->Articulo;
 
-        $proveedores = $articulo->Proveedores;
+        $proveedores = $articulo->Proveedores()->get();
 
         return view('articulos.show', [
             'articulo' => $articulo,

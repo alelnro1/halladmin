@@ -368,7 +368,7 @@ class MercaderiaController extends ArchivosTemporalesController
             $proveedor, [
                 'costo' => $fila_de_archivo_temporal['costo'],
                 'cantidad' => $fila_de_archivo_temporal['cantidad'],
-                'cantidad_remanente' => $fila_de_archivo_temporal['cantidad'],
+                //'cantidad_remanente' => $fila_de_archivo_temporal['cantidad'],
                 'local_id' => $this->getLocalId()
             ]
         );

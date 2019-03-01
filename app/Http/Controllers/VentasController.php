@@ -48,7 +48,10 @@ class VentasController extends Ventas
             $articulo_a_cambiar = $venta->Cambio->Articulo;
         }
 
-        return view('ventas.show', ['venta' => $venta, 'articulo_a_cambiar' => $articulo_a_cambiar]);
+        return view('ventas.show', [
+            'venta' => $venta,
+            'articulo_a_cambiar' => $articulo_a_cambiar
+        ]);
     }
 
     /**
