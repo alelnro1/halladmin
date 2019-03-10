@@ -49,10 +49,10 @@
         </a>
     </li>
 
-    <li @if(Request::is('usuarios') ) class="active" @endif>
-        <a href="{{ url('/usuarios') }}">
+    <li @if(Request::is('empleados') ) class="active" @endif>
+        <a href="{{ url('/empleados') }}">
             <i class="fa fa-user-tie" aria-hidden="true"></i>
-            <span>Usuarios</span>
+            <span>Empleados</span>
         </a>
     </li>
 

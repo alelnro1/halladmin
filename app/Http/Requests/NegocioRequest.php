@@ -52,6 +52,8 @@ class NegocioRequest extends FormRequest
 
             $persona_afip = $afipController->getContribuyenteAfip($cuit, $condicion_iva);
 
+            dd($persona_afip);
+
             // Revisamos si dada una CUIT la AFIP nos responde que el contribuyente existe y está registrado
             if (!isset($persona_afip->datosGenerales)) {
                 $validator->errors()->add('cuit', 'El CUIT es inválido o no corresponde a un registro frente al IVA');

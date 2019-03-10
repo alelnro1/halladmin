@@ -54,7 +54,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('nuevo', 'UsuariosController@store')->name('usuarios.store');
 
         Route::group(['middleware' => ['ownership-usuarios']], function () {
-            Route::get('{usuario}', 'UsuariosController@show')->name('usuarios.view');
+            Route::get('/{usuario}', 'UsuariosController@show')->name('usuarios.view');
 
             Route::get('{usuario}/edit', 'UsuariosController@edit')->name('usuarios.edit');
             Route::post('{usuario}/edit', 'UsuariosController@update')->name('usuarios.update');
@@ -78,6 +78,9 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });
 
+    Route::group(['prefix' => 'facturacion', 'middleware' => 'tiene-algun-local'], function () {
+        Route::get('/', 'FacturacionController@index')->name('facturacion');
+    });
 
     Route::resource('promociones', 'PromocionesController');
     Route::resource('ofertas', 'OfertasController');

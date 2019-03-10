@@ -83,9 +83,6 @@ class ConcretarVenta extends Ventas
             // Actualizamos la cantidad remanente por ingreso por proveedor
             $articulo->actualizarCantidadesDeProveedores($cantidad_a_vender);
 
-            // 2.1) Se resta el stock
-            $articulo->cantidad = $articulo->cantidad - 1;
-
             // 2.2) Se guarda en la tabla articulo_venta con el precio y la cantidad
             $articulo->Ventas()->attach(
                 $venta->id, [

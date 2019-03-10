@@ -23,14 +23,18 @@ class AfipController extends Controller
             'CUIT' => 20373561690,
             'res_folder' => base_path('app/Certs/'),
             'ta_folder' => base_path('app/Certs/'),
-            //'cert' => 'miempresa.crt',
-            /*'cert' => 'miempresacert.pem',
-            'key' => 'nosotros.key',*/
-            'cert' => 'miempresaprod.crt',
-            'key' => 'nosotrosprod.key',
-            'production' => true
+            'cert' => 'nosotrostest.pem',
+            'key' => 'nosotrostest.key',
+            //'cert' => 'miempresaprod.crt',
+            //'key' => 'nosotrosprod.key',
+            'production' => false
             //'passphrase' => 'ejemplocert'
         ], base_path());
+    }
+
+    public function index()
+    {
+        return view('afip.index');
     }
 
     /**
@@ -178,9 +182,6 @@ class AfipController extends Controller
         $ventas = new Ventas();
         $articulos = $ventas->armarArticulosParaVenderDeTemporales();
 
-        dd($articulos);
-
-        dd('aca');
         $data = array(
             'CantReg' => 1, // Cantidad de comprobantes a registrar
             'PtoVta' => 1, // Punto de venta
@@ -240,6 +241,8 @@ class AfipController extends Controller
                 )
             )
         );
+
+        //dd($this->afipws);
 
         try {
             $afip = $this->afipws;

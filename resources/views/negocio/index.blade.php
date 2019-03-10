@@ -86,6 +86,24 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('punto_venta') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Punto de Venta</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="punto_venta" value="{{ old('punto_venta') }}"
+                                       placeholder="Escriba el punto de venta del local"
+                                       data-cuit-registrado="{{ $local->punto_venta }}"
+                                       id="punto_venta"
+                                       autocomplete="off">
+
+                                @if ($errors->has('punto_venta'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('punto_venta') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">

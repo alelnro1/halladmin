@@ -66,12 +66,12 @@
                             <td>{{ $usuario->telefono }}</td>
 
                             <td>
-                                <a href="{{ route('usuarios', ['usuario' => $usuario['id']]) }}" class="btn btn-default btn-sm">
+                                <a href="{{ route('usuarios.view', ['usuario' => $usuario['id']]) }}" class="btn btn-default btn-sm">
                                     <i class="fa fa-eye" aria-hidden="true"></i>
                                     Ver
                                 </a>
 
-                                <a href="{{ route('usuarios.view', ['usuario' => $usuario['id']]) }}" class="btn btn-default btn-sm">
+                                <a href="{{ route('usuarios.edit', ['usuario' => $usuario['id']]) }}" class="btn btn-default btn-sm">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                     Editar
                                 </a>

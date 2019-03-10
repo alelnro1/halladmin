@@ -22,7 +22,7 @@ class Local extends Model
     protected $table = 'locales';
 
     protected $fillable = [
-        'nombre', 'descripcion', 'archivo', 'domicilio', 'email', 'telefono', 'negocio_id'
+        'nombre', 'descripcion', 'archivo', 'domicilio', 'email', 'telefono', 'negocio_id', 'punto_venta'
     ];
 
     /**

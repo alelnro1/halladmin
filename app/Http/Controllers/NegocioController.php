@@ -18,8 +18,12 @@ class NegocioController extends Controller
         // Traigo el negocio
         $negocio = $this->getNegocio();
 
+        // Traigo el local
+        $local = $this->getLocal();
+
         return view('negocio.index', [
-            'negocio' => $negocio
+            'negocio' => $negocio,
+            'local' => $local
         ]);
     }
 
@@ -34,12 +38,18 @@ class NegocioController extends Controller
         // Busco el negocio
         $negocio = $this->getNegocio();
 
+        // Busco el local
+        $local = $this->getLocal();
+
         // El CUIT viene con una mascara => La limpiamos
         $cuit = str_replace('-', '', $request->cuit);
 
         $negocio->cuit = $cuit;
         $negocio->condicion_iva = $request->condicion_iva;
         $negocio->save();
+
+        $local->punto_venta = $request->punto_venta;
+        $local->save();
 
         return redirect(route('negocio'))->with(['actualizado' => true]);
     }
