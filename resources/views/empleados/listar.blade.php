@@ -2,7 +2,7 @@
 
 @section('site-name', 'Listando usuarios')
 
-@section('page-description', 'Usuarios')
+@section('page-description', 'Empleados')
 
 @section('styles')
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/jquery.dataTables.css">
@@ -10,7 +10,7 @@
 @stop
 
 @section('niveles')
-    <li><a href="#"><i class="fa fa-dashboard"></i> Usuarios</a></li>
+    <li><a href="#"><i class="fa fa-dashboard"></i> Empleados</a></li>
     <li class="active">Listado</li>
 @stop
 
@@ -20,9 +20,9 @@
         <div class="box-header">
             <h3 class="box-title">Listado</h3>
             <div class="box-tools">
-                <a href="{{ route('usuarios.create') }}" class="btn btn-block btn-success btn-sm">
+                <a href="{{ route('empleados.create') }}" class="btn btn-block btn-success btn-sm">
                     <i class="fa fa-plus" aria-hidden="true"></i>
-                    Nuevo Usuario
+                    Nuevo Empleado
                 </a>
             </div>
         </div>
@@ -66,17 +66,17 @@
                             <td>{{ $usuario->telefono }}</td>
 
                             <td>
-                                <a href="{{ route('usuarios.view', ['usuario' => $usuario['id']]) }}" class="btn btn-default btn-sm">
+                                <a href="{{ route('empleados.view', ['usuario' => $usuario['id']]) }}" class="btn btn-default btn-sm">
                                     <i class="fa fa-eye" aria-hidden="true"></i>
                                     Ver
                                 </a>
 
-                                <a href="{{ route('usuarios.edit', ['usuario' => $usuario['id']]) }}" class="btn btn-default btn-sm">
+                                <a href="{{ route('empleados.edit', ['usuario' => $usuario['id']]) }}" class="btn btn-default btn-sm">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                     Editar
                                 </a>
 
-                                <a href="{{ route('usuarios.delete', ['usuario' => $usuario['id']]) }}"
+                                <a href="{{ route('empleados.delete', ['usuario' => $usuario['id']]) }}"
                                    class="btn btn-danger btn-sm eliminar-elem"
                                    data-confirm="Está seguro que desea eliminar al usuario <strong>{{ $usuario->nombre }}?</strong>">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
@@ -88,7 +88,7 @@
                     </tbody>
                 </table>
             @else
-                No hay usuarios
+                No hay empleados
             @endif
         </div>
     </div>

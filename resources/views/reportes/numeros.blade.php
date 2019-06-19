@@ -58,7 +58,7 @@
             <div class="icon">
                 <i class="fa fa-users" aria-hidden="true"></i>
             </div>
-            <a href="{{ route('usuarios') }}" class="small-box-footer">Ver más <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="{{ route('empleados') }}" class="small-box-footer">Ver más <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
     <!-- ./col -->

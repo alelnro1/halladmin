@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<loginTicketResponse version="1">
+<loginTicketResponse version="1.0">
     <header>
-        <source>CN=wsaa, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239</source>
-        <destination>SERIALNUMBER=CUIT 20373561690, CN=miempresaprod</destination>
-        <uniqueId>1257362248</uniqueId>
-        <generationTime>2019-03-04T12:25:21.957-03:00</generationTime>
-        <expirationTime>2019-03-05T00:25:21.957-03:00</expirationTime>
+        <source>CN=wsaahomo, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239</source>
+        <destination>SERIALNUMBER=CUIT 20373561690, CN=nosotrostest</destination>
+        <uniqueId>3255358924</uniqueId>
+        <generationTime>2019-06-17T15:02:04.343-03:00</generationTime>
+        <expirationTime>2019-06-18T03:02:04.343-03:00</expirationTime>
     </header>
     <credentials>
-        <token>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/Pgo8c3NvIHZlcnNpb249IjIuMCI+CiAgICA8aWQgc3JjPSJDTj13c2FhLCBPPUFGSVAsIEM9QVIsIFNFUklBTE5VTUJFUj1DVUlUIDMzNjkzNDUwMjM5IiBkc3Q9IkNOPXdzZmUsIE89QUZJUCwgQz1BUiIgdW5pcXVlX2lkPSIxNzgxNzcxNzQxIiBnZW5fdGltZT0iMTU1MTcxMzA2MSIgZXhwX3RpbWU9IjE1NTE3NTYzMjEiLz4KICAgIDxvcGVyYXRpb24gdHlwZT0ibG9naW4iIHZhbHVlPSJncmFudGVkIj4KICAgICAgICA8bG9naW4gZW50aXR5PSIzMzY5MzQ1MDIzOSIgc2VydmljZT0id3NmZSIgdWlkPSJTRVJJQUxOVU1CRVI9Q1VJVCAyMDM3MzU2MTY5MCwgQ049bWllbXByZXNhcHJvZCIgYXV0aG1ldGhvZD0iY21zIiByZWdtZXRob2Q9IjIyIj4KICAgICAgICAgICAgPHJlbGF0aW9ucz4KICAgICAgICAgICAgICAgIDxyZWxhdGlvbiBrZXk9IjIwMzczNTYxNjkwIiByZWx0eXBlPSI0Ii8+CiAgICAgICAgICAgIDwvcmVsYXRpb25zPgogICAgICAgIDwvbG9naW4+CiAgICA8L29wZXJhdGlvbj4KPC9zc28+Cg==</token>
-        <sign>erPhAmvDlAqzaL9Qn4lFesZbR25qVC+KQdsct3YOMok3YynAo4VtcUd1jN/r9rbf5v9ywBwGJOSFdRci3nJz3SY8XJB+ba8vs+XFxM05R8oC2Cptr8Pppc4+Hi53FaOcrxNLAxFpboocVxoXBLmueO6cBr/MD6m3oe6PkdwGG04=</sign>
+        <token>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/Pgo8c3NvIHZlcnNpb249IjIuMCI+CiAgICA8aWQgc3JjPSJDTj13c2FhaG9tbywgTz1BRklQLCBDPUFSLCBTRVJJQUxOVU1CRVI9Q1VJVCAzMzY5MzQ1MDIzOSIgZHN0PSJDTj13c2ZlLCBPPUFGSVAsIEM9QVIiIHVuaXF1ZV9pZD0iMTA3NjMwNjAzNiIgZ2VuX3RpbWU9IjE1NjA3OTQ0NjQiIGV4cF90aW1lPSIxNTYwODM3NzI0Ii8+CiAgICA8b3BlcmF0aW9uIHR5cGU9ImxvZ2luIiB2YWx1ZT0iZ3JhbnRlZCI+CiAgICAgICAgPGxvZ2luIGVudGl0eT0iMzM2OTM0NTAyMzkiIHNlcnZpY2U9IndzZmUiIHVpZD0iU0VSSUFMTlVNQkVSPUNVSVQgMjAzNzM1NjE2OTAsIENOPW5vc290cm9zdGVzdCIgYXV0aG1ldGhvZD0iY21zIiByZWdtZXRob2Q9IjIyIj4KICAgICAgICAgICAgPHJlbGF0aW9ucz4KICAgICAgICAgICAgICAgIDxyZWxhdGlvbiBrZXk9IjIwMzczNTYxNjkwIiByZWx0eXBlPSI0Ii8+CiAgICAgICAgICAgIDwvcmVsYXRpb25zPgogICAgICAgIDwvbG9naW4+CiAgICA8L29wZXJhdGlvbj4KPC9zc28+Cg==</token>
+        <sign>fcKlsurkrqmvLGpiTVwG76LX+AiJGhTwCzUnjf5XcxXdSai7cE1Cws7nLfomelz1oubj1k60D1U8j8KBS5U/mc8U3YZ3ZWFTW6XKWwnEiSwdTGiN9YdUc2wNznpy3UR7TmLFEolN5oQvH6gXCGWQONSgUAbekQ/zVPji3Yxg2zw=</sign>
     </credentials>
 </loginTicketResponse>

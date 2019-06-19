@@ -14,13 +14,13 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use App\User;
 
-class UsuariosController extends BaseController
+class EmpleadosController extends BaseController
 {
     use SoftDeletes;
 
     public function __construct()
     {
-        $this->middleware('section:usuarios');
+        $this->middleware('section:empleados');
     }
 
     /**
@@ -32,7 +32,7 @@ class UsuariosController extends BaseController
     {
         $usuarios = $this->getLocal()->getUsuarios();
 
-        return view('usuarios.listar')->with('usuarios', $usuarios);
+        return view('empleados.listar')->with('usuarios', $usuarios);
     }
 
     /**
@@ -51,7 +51,7 @@ class UsuariosController extends BaseController
                 ->with('MenusHijos')
                 ->get();
 
-        return view('usuarios.create', array('menus' => $menus));
+        return view('empleados.create', array('menus' => $menus));
     }
 
     /**
@@ -82,7 +82,7 @@ class UsuariosController extends BaseController
 
         $this->subirYGuardarArchivoSiHay($request, $usuario);
 
-        return redirect(route('usuarios'))->with('usuario_creado', 'Usuario con nombre ' . $request->nombre . ' creado');
+        return redirect(route('empleados'))->with('usuario_creado', 'Empleado ' . $request->nombre . ' creado');
     }
 
     /**
@@ -134,7 +134,7 @@ class UsuariosController extends BaseController
                 }]
         );
 
-        return view('usuarios.show')->with('usuario', $usuario);
+        return view('empleados.show')->with('usuario', $usuario);
     }
 
     /**
@@ -157,7 +157,7 @@ class UsuariosController extends BaseController
                 ->with('MenusHijos')
                 ->get();
 
-        return view('usuarios.edit', array('usuario' => $usuario, 'menus' => $menus));
+        return view('empleados.edit', array('usuario' => $usuario, 'menus' => $menus));
     }
 
     /**
@@ -167,7 +167,7 @@ class UsuariosController extends BaseController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UsuarioRequest $request, User $id)
+    public function update(UsuarioRequest $request, User $usuario)
     {
         // Valido el input
         /*$validator = Validator::make(
@@ -183,9 +183,6 @@ class UsuariosController extends BaseController
         if ($validator->fails()) {
             return redirect(route('usuarios.edit', ['usuario' => $id]))->withErrors($validator)->withInput();
         }*/
-
-        // Busco el usuario
-        $usuario = User::findOrFail($id);
 
         // Si hay una contraseña, la actualizo
         if (trim($request->password) == "") {
@@ -211,7 +208,7 @@ class UsuariosController extends BaseController
             }
         }*/
 
-        return redirect(route('usuarios'))->with('usuario_actualizado', 'Usuario actualizado');
+        return redirect(route('empleados'))->with('usuario_actualizado', 'Empleado actualizado');
     }
 
     /**
@@ -224,7 +221,7 @@ class UsuariosController extends BaseController
     {
         $usuario->delete();
 
-        return redirect(route('usuarios'))->with('usuario_eliminado', 'Usuario eliminado');
+        return redirect(route('empleados'))->with('usuario_eliminado', 'Empleado eliminado');
     }
 
     /**

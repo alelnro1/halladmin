@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Mercaderia\Articulo;
 use App\Models\Mercaderia\DatosArticulo;
 use App\Models\Precios\PriceList;
+use App\Models\Precios\PriceListEntry;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -127,6 +128,10 @@ class Negocio extends Model
     public function getArticulos()
     {
         $articulos = $this->Articulos()->get();
+
+        foreach ($articulos as $articulo) {
+            $articulo->precio_default = PriceListEntry::getPLEDefaultParaArticulo($articulo->id)->precio;
+        }
 
         return $articulos;
     }

@@ -5,7 +5,7 @@ namespace App\Http\Middleware\ProtectOwnership;
 use App\User;
 use Closure;
 
-class Usuarios
+class Empleados
 {
     /**
      * Handle an incoming request.
@@ -22,9 +22,18 @@ class Usuarios
         // Flag que dice si el usuario al que se quiere acceder pertenece al local
         $usuario_pertenece = false;
 
+        // Obtengo el empleado a partir del ID de la URL
+        if ($request->route()->parameter('usuario')) {
+            $empleado_id = $request->route()->parameter('usuario');
+        }
+
+        if (isset($request->usuario->id)) {
+            $empleado_id = $request->usuario->id;
+        }
+
         // Recorremos los usuarios del local y si alguno matchea está ok
         foreach ($usuarios_de_local as $usuario_local) {
-            if ($usuario_local->id == $request->usuario->id) {
+            if ($usuario_local->id == $empleado_id) {
                 $usuario_pertenece = true;
 
                 break;
@@ -36,6 +45,5 @@ class Usuarios
         }
 
         abort(404);
-
     }
 }

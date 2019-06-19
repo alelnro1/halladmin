@@ -27,7 +27,8 @@ class AltaLocalRequest extends FormRequest
             'nombre'      => 'required|max:100',
             'archivo'     => 'mimes:jpg,jpeg,png,gif',
             'email'       => 'email|max:100',
-            'telefono'    => 'required'
+            'telefono'    => 'required',
+            'domicilio'   => 'required'
         ];
     }
 }

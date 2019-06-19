@@ -13,13 +13,13 @@ class AgregarMedioPagoCajas extends Migration
      */
     public function up()
     {
-        Schema::table('cajas', function (Blueprint $table) {
+        /*Schema::table('cajas', function (Blueprint $table) {
             $table->integer('medio_pago_id')->unsigned();
         });
 
         Schema::table('cajas', function (Blueprint $table) {
             $table->foreign('medio_pago_id')->references('id')->on('medios_pago');
-        });
+        });*/
     }
 
     /**

@@ -42,7 +42,7 @@
                         <tr>
                             <td>{{ $venta->created_at }}</td>
                             <td>
-                                <a href="{{ url('usuarios/' . $venta->Usuario->id) }}">
+                                <a href="{{ url('empleados/' . $venta->Usuario->id) }}">
                                     {{ $venta->Usuario->nombre }} {{ $venta->Usuario->apellido }}
                                 </a>
                             </td>

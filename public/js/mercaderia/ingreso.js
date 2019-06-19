@@ -204,7 +204,8 @@ $(document).ready(function() {
                 }
 
                 if ($(this).hasClass('fila-precio')) {
-                    $(this).find('input').val(data_articulo.datos_articulo.precio).prop('disabled', true);
+                    console.log(data_articulo);
+                    $(this).find('input').val(data_articulo.precio_default).prop('disabled', true);
                 }
 
                 if ($(this).hasClass('fila-genero')) {

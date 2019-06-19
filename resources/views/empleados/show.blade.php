@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('site-name', 'Usuario')
+@section('site-name', 'Empleado')
 
-@section('page-description', 'Usuario ' . $usuario->nombre)
+@section('page-description', 'Empleado ' . $usuario->nombre)
 
 @section('styles')
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/jquery.dataTables.css">
@@ -10,7 +10,7 @@
 @stop
 
 @section('niveles')
-    <li><a href="#"><i class="fa fa-dashboard"></i> Usuarios</a></li>
+    <li><a href="#"><i class="fa fa-dashboard"></i> Empleado</a></li>
     <li class="active">{{ $usuario->nombre }} {{ $usuario->apellido }}</li>
 @stop
 
@@ -62,7 +62,7 @@
                 @if(count($usuario->Ventas) > 0)
                     @include('ventas.listado-ventas', ['ventas' => $usuario->Ventas])
                 @else
-                    El usuario no ha realizado ventas
+                    El empleado no ha realizado ventas
                 @endif
 
                 <br><br>
@@ -73,8 +73,8 @@
                     <legend>Módulos Habilitados</legend>
 
                     <div class="help-block">
-                        El usuario tiene acceso a los siguientes módulos. Si quiere cambiarlos, haga
-                        <a href="{{ route('usuarios.edit', ['usuario' => $usuario->id]) }}">click acá</a>
+                        El empleado tiene acceso a los siguientes módulos. Si quiere cambiarlos, haga
+                        <a href="{{ route('empleados.edit', ['usuario' => $usuario->id]) }}">click acá</a>
                     </div>
 
                     <div class="description-block">
@@ -104,8 +104,8 @@
                 </div>
 
                 <div class="col-xs-6">
-                    <a href="{{ route('usuarios.edit', ['usuario' => $usuario->id]) }}" class="btn btn-default btn-primary" style="float:right; color: white;">
-                        <i class="fa fa-wrench" aria-hidden="true"></i>&nbsp;Editar Usuario
+                    <a href="{{ route('empleados.edit', ['usuario' => $usuario->id]) }}" class="btn btn-default btn-primary" style="float:right; color: white;">
+                        <i class="fa fa-wrench" aria-hidden="true"></i>&nbsp;Editar Empleado
                     </a>
                 </div>
             </div>
